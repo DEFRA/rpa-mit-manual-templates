@@ -1,0 +1,4 @@
+{{- include "adp-helm-library.cluster-ip-service" (list . "rpa-mit-manual-templates.cluster-ip-service") -}}
+{{- define "rpa-mit-manual-templates.cluster-ip-service" -}}
+{{- end -}}
+

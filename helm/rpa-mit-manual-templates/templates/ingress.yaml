@@ -1,0 +1,3 @@
+{{- include "adp-helm-library.azure-ingress" (list . "rpa-mit-manual-templates.ingress") -}}
+{{- define "rpa-mit-manual-templates.ingress" -}}
+{{- end -}}

@@ -1,0 +1,8 @@
+{{- include "adp-helm-library.deployment" (list . "rpa-mit-manual-templates.deployment") -}}
+{{- define "rpa-mit-manual-templates.deployment" -}}
+spec:
+  template:
+    spec:
+      containers:
+      - {{ include "adp-helm-library.container" (list . "rpa-mit-manual-templates.container") }}
+{{- end -}}

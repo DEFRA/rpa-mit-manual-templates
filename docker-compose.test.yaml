@@ -1,0 +1,16 @@
+# This override file should be used when running automated tests so
+# that test output is saved to the host
+
+services:
+  rpa-mit-manual-templates:
+    build:
+      target: development
+    image: rpa-mit-manual-templates-development
+    container_name: rpa-mit-manual-templates-test
+    command: npm run test
+    volumes:
+      - ./app:/home/node/app
+      - ./test:/home/node/test
+      - ./test-output:/home/node/test-output
+      - ./jest.config.js:/home/node/jest.config.js
+      - ./package.json:/home/node/package.json

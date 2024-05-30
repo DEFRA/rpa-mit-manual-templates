@@ -1,0 +1,44 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: rpa-mit-manual-templates
+  description: Node UI for rpa-mit-manual-templates reworking
+  annotations:
+    github.com/project-slug: defra/rpa-mit-manual-templates
+    dev.azure.com/project: DEFRA-MIT
+    dev.azure.com/build-definition: rpa-mit-manual-templates
+    sonarqube.org/project-key: rpa-mit-manual-templates
+    grafana/dashboard-selector: "folderTitle == 'Managed Prometheus'"
+    backstage.io/kubernetes-id: rpa-mit-manual-templates
+  links:
+    - url: https://github.com/defra/rpa-mit-manual-templates
+      title: GitHub Repository
+      icon: github
+    - url: https://dev.azure.com/defragovuk/DEFRA-MIT/
+      title: Azure DevOps Project
+      icon: project
+    - url: https://sonarcloud.io/project/overview?id=rpa-mit-manual-templates
+      title: SonarCloud Analysis
+      icon: check
+    - url: https://snyk.io/test/github/DEFRA/rpa-mit-manual-templates
+      title: Snyk Analysis
+      icon: policy
+    - url: https://portal.azure.com/defradev.onmicrosoft.com
+      title: Azure Portal - Defra Dev
+      icon: cloud
+    - url: https://portal.azure.com/Defra.onmicrosoft.com
+      title: Azure Portal - Defra
+      icon: cloud
+    - url: https://rpa-mit-manual-templates.snd3.adp.defra.gov.uk/
+      title: SND3
+    - url: https://rpa-mit-manual-templates.dev1.adp.defra.gov.uk/
+      title: DEV1
+    - url: https://rpa-mit-manual-templates.tst1.adp.defra.gov.uk/
+      title: TST1
+    - url: https://rpa-mit-manual-templates.pre1.adp.defra.gov.uk/
+      title: PRE1
+spec:
+  type: frontend
+  lifecycle: discovery
+  owner: "group:default/lap-mit"
+  system: system:default/lap-mit-system
