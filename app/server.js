@@ -5,7 +5,7 @@ async function createServer () {
     port: process.env.PORT
   })
 
-  // Register the plugins
+  // Register the plugins.
   await server.register(require('@hapi/inert'))
   await server.register(require('./plugins/views'))
   await server.register(require('./plugins/router'))
