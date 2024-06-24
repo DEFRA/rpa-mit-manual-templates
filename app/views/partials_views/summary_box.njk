@@ -1,0 +1,19 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+<div class="summary-border">
+  <div class="header-top">
+    <div class="govuk-heading-s header-label">
+      {{item.head}}: {{ item.id }}
+    </div>
+    <div class="action-flex">
+    {% for action in item.actions %}
+      <a href="{{action.link}}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">{{action.name}}</a>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="bottom-part">
+    {{ govukSummaryList({
+      rows: item.rows
+    }) }}
+  </div>
+</div>

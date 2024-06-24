@@ -1,16 +1,19 @@
-const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
 
-const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
+const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 
-console.log(`Running webpack in ${isDev ? 'development' : 'production'} mode`)
+console.log(`Running webpack in ${isDev ? 'development' : 'production'} mode`);
 
 module.exports = {
   entry: {
     core: [
+      'jquery', 
       './app/frontend/css/index.js',
+      './app/frontend/js/common_func.js',
       './app/frontend/images/android-chrome-192x192.png',
       './app/frontend/images/android-chrome-512x512.png',
       './app/frontend/images/apple-touch-icon.png',
@@ -52,13 +55,6 @@ module.exports = {
         generator: {
           filename: 'images/[name][ext]'
         }
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        type: 'asset/resource',
-        generator: {
-          filename: 'fonts/[name].[fullhash].[ext]'
-        }
       }
     ]
   },
@@ -71,12 +67,16 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       inject: false,
-      filename: '../views/_layout.njk',
-      template: 'app/views/_layout.template.njk',
+      filename: '../views/main_views/_layout.njk',
+      template: 'app/views/main_views/_layout.template.njk',
       chunks: ['core']
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].[fullhash].css'
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
     })
   ]
-}
+};

@@ -79,3 +79,179 @@ $govuk-assets-path: "~govuk-frontend/govuk/assets/";
     @extend %govuk-section-break--xl;
   }
 }
+
+.govuk-success-message
+{
+  color:$govuk-success-colour;
+}
+
+.govuk-template 
+{
+  background-color: white;
+  height: 100%;
+}
+
+.govuk-template body
+{
+  height: 100%;
+}
+
+.full-height
+{
+  height: 100%;
+}
+
+.align-right
+{
+  display: flex;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.invoice-box
+{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.bottom-part .govuk-summary-list__row:last-child {
+  border: none !important;
+}
+
+.bottom-part .govuk-summary-list__key
+{
+  color:#0b0c0c !important;
+}
+
+.color-heading
+{
+  color:#0b0c0c !important
+}
+
+.header-label
+{
+  color: #0b0c0c !important;
+  margin-bottom: 0px !important;
+}
+
+.remove-margin
+{
+  margin-bottom: 0px !important;
+}
+
+.action-flex
+{
+  display: flex;
+  align-items: center;
+}
+
+.action-flex-other
+{
+  flex-wrap: wrap;
+}
+
+.header-top
+{
+  padding-left: 15px;
+  background-color: rgba(221,223,220,0.7);
+  padding-right: 10px;
+  padding-top: 17px;
+  padding-bottom: 17px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bottom-part .govuk-summary-list {
+  margin-bottom: 15px !important;
+}
+
+.bottom-part
+{
+    padding-left: 17px;
+    padding-right: 17px;
+    padding-top: 15px;
+}
+
+.summary-border
+{
+  border:1px solid gainsboro;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.action-flex:not(:last-child) {
+  padding-left: 10px;
+  border-right: 1px solid #b1b4b6;
+  padding-right: 10px;
+}
+
+.action-flex a:not(:last-child) {
+  padding-left: 10px;
+  border-right: 1px solid #b1b4b6;
+  padding-right: 10px;
+}
+
+.action-flex a:last-child
+{
+  padding-left: 10px;
+}
+
+.fix-width
+{
+  width: fit-content;
+}
+
+.radio-border
+{
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-top: 10px;
+}
+
+.radio-no-border
+{
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-top: 10px;
+}
+
+.govuk-fieldset__legend--l
+{
+font-size: 1.25rem !important;
+}
+
+.red-border
+{
+  border-color: #a42d27;
+}
+
+.full-width
+{
+  width: 100%;
+}
+
+.custom-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+@media only screen and (min-width: 1024px) {
+  .custom-container > div {
+    width: 49%;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  .custom-container > div {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .custom-container > div {
+    width: 100%;
+  }
+}

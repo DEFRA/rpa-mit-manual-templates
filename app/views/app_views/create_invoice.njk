@@ -1,0 +1,113 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends 'main_views/_layout.njk' %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="full-height">
+{% include "partials_views/page_title.njk" %}
+ <form action="/createInvoice" method="POST" id="invoiceForm">
+    {{ 
+      govukRadios({
+      name: "account_type",
+      classes: "radio-border govuk-radios--inline",
+      fieldset: {
+        legend: {
+          text: "Select Account Type",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: account_type
+      }) 
+    }}
+    <div id="delivery-body-container" class="govuk-form-group">
+    {{ 
+      govukRadios({
+      name: "delivery_body",
+      classes: "radio-border govuk-radios--inline",
+      fieldset: {
+        legend: {
+          text: "Select Delivery Body",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: []
+      }) 
+    }}
+    </div>
+    
+    <div id="invoice-template-body-container" class="govuk-form-group">
+    {{ 
+      govukRadios({
+      name: "invoice_template",
+      classes: "radio-border govuk-radios--inline",
+      fieldset: {
+        legend: {
+          text: "Select Scheme Invoice Template",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: []
+       }) 
+    }}
+    </div>
+    
+    <div id="invoice-template-secondary-body-container" class="govuk-form-group">
+    {{ 
+      govukRadios({
+      name: "invoice_template_secondary",
+      classes: "radio-border govuk-radios--inline",
+      fieldset: {
+        legend: {
+          text: "Select Scheme Invoice Template Secondary Question",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: []
+       }) 
+      }}
+     </div>
+
+    {{ 
+      govukRadios({
+      name: "payment_type",
+      classes: "radio-no-border govuk-radios--inline",
+      fieldset: {
+        legend: {
+          text: "Select Payment Type",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: payment_type 
+      }) 
+    }}
+
+    {% set error_message %}
+    Select All The Options
+    {% endset %}
+
+    {% include "partials_views/error_banner.njk" %}
+    
+    <div class="govuk-button-group">
+     {{ govukButton({text: "Save and continue"}) }}
+     <a class="govuk-link backButton" href="#">Cancel</a>
+    </div>
+  
+    </form>
+
+</div>
+{% endblock %}
+{% block footer %}
+<script>
+    const delivery_body_data = {{ delivery_body | dump | safe }};
+    const invoice_template = {{ invoice_template | dump | safe }};
+    const invoice_template_secondary_data = {{ invoice_template_secondary | dump | safe }};
+</script>
+{% endblock %}

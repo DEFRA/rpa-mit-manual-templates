@@ -1,0 +1,56 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% extends 'main_views/_layout.njk' %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="full-height">
+{{ govukBackLink({
+  text: "Back",
+  href: "#",
+  classes:"backButton"
+}) }}
+
+{% include "partials_views/page_title.njk" %}
+
+{% include "partials_views/summary_table.njk" %}
+
+{% set item = summaryBox %}
+{% include "partials_views/summary_box.njk" %}
+
+{% set pageTitle = 'Payment Requests' %}
+{% include "partials_views/page_title.njk" %}
+
+{{ 
+govukButton({
+text: "Add Payment Request",
+classes: "fix-width",
+href: paymentLink
+}) 
+}}
+{% include "partials_views/success_banner.njk" %}
+
+{% if total_requests == 0 %}
+{% set html %}
+  <h3 class=" govuk-heading-l">
+    This invoice currently has no payment requests
+  </h3>
+  <p class="govuk-body-m">You can select Add Payment Request to include one with this invoice.</p>
+{% endset %}
+
+<div class="govuk-inset-text red-border">
+{{ html | safe }}
+</div>
+{% endif %}
+
+{% for item in allPayments %}
+ {% include "partials_views/summary_box.njk" %}
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

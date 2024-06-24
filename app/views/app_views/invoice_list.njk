@@ -1,0 +1,25 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends 'main_views/_layout.njk' %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="full-height">
+{% include "partials_views/page_title.njk" %}
+{{ 
+govukButton({
+text: "Create Invoice",
+classes: "fix-width",
+href: "/createInvoice"
+}) 
+}}
+{% include "partials_views/success_banner.njk" %}
+{% for item in invoices %}
+ {% include "partials_views/summary_box.njk" %}
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

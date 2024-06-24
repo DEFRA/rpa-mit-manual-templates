@@ -1,0 +1,27 @@
+{% extends "govuk/template.njk" %}
+{% block head %}
+  <% htmlWebpackPlugin.files.css.forEach(file => { %>
+  <link href="<%= file.replace('../../dist/', '/static/') %>" rel="stylesheet">
+  <% }) %>
+{% endblock %}
+{% block header %}
+{{ govukHeader({
+  homepageUrl: "/",
+  serviceName: pageTitle,
+  serviceUrl: "#"
+}) }}
+{% endblock %}
+{% block pageTitle %} {{ pageTitle }} {% endblock %}
+{% block content %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block bodyEnd %}
+<script>
+    const pageTitle = {{ pageTitle | dump | safe }};
+</script>
+<% htmlWebpackPlugin.files.js.forEach(file => { %>
+  <script src="<%= file.replace('../../dist/', '/static/') %>"></script>
+<% }) %>
+{% endblock %}
+

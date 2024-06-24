@@ -35,8 +35,8 @@ module.exports = {
       appVersion: pkg.version,
       assetPath: '/static',
       govukAssetPath: '/assets',
-      serviceName: 'rpa-mit-manual-templates',
-      pageTitle: 'rpa-mit-manual-templates - GOV.UK'
+      serviceName: '',
+      pageTitle: ''
     }
   }
 }

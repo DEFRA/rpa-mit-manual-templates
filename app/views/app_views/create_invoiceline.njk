@@ -1,0 +1,132 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% extends 'main_views/_layout.njk' %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="full-height">
+{% if view_type and view_type=='view' %}
+{{ govukBackLink({
+  text: "Back",
+  href: "#",
+  classes:"backButton"
+}) }}
+{% endif %}
+{% include "partials_views/page_title.njk" %}
+{% set item = summaryPayment %}
+{% include "partials_views/summary_box.njk" %}
+ <form action="{% if view_type != 'view' %}/createInvoiceLine{% else %}#{% endif %}" method="POST" id="lineForm">
+    <input name="payment_id" type="hidden" value="{{payment_id}}" />
+    {% if line_id and line_id!='' %}
+      <input name="line_id" type="hidden" value="{{line_id}}" />
+    {% endif %}
+    {{ govukInput({
+    label: {
+      text: "Line Value",
+      classes: "govuk-label--s",
+      isPageHeading: true
+    },
+    name: "paymentvalue",
+    value: paymentvalue,
+    classes:"line_inputs",
+    attributes: attributesitem
+    }) 
+    }}
+    
+    <div class="custom-container">
+    {{ govukSelect({
+     name: "description",
+     label: {
+      text: 'Description',
+      classes: "govuk-label--s"
+     },
+    items: description,
+    classes:"full-width line_inputs",
+    disabled:disableditem
+    }) 
+    }}
+
+    {{ govukSelect({
+     name: "deliverybody",
+     label: {
+      text: 'Delivery Body',
+      classes: "govuk-label--s"
+     },
+    items: deliverybody,
+    classes:"full-width line_inputs",
+    disabled:disableditem
+    }) 
+    }}
+
+    {{ govukSelect({
+     name: "fundcode",
+     label: {
+      text: 'Fund Code',
+      classes: "govuk-label--s"
+     },
+    items: fundcode,
+    classes:"full-width line_inputs",
+    disabled:disableditem
+    }) 
+    }}
+
+    {{ govukSelect({
+     name: "mainaccount",
+     label: {
+      text: 'Main Account',
+      classes: "govuk-label--s"
+     },
+    items: mainaccount,
+    classes:"full-width line_inputs",
+    disabled:disableditem
+    }) 
+    }}
+
+    {{ govukSelect({
+     name: "schemecode",
+     label: {
+      text: 'Scheme Code',
+      classes: "govuk-label--s"
+     },
+    items: schemecode,
+    classes:"full-width line_inputs",
+    disabled:disableditem
+    }) 
+    }}
+
+    {{ govukSelect({
+     name: "marketingyear",
+     label: {
+      text: 'Marketing Year',
+      classes: "govuk-label--s"
+     },
+    items: marketingyear,
+    classes:"full-width line_inputs",
+    disabled:disableditem
+    }) 
+    }}
+    </div>
+    {% if view_type and view_type!='view' %}
+
+    {% set error_message %}
+    Fill All The Fields
+    {% endset %}
+
+    {% include "partials_views/error_banner.njk" %}
+    
+    <div class="govuk-button-group">
+     {{ govukButton({text: "Save and continue"}) }}
+     <a class="govuk-link backButton" href="#">Cancel</a>
+    </div>
+   {% endif %}
+    </form>
+
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
