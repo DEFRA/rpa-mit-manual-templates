@@ -2,11 +2,11 @@
 const request_host = 'http://localhost:5161';
 /* invoice model */
 const invoice_list_title = 'Invoice List'
-const invoice_add_title = 'Invoice Header'
+const invoice_add_title = 'Template Type'
 const invoice_creation_success = `Invoice Created Successfully`;
 const invoice_summary_title = `Invoice Created Successfully`;
 /* payment model */
-const payment_add_title = 'Add Payment Request';
+const payment_add_title = 'Add Invoice Request';
 const payment_edit_title = 'Edit Payment Request';
 const payment_view_title = 'View Payment Request';
 const payment_update_success = `Payment Updated Successfully`;

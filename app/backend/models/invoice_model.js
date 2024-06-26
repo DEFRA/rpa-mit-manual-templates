@@ -74,7 +74,7 @@ const modifyForSummaryBox = async (summaryData)=>{
     summaryData["total_requests"] = total_requests;
     summaryBoxData.push({name:'Status',value:`<strong class="govuk-tag">${summaryData.status.toUpperCase()}</strong>`})
     summaryBoxData.push({name:'Created On',value:common_model.formatTimestamp(summaryData.created_at)})
-    summaryBoxData.push({name:'Number Of Payment Requests',value:total_requests.toString()})
+    summaryBoxData.push({name:'Number Of Invoice Requests',value:total_requests.toString()})
     return common_model.modify_Response_Summary(summaryBoxData);
 }
 

@@ -21,12 +21,12 @@
 {% set item = summaryBox %}
 {% include "partials_views/summary_box.njk" %}
 
-{% set pageTitle = 'Payment Requests' %}
+{% set pageTitle = 'Invoice Requests' %}
 {% include "partials_views/page_title.njk" %}
 
 {{ 
 govukButton({
-text: "Add Payment Request",
+text: "Add Invoice Request",
 classes: "fix-width",
 href: paymentLink
 }) 
@@ -36,7 +36,7 @@ href: paymentLink
 {% if total_requests == 0 %}
 {% set html %}
   <h3 class=" govuk-heading-l">
-    This invoice currently has no payment requests
+    This invoice currently has no invoice requests
   </h3>
   <p class="govuk-body-m">You can select Add Payment Request to include one with this invoice.</p>
 {% endset %}

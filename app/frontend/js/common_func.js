@@ -94,13 +94,13 @@ function groupByKeys(data, key) {
 }
 
 
-const deliveryBodyOptions = pageTitle == 'Invoice Header'? groupByKeys(delivery_body_data, 'accountCode') : [];
+const deliveryBodyOptions = pageTitle == 'Template Type'? groupByKeys(delivery_body_data, 'accountCode') : [];
 
-const invoiceTemplateBodyOptions = pageTitle == 'Invoice Header'? groupByKeys(invoice_template, 'deliveryBodyCode') : [];
+const invoiceTemplateBodyOptions = pageTitle == 'Template Type'? groupByKeys(invoice_template, 'deliveryBodyCode') : [];
 
-const deliveryBodyOptionsUnique = pageTitle == 'Invoice Header'? groupByKeys(delivery_body_data, 'code') : [];
+const deliveryBodyOptionsUnique = pageTitle == 'Template Type'? groupByKeys(delivery_body_data, 'code') : [];
 
-const invoiceTemplateSecondaryBodyOptions = pageTitle == 'Invoice Header'? invoice_template_secondary_data : [];
+const invoiceTemplateSecondaryBodyOptions = pageTitle == 'Template Type'? invoice_template_secondary_data : [];
 
 function updateBodyOptions(selectedType , container_name , radio_name, heading) {
   const bodyContainer = document.getElementById(container_name);
@@ -108,7 +108,7 @@ function updateBodyOptions(selectedType , container_name , radio_name, heading) 
   
   if(radio_name == 'invoice_template_secondary')
   {
-    options =  deliveryBodyOptionsUnique[selectedType]?.[0]?.org=='b'?invoiceTemplateSecondaryBodyOptions:[];
+    options =  deliveryBodyOptionsUnique[selectedType]?invoiceTemplateSecondaryBodyOptions:[];
   }
   else if(radio_name == 'invoice_template')
   {
@@ -156,7 +156,7 @@ function updateBodyOptions(selectedType , container_name , radio_name, heading) 
   `;
     
 }
-if(pageTitle == 'Invoice Header')
+if(pageTitle == 'Template Type')
 {
 const accountTypeRadios = document.querySelectorAll('input[name="account_type"]');
 accountTypeRadios.forEach(radio => {
