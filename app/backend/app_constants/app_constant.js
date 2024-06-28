@@ -14,7 +14,7 @@ const payment_creation_success = `Payment Created Successfully`;
 const payment_deletion_success = `Payment Deleted Successfully`;
 
 /* invoice line model */
-const invoiceline_summary_title = 'Payment Request Summary';
+const invoiceline_summary_title = 'Invoice Summary';
 const invoiceline_add_title = 'Add Invoice Line';
 const invoiceline_edit_title = 'Edit Invoice Line';
 const invoiceline_view_title = 'View Invoice Line';

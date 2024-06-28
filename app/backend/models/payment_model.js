@@ -145,7 +145,7 @@ const modifyPaymentResponse = (payment_list)=>{
             head:'Payment Request Id',
             actions : [
                 {link:`/viewPayment/${item.paymentrequestid}`, name:'View'},
-                {link:`/viewPaymentLine/${item.paymentrequestid}`, name:'Edit'},
+                {link:`/viewPaymentLine/${item.paymentrequestid}`, name:'Detail Line'},
                 {link:`/deletePayment/${item.paymentrequestid}`, name:'Delete'}
             ],
             id : item.paymentrequestid,

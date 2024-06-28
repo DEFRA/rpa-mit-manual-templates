@@ -115,6 +115,32 @@
     }) 
     }}
 
+    {{ govukInput({
+     label: {
+      text: "Claim Reference Number",
+      classes: "govuk-label--s",
+      isPageHeading: true
+    },
+    name: "claim",
+    value: claim,
+    classes:"payment_inputs",
+    attributes: attributesitem
+    }) 
+    }}
+
+    {{ govukInput({
+     label: {
+      text: "Claim Reference (ClaimRef)",
+      classes: "govuk-label--s",
+      isPageHeading: true
+    },
+    name: "claim",
+    value: claim,
+    classes:"payment_inputs",
+    attributes: attributesitem
+    }) 
+    }}
+
     {% if view_type and view_type!='view' %}
 
     {% set error_message %}
