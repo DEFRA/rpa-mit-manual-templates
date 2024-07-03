@@ -17,6 +17,8 @@ const createPayment = async (request)=>{
         marketing_year:'',
         agreement_number:'',
         description:'',
+        claimreferencenumber:'',
+        claimreference:'',
         disableditem:false,
         attributesitem:{},
         view_type:'create'};
@@ -82,6 +84,7 @@ const paymentStore = async (request)=>{
     else
     {
     const payment_id = common_model.generateID();
+    console.log(payload);
     await external_request.sendExternalRequestPost(`${constant_model.request_host}/paymentrequest/add`,{
         InvoiceId:payload.inv_id,
         FRN:payload.frn,
@@ -91,7 +94,9 @@ const paymentStore = async (request)=>{
         AgreementNumber:payload.agreement_number,
         Currency:payload.currency,
         Description:payload.description,
-        PaymentRequestId:payment_id
+        PaymentRequestId:payment_id,
+        ClaimReference:payload.claimreference,
+        ClaimReferenceNumber:payload.claimreferencenumber
     })
     request.yar.flash('success_message', constant_model.payment_creation_success);
     }
@@ -121,8 +126,7 @@ const getAllPayments = async (invoiceID)=>{
     const data = await db_con('paymentrequests')
     .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
     .select('paymentrequests.*')
-    .where('paymentrequests.invoiceid', invoiceID)
-    .orderBy('paymentrequests.created_at', 'desc');
+    .where('paymentrequests.invoiceid', invoiceID);
     return modifyPaymentResponse(data);
 }
 

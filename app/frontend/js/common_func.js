@@ -97,7 +97,7 @@ function groupByKeys(data, key) {
 const deliveryBodyOptions = pageTitle == 'Template Type'? groupByKeys(delivery_body_data, 'accountCode') : [];
 
 const invoiceTemplateBodyOptions = pageTitle == 'Template Type'? groupByKeys(invoice_template, 'deliveryBodyCode') : [];
-
+//console.log(invoiceTemplateBodyOptions);
 const deliveryBodyOptionsUnique = pageTitle == 'Template Type'? groupByKeys(delivery_body_data, 'code') : [];
 
 const invoiceTemplateSecondaryBodyOptions = pageTitle == 'Template Type'? invoice_template_secondary_data : [];
