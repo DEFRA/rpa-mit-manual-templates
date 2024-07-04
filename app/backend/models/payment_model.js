@@ -14,8 +14,6 @@ const createPayment = async (request)=>{
     const invoice_data = await summaryPayments(request.params.id);
     return {pageTitle:constant_model.payment_add_title, payment_type:payment_type,...invoice_data,invoice_id:request.params.id,
         frn:'', sbi:'',vendor:'',
-        marketing_year:'',
-        agreement_number:'',
         description:'',
         claimreferencenumber:'',
         claimreference:'',
@@ -35,8 +33,6 @@ const updatePayment = async (request)=>{
     const invoice_data = await summaryPayments(paymentData.invoiceid);
     return {pageTitle:constant_model.payment_edit_title, payment_type:payment_type,...invoice_data,invoice_id:paymentData.invoiceid,
         frn:paymentData.frn,sbi:paymentData.sbi,vendor:paymentData.vendor,
-        marketing_year:paymentData.marketingyear,
-        agreement_number:paymentData.agreementnumber,
         description:paymentData.description,
         disableditem:false,
         payment_id:request.params.id,
@@ -55,8 +51,6 @@ const viewPayment = async (request)=>{
     const invoice_data = await summaryPayments(paymentData.invoiceid);
     return {pageTitle:constant_model.payment_view_title, payment_type:payment_type,...invoice_data,invoice_id:paymentData.invoiceid,
         frn:paymentData.frn,sbi:paymentData.sbi,vendor:paymentData.vendor,
-        marketing_year:paymentData.marketingyear,
-        agreement_number:paymentData.agreementnumber,
         description:paymentData.description,
         disableditem:true,
         attributesitem:{ readonly: 'readonly' },
@@ -74,8 +68,6 @@ const paymentStore = async (request)=>{
             frn:payload.frn,
             sbi:payload.sbi,
             vendor:payload.vendor,
-            marketingyear:payload.marketing_year,
-            agreementnumber:payload.agreement_number,
             currency:payload.currency,
             description:payload.description
         })
@@ -90,8 +82,6 @@ const paymentStore = async (request)=>{
         FRN:payload.frn,
         SBI:payload.sbi,
         Vendor:payload.vendor,
-        MarketingYear:payload.marketing_year,
-        AgreementNumber:payload.agreement_number,
         Currency:payload.currency,
         Description:payload.description,
         PaymentRequestId:payment_id,
@@ -146,7 +136,7 @@ const deletePayment=async (request)=>{
 const modifyPaymentResponse = (payment_list)=>{
     return payment_list.map((item) => {
         return {
-            head:'Payment Request Id',
+            head:'Invoice Request Id',
             actions : [
                 {link:`/viewPayment/${item.paymentrequestid}`, name:'View'},
                 {link:`/viewPaymentLine/${item.paymentrequestid}`, name:'Detail Line'},
@@ -161,8 +151,6 @@ const modifyPaymentResponse = (payment_list)=>{
 const modifyForPaymentSummary = (payment)=>{
     const paymentData = [];
     paymentData.push({name:'FRN',value:payment.frn})
-    paymentData.push({name:'Marketing Year',value:payment.marketingyear})
-    paymentData.push({name:'Agreement Number',value:payment.agreementnumber})
     paymentData.push({name:'Currency',value:payment.currency})
     paymentData.push({name:'Description',value:payment.description})
     paymentData.push({name:'Value',value:payment.value})

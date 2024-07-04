@@ -7,11 +7,11 @@ const invoice_creation_success = `Invoice Created Successfully`;
 const invoice_summary_title = `Invoice Created Successfully`;
 /* payment model */
 const payment_add_title = 'Add Invoice Request';
-const payment_edit_title = 'Edit Payment Request';
-const payment_view_title = 'View Payment Request';
-const payment_update_success = `Payment Updated Successfully`;
-const payment_creation_success = `Payment Created Successfully`;
-const payment_deletion_success = `Payment Deleted Successfully`;
+const payment_edit_title = 'Edit Invoice Request';
+const payment_view_title = 'View Invoice Request';
+const payment_update_success = `Invoice Updated Successfully`;
+const payment_creation_success = `Invoice Created Successfully`;
+const payment_deletion_success = `Invoice Deleted Successfully`;
 
 /* invoice line model */
 const invoiceline_summary_title = 'Invoice Summary';

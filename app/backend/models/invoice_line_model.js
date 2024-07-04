@@ -178,7 +178,7 @@ const modifyPaymentResponse = async (id, show_actions)=>{
         .where('paymentrequests.paymentrequestid', id);
         const payment = data[0];
         return {
-            head:'Payment Request Id',
+            head:'Invoice Request Id',
             actions : show_actions?[
                 {link:`/editPayment/${payment.paymentrequestid}`, name:'Edit'},
             ]:[],
