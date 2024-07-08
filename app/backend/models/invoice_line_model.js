@@ -3,10 +3,16 @@ const common_model = require('./common_model')
 const external_request = require('../custom_requests/external_requests')
 const payment_model = require('./payment_model')
 const constant_model = require('../app_constants/app_constant')
+const Path = require('path');
 
 const getTotalInvoiceLines = async (ID)=>{
     const total_lines = await db_con('invoicelines').count('* as total').where('paymentrequestid', ID); 
     return total_lines[0].total;
+}
+
+const downloadFile = async (request, h)=>{
+    const filePath = Path.join(__dirname, 'sample_files', 'sample.csv');
+    return h.file(filePath);
 }
 
 const deleteInvoiceLine=async (request)=>{
@@ -23,6 +29,7 @@ const deleteInvoiceLine=async (request)=>{
 
 const getAllInvoiceLines = async (request)=>{
     const success_message = request.yar.flash('success_message');
+    const error_message = request.yar.flash('error_message');
     const data = await db_con('invoicelines')
     .join('lookup_deliverybodycodes', 'invoicelines.deliverybody', '=', 'lookup_deliverybodycodes.code')
     .join('lookup_marketingyearcodes', 'invoicelines.marketingyear', '=', 'lookup_marketingyearcodes.code')
@@ -45,12 +52,15 @@ const getAllInvoiceLines = async (request)=>{
     const lineTable = common_model.addForSummaryTableLine(lineData);
     const summaryPayment = await modifyPaymentResponse(request.params.id,true);
     request.yar.flash('success_message', '');
+    request.yar.flash('error_message', '');
     return {
             pageTitle:constant_model.invoiceline_summary_title, 
+            payment_id:request.params.id,
             lineLink:`/createInvoiceLine/${request.params.id}`,
             summaryTable:lineTable,
             summaryHeader:lineHeader, 
             success_message:success_message,
+            error_message:error_message,
             summaryPayment:summaryPayment
            }
 }
@@ -188,4 +198,44 @@ const modifyPaymentResponse = async (id, show_actions)=>{
 }
 
 
-module.exports = {getTotalInvoiceLines, getAllInvoiceLines, deleteInvoiceLine, viewInvoiceLine, invoiceLineStore, updateInvoiceLine, viewInvoiceLine, deleteInvoiceLine, createInvoiceLine};
+const BulkDataUpload = async (request) =>{
+    const { payload } = request;
+    const bulk_data = JSON.parse(payload.bulk_data)
+    for (const single_data of bulk_data) {
+        await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoicelines/add`,{
+            Value:single_data[0],
+            PaymentRequestId:payload.payment_id,
+            Description:single_data[1],
+            DeliveryBody:single_data[2],
+            FundCode:single_data[3],
+            MainAccount:single_data[4],
+            SchemeCode:single_data[5],
+            MarketingYear:single_data[6]
+        })
+    }
+    request.yar.flash('success_message', constant_model.invoiceline_bulkupload_success);
+    return payload.payment_id;
+}
+
+const uploadBulk = async (request, h)=>{
+    const { payload } = request;
+    const bulk_data = await common_model.processUploadedCSV(payload.bulk_file);
+    if (!bulk_data) {
+        request.yar.flash('error_message', constant_model.invoiceline_bulkupload_failed);
+        return h.redirect(`/viewPaymentLine/${payload.payment_id}`).temporary();
+    }
+    else
+    {
+        const lineHeader = [ {text: "Line Value"}, {text: "Description"}, {text: "Delivery Body"}, {text: "Fund Code"}, {text: "Main Account"}, {text: "Scheme Code"}, {text: "Marketing Year"}];
+        const lineTable = common_model.addForSummaryTableLineCSV(bulk_data.slice(1)); 
+        return h.view('app_views/bulk_view',{
+            pageTitle:constant_model.bulk_upload, 
+            payment_id:payload.payment_id,
+            summaryTable:lineTable,
+            summaryHeader:lineHeader, 
+            bulk_data:JSON.stringify(bulk_data.slice(1))
+           });
+    }
+}
+
+module.exports = {BulkDataUpload, uploadBulk, getTotalInvoiceLines, downloadFile, getAllInvoiceLines, deleteInvoiceLine, viewInvoiceLine, invoiceLineStore, updateInvoiceLine, viewInvoiceLine, deleteInvoiceLine, createInvoiceLine};

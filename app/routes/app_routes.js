@@ -33,6 +33,13 @@ module.exports = [
     },
     {
       method: 'GET',
+      path: '/deleteInvoice/{id}',
+      options: {
+        handler: invoice_controller.invoiceDelete
+      }, 
+    },
+    {
+      method: 'GET',
       path: '/createPayment/{id}',
       options: {
         handler: payment_controller.paymentCreate
@@ -106,6 +113,34 @@ module.exports = [
       path: '/deleteInvoiceLine/{id}',
       options: {
         handler: invoice_line_controller.invoiceLineDelete
+      }, 
+    },
+    {
+      method: 'GET',
+      path: '/sample_download',
+      options: {
+        handler: invoice_line_controller.downloadSample
+      }, 
+    },
+    {
+      method: 'POST',
+      path: '/bulk_upload',
+      handler: invoice_line_controller.uploadBulk,
+      options: {
+        payload: {
+            output: 'stream',
+            parse: true,
+            allow: 'multipart/form-data',
+            maxBytes: 10485760, 
+            multipart: true,
+        }
+      }
+    },
+    {
+      method: 'POST',
+      path: '/bulk_data_upload',
+      options: {
+        handler: invoice_line_controller.BulkDataUpload
       }, 
     },
   ]

@@ -1,5 +1,6 @@
 const moment = require('moment'); 
 const crypto = require('crypto');
+const { parse } = require('csv-parse');
 const generateID = ()=> {
   return crypto.randomUUID().toString();
 }
@@ -93,4 +94,47 @@ const addForSummaryTableLine = (items)=>{
 
 }
 
-module.exports = {addForSummaryTableLine, modify_Response_Radio, modify_Response_Select, modify_Response_Summary, modify_Response_Table, generateID, formatTimestamp, removeForSummaryTable};
+const addForSummaryTableLineCSV = (items)=>{
+  return items.map((item) => {
+    return [
+      {
+        text: item[0]
+      },
+      {
+        text:item[1]
+      },
+      {
+        text: item[2]
+      },
+      {
+        text: item[3]
+      },
+      {
+        text: item[4]
+      },
+      {
+        text: item[5]
+      },
+      {
+        text: item[6]
+      }
+    ]
+  })
+
+}
+
+async function processUploadedCSV(file) {
+  if(!file) return null
+  const extension = file.hapi.filename.split('.').pop().toLowerCase();
+  const validExtensions = ['csv'];
+  if (!validExtensions.includes(extension)) return null 
+  const parser = parse({ delimiter: ',' }); 
+  const results = [];
+  const stream = file.pipe(parser);
+  for await (const row of stream) {
+    results.push(row);
+  }
+  return results; 
+}
+
+module.exports = {addForSummaryTableLineCSV, processUploadedCSV, addForSummaryTableLine, modify_Response_Radio, modify_Response_Select, modify_Response_Summary, modify_Response_Table, generateID, formatTimestamp, removeForSummaryTable};

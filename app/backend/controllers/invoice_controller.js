@@ -48,4 +48,16 @@ const invoiceCreate = async (request, h) => {
       } 
  }
 
-module.exports = {invoiceList, invoiceCreate, invoiceStore, invoiceSummary};
+ const invoiceDelete= async (request, h) => {
+      try 
+      {
+       await invoice_model.deleteInvoice(request);
+       return h.redirect('/').temporary();
+       } 
+       catch (error) 
+       {
+       return error_model.errorMessage(error,h); 
+       } 
+  }
+
+module.exports = {invoiceList, invoiceCreate, invoiceStore, invoiceSummary, invoiceDelete};

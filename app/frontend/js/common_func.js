@@ -82,6 +82,14 @@ setTimeout(function() {
 }, 3000);
 }
 
+const messageElementSecond = $('.error_message');
+if(messageElementSecond)
+{
+setTimeout(function() {
+  messageElementSecond.hide(); 
+}, 3000);
+}
+
 function groupByKeys(data, key) {
   return data.reduce((acc, item) => {
       const keyValue = item[key];
@@ -165,4 +173,14 @@ accountTypeRadios.forEach(radio => {
   });
 });
 }
+$('#bulk_upload').on('click', function(event) {
+  event.preventDefault();
+  $('#bulk_file').trigger('click');
+});
+
+$('#bulk_file').on('change', function() {
+  if ($(this).val()) {
+      $('#uploadBulk').trigger('submit');
+  }
+});
 });

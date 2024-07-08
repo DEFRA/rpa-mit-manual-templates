@@ -83,12 +83,23 @@ const modifyInvoiceResponse = (invoice_list)=>{
     return invoice_list.map((item) => {
         return {
             head:'Invoice Id',
-            actions : [{link:`/viewInvoice/${item.generated_id}`, name:'View'}],
+            actions : [
+                {link:`/viewInvoice/${item.generated_id}`, name:'View'},
+                {link:`/deleteInvoice/${item.generated_id}`, name:'Delete'}
+           ],
             id : item.generated_id,
             rows:modifyForSummary(item)
         }
       }); 
 }
+
+const deleteInvoice=async (request)=>{
+    await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoices/delete`,{
+        InvoiceId:request.params.id
+    });
+    request.yar.flash('success_message', constant_model.invoice_deletion_success);
+    return request.params.id;
+};
 
 const modifyForSummary = (invoice)=>{
     const summaryData = [];
@@ -101,4 +112,4 @@ const modifyForSummary = (invoice)=>{
 
 }
 
-module.exports = {getAllInvoices, createInvoice, invoiceStore, invoiceSummary}
+module.exports = {getAllInvoices, deleteInvoice, createInvoice, invoiceStore, invoiceSummary}
