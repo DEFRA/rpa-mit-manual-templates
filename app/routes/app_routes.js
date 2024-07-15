@@ -54,28 +54,28 @@ module.exports = [
     },
     {
       method: 'GET',
-      path: '/viewPayment/{id}',
+      path: '/viewPayment/{id}/{invoiceid}',
       options: {
         handler: payment_controller.paymentView
       }, 
     },
     {
       method: 'GET',
-      path: '/editPayment/{id}',
+      path: '/editPayment/{id}/{invoiceid}',
       options: {
         handler: payment_controller.paymentEdit
       }, 
     },
     {
       method: 'GET',
-      path: '/deletePayment/{id}',
+      path: '/deletePayment/{id}/{invoiceid}',
       options: {
         handler: payment_controller.paymentDelete
       }, 
     },
     {
       method: 'GET',
-      path: '/viewPaymentLine/{id}',
+      path: '/viewPaymentLine/{id}/{invoiceid}',
       options: {
         handler: invoice_line_controller.invoiceLineAll
       }, 
@@ -96,21 +96,21 @@ module.exports = [
     },
     {
       method: 'GET',
-      path: '/viewInvoiceLine/{id}',
+      path: '/viewInvoiceLine/{id}/{invoiceid}',
       options: {
         handler: invoice_line_controller.invoiceLineView
       }, 
     },
     {
       method: 'GET',
-      path: '/editInvoiceLine/{id}',
+      path: '/editInvoiceLine/{id}/{invoiceid}',
       options: {
         handler: invoice_line_controller.invoiceLineEdit
       }, 
     },
     {
       method: 'GET',
-      path: '/deleteInvoiceLine/{id}',
+      path: '/deleteInvoiceLine/{id}/{invoiceid}',
       options: {
         handler: invoice_line_controller.invoiceLineDelete
       }, 

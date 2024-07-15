@@ -9,7 +9,7 @@ const getAllInvoices = async (request)=>{
     const data = await db_con('invoices')
     .join('lookup_accountcodes', 'invoices.accounttype', '=', 'lookup_accountcodes.code')
     .join('lookup_deliverybodyinitialselections', 'invoices.deliverybody', '=', 'lookup_deliverybodyinitialselections.code')
-    .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.code')
+    .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.id')
     .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.id')
     .join('lookup_paymenttypes', 'invoices.paymenttype', '=', 'lookup_paymenttypes.code')
     .select('invoices.id as generated_id', 'invoices.status', 'invoices.created as created_at', 
@@ -24,10 +24,10 @@ const createInvoice = async (request)=>{
     const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
     const account_type = common_model.modify_Response_Radio(options_data.referenceData.accountCodes);
     const delivery_body = options_data.referenceData.initialDeliveryBodies;
-    console.log(delivery_body);
     const invoice_template = options_data.referenceData.schemeInvoiceTemplates;
     const invoice_template_secondary = options_data.referenceData.schemeInvoiceTemplateSecondaryQuestions;
     const payment_type = common_model.modify_Response_Radio(options_data.referenceData.paymentTypes);
+    console.log(invoice_template);
     return {pageTitle:constant_model.invoice_add_title,account_type:account_type,delivery_body:delivery_body,
             invoice_template:invoice_template,invoice_template_secondary:invoice_template_secondary,
             payment_type:payment_type};
@@ -35,6 +35,7 @@ const createInvoice = async (request)=>{
 
 const invoiceStore = async (request)=>{
     const payload = request.payload;
+    console.log(payload);
     await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoices/add`,{
         AccountType:payload.account_type,
         DeliveryBody:payload.delivery_body,
@@ -95,8 +96,8 @@ const modifyInvoiceResponse = (invoice_list)=>{
 }
 
 const deleteInvoice=async (request)=>{
-    await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoices/delete`,{
-        InvoiceId:request.params.id
+    await external_request.sendExternalRequestDelete(`${constant_model.request_host}/invoices/delete`,{
+        invoiceId:request.params.id
     });
     request.yar.flash('success_message', constant_model.invoice_deletion_success);
     return request.params.id;

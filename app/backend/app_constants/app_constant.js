@@ -3,17 +3,17 @@ const request_host = 'http://localhost:5161';
 const invoice_list_title = 'Invoice List'
 const invoice_add_title = 'Invoice Header'
 const invoice_creation_success = `Invoice Created Successfully`;
-const invoice_summary_title = `Invoice Created Successfully`;
+const invoice_summary_title = `Invoice Summary`;
 const invoice_deletion_success = `Invoice Deleted Successfully`
 /* payment model */
-const payment_add_title = 'Add Payment Request';
-const payment_edit_title = 'Edit Payment Request';
-const payment_view_title = 'View Payment Request';
-const payment_update_success = `Payment Updated Successfully`;
-const payment_creation_success = `Payment Created Successfully`;
-const payment_deletion_success = `Payment Deleted Successfully`;
+const payment_add_title = 'Add Invoice Requests';
+const payment_edit_title = 'Edit Invoice Requests';
+const payment_view_title = 'View Invoice Requests';
+const payment_update_success = `Invoice Request Updated Successfully`;
+const payment_creation_success = `Invoice Request Created Successfully`;
+const payment_deletion_success = `Invoice Request Deleted Successfully`;
 /* invoice line model */
-const invoiceline_summary_title = 'Payment Request Summary';
+const invoiceline_summary_title = 'Invoice Request Summary';
 const invoiceline_add_title = 'Add Invoice Line';
 const invoiceline_edit_title = 'Edit Invoice Line';
 const invoiceline_view_title = 'View Invoice Line';

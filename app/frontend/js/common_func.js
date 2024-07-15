@@ -1,44 +1,8 @@
 $(function() {
+  try{
   $('.backButton').on('click', function() {
     window.history.back();
  });
-
-  const messageElement = $('.success_message');
-  if(messageElement)
-  {
-  setTimeout(function() {
-   messageElement.hide(); 
-  }, 3000);
-  }
-
-  const messageElementSecond = $('.error_message');
-  if(messageElementSecond)
-  {
-  setTimeout(function() {
-   messageElementSecond.hide(); 
-  }, 3000);
-  }
-
-  function groupByKeys(data, key) {
-    return data.reduce((acc, item) => {
-        const keyValue = item[key];
-        if (!acc[keyValue]) {
-            acc[keyValue] = [];
-        }
-        acc[keyValue].push(item);
-        return acc;
-    }, {});
-  }
-
-  function showErrorMessage()
-  {
-    const messageElement = $('#error-message');
-    messageElement.show();
-    setTimeout(function() {
-      messageElement.hide(); 
-    }, 3000);
-  }
-
  $('#invoiceForm').on('submit', function(event) {
   event.preventDefault();
   let allGroupsSelected = true;
@@ -54,12 +18,17 @@ $(function() {
   });
   ard = [...new Set(ard)];
   if (!allGroupsSelected || ard.length != 5) {
-    showErrorMessage();
+    const messageElement = $('#error-message');
+    messageElement.show();
+    setTimeout(function() {
+      messageElement.hide(); 
+    }, 3000);
   } else {
     $('#error-message').hide(); 
     this.submit(); 
   }
 });
+
 
 $('#paymentForm').on('submit', function(event) {
   event.preventDefault();
@@ -72,12 +41,17 @@ $('#paymentForm').on('submit', function(event) {
       }
   }
   if (!allGroupsSelected) {
-    showErrorMessage();
+    const messageElement = $('#error-message');
+    messageElement.show();
+    setTimeout(function() {
+      messageElement.hide(); 
+    }, 3000);
   } else {
     $('#error-message').hide(); 
     this.submit(); 
   }
 });
+
 
 $('#lineForm').on('submit', function(event) {
   event.preventDefault();
@@ -90,12 +64,44 @@ $('#lineForm').on('submit', function(event) {
       }
   }
   if (!allGroupsSelected) {
-    showErrorMessage();
+    const messageElement = $('#error-message');
+    messageElement.show();
+    setTimeout(function() {
+      messageElement.hide(); 
+    }, 3000);
   } else {
     $('#error-message').hide(); 
     this.submit(); 
   }
 });
+
+const messageElement = $('.success_message');
+if(messageElement)
+{
+setTimeout(function() {
+  messageElement.hide(); 
+}, 3000);
+}
+
+const messageElementSecond = $('.error_message');
+if(messageElementSecond)
+{
+setTimeout(function() {
+  messageElementSecond.hide(); 
+}, 3000);
+}
+
+function groupByKeys(data, key) {
+  return data.reduce((acc, item) => {
+      const keyValue = item[key];
+      if (!acc[keyValue]) {
+          acc[keyValue] = [];
+      }
+      acc[keyValue].push(item);
+      return acc;
+  }, {});
+}
+
 
 const deliveryBodyOptions = delivery_body_data ? groupByKeys(delivery_body_data, 'accountCode') : [];
 const invoiceTemplateBodyOptions = invoice_template ? groupByKeys(invoice_template, 'deliveryBodyCode') : [];
@@ -108,8 +114,8 @@ function updateBodyOptions(selectedType , container_name , radio_name, heading) 
   
   if(radio_name == 'invoice_template_secondary')
   {
-    options =  deliveryBodyOptionsUnique[selectedType]?.[0]?.org=='AP'?invoiceTemplateSecondaryBodyOptions:[];
-    console.log(deliveryBodyOptionsUnique[selectedType]?.[0]?.org);
+    options =  deliveryBodyOptionsUnique[selectedType]?invoiceTemplateSecondaryBodyOptions:[];
+    updateBodyOptions("", 'invoice-template-body-container', 'invoice_template', 'Select Scheme Invoice Template');
   }
   else if(radio_name == 'invoice_template')
   {
@@ -139,12 +145,23 @@ function updateBodyOptions(selectedType , container_name , radio_name, heading) 
         const deliveryTypeRadios = document.querySelectorAll('input[name="delivery_body"]');   
         deliveryTypeRadios.forEach(radio => {
           radio.addEventListener('change', function () {
-            updateBodyOptions(this.value, 'invoice-template-body-container', 'invoice_template', 'Select Scheme Invoice Template');
             updateBodyOptions(this.value, 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question');
           });
         });
       },50)
     }
+
+    if(radio_name == 'invoice_template_secondary')
+      {
+        setTimeout(()=>{
+          const secondaryTypeRadios = document.querySelectorAll('input[name="invoice_template_secondary"]');   
+          secondaryTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+              updateBodyOptions(document.querySelector('input[name="delivery_body"]:checked').value, 'invoice-template-body-container', 'invoice_template', 'Select Scheme Invoice Template');
+            });
+          });
+        },50)
+      }
   });
 
   bodyContainer.innerHTML = `
@@ -155,17 +172,15 @@ function updateBodyOptions(selectedType , container_name , radio_name, heading) 
       </div>
     </fieldset>
   `;
+    
 }
 
 const accountTypeRadios = document.querySelectorAll('input[name="account_type"]');
-if(accountTypeRadios.length>0)
-{
 accountTypeRadios.forEach(radio => {
   radio.addEventListener('change', function () {
     updateBodyOptions(this.value, 'delivery-body-container', 'delivery_body', 'Select Delivery Body');
   });
 });
-}
 
 $('#bulk_upload').on('click', function(event) {
   event.preventDefault();
@@ -177,5 +192,6 @@ $('#bulk_file').on('change', function() {
       $('#uploadBulk').trigger('submit');
   }
 });
-
+}
+catch(e){}
 });

@@ -84,9 +84,9 @@ const addForSummaryTableLine = (items)=>{
       },
       {
         html : `<div class="action-flex action-flex-other">
-               <a href="/viewInvoiceLine/${item.id}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">View</a>
-               <a href="/editInvoiceLine/${item.id}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">Edit</a>
-               <a href="/deleteInvoiceLine/${item.id}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">Delete</a>
+               <a href="/viewInvoiceLine/${item.id}/${item.invoicerequestid}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">View</a>
+               <a href="/editInvoiceLine/${item.id}/${item.invoicerequestid}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">Edit</a>
+               <a href="/deleteInvoiceLine/${item.id}/${item.invoicerequestid}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">Delete</a>
                </div>`
       }
     ]

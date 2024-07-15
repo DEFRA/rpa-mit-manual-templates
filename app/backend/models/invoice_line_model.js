@@ -6,7 +6,7 @@ const constant_model = require('../app_constants/app_constant')
 const Path = require('path');
 
 const getTotalInvoiceLines = async (ID)=>{
-    const total_lines = await db_con('invoicelines').count('* as total').where('paymentrequestid', ID); 
+    const total_lines = await db_con('invoicelines').count('* as total').where('invoicerequestid', ID); 
     return total_lines[0].total;
 }
 
@@ -16,15 +16,11 @@ const downloadFile = async (request, h)=>{
 }
 
 const deleteInvoiceLine=async (request)=>{
-    const data = await db_con('invoicelines')
-    .select('invoicelines.*')
-    .where('invoicelines.id', request.params.id)
-    const lineData = data[0];
-    await db_con('invoicelines')
-    .where('invoicelines.id', request.params.id)
-    .delete();
+    await external_request.sendExternalRequestDelete(`${constant_model.request_host}/invoicelines/delete`,{
+        invoiceLineId:request.params.id
+    });
     request.yar.flash('success_message', constant_model.invoiceline_deletion_success);
-    return lineData.paymentrequestid;
+    return request.params.invoiceid;
 };
 
 const getAllInvoiceLines = async (request)=>{
@@ -39,13 +35,14 @@ const getAllInvoiceLines = async (request)=>{
     .join('lookup_schemetypes', 'invoicelines.description', '=', 'lookup_schemetypes.code')
     .select('invoicelines.id',
             'invoicelines.value', 
+            'invoicelines.invoicerequestid', 
             'lookup_deliverybodycodes.description as deliverybody', 
             'lookup_marketingyearcodes.description as marketingyear', 
             'lookup_schemecodes.description as schemecode',
             'lookup_accountcodes.description as mainaccount', 
             'lookup_fundcodes.description as fundcode',
             'lookup_schemetypes.description as schemetypes')
-    .where('invoicelines.paymentrequestid', request.params.id)
+    .where('invoicelines.invoicerequestid', request.params.id)
     .orderBy('invoicelines.created_at', 'desc');
     const lineData = data;
     const lineHeader = [ {text: "Fund Code"}, {text: "Main Account"}, {text: "Scheme Code"}, {text: "Marketing Year"}, {text: "Delivery Body"}, {text: "Line Value"}, {text: "Description"}, {text: "Action"}];
@@ -77,11 +74,11 @@ const viewInvoiceLine = async (request)=>{
     .select('invoicelines.*')
     .where('invoicelines.id', request.params.id);
     const lineData = data[0];
-    const summaryPayment = await modifyPaymentResponse(lineData.paymentrequestid,false);
+    const summaryPayment = await modifyPaymentResponse(lineData.invoicerequestid,false);
     return {
         pageTitle:constant_model.invoiceline_view_title, 
         summaryPayment:summaryPayment,
-        payment_id:lineData.paymentrequestid,
+        payment_id:lineData.invoicerequestid,
         line_id:request.params.id,
         paymentvalue:lineData.value,
         description:common_model.modify_Response_Select(options_data.referenceData.schemeTypes,lineData.description),
@@ -128,11 +125,11 @@ const updateInvoiceLine = async (request)=>{
     .select('invoicelines.*')
     .where('invoicelines.id', request.params.id);
     const lineData = data[0];
-    const summaryPayment = await modifyPaymentResponse(lineData.paymentrequestid,false);
+    const summaryPayment = await modifyPaymentResponse(lineData.invoicerequestid,false);
     return {
         pageTitle:constant_model.invoiceline_edit_title, 
         summaryPayment:summaryPayment,
-        payment_id:lineData.paymentrequestid,
+        payment_id:lineData.invoicerequestid,
         line_id:request.params.id,
         paymentvalue:lineData.value,
         description:common_model.modify_Response_Select(options_data.referenceData.schemeTypes,lineData.description),
@@ -151,16 +148,16 @@ const invoiceLineStore = async (request)=>{
     const payload = request.payload;
     if(payload.line_id)
     {
-        await db_con('invoicelines')
-        .where('id',payload.line_id)
-        .update({
-            value:payload.paymentvalue,
-            description:payload.description,
-            fundcode:payload.fundcode,
-            mainaccount:payload.mainaccount,
-            schemecode:payload.schemecode,
-            marketingyear:payload.marketingyear,
-            deliverybody:payload.deliverybody,
+        await external_request.sendExternalRequestPut(`${constant_model.request_host}/invoicelines/update`,{
+            Value:payload.paymentvalue,
+            InvoiceRequestId:payload.payment_id,
+            Description:payload.description,
+            FundCode:payload.fundcode,
+            MainAccount:payload.mainaccount,
+            SchemeCode:payload.schemecode,
+            MarketingYear:payload.marketingyear,
+            DeliveryBody:payload.deliverybody,
+            Id:payload.line_id
         })
         request.yar.flash('success_message', constant_model.invoiceline_update_success);
     }
@@ -168,7 +165,7 @@ const invoiceLineStore = async (request)=>{
     {
     await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoicelines/add`,{
         Value:payload.paymentvalue,
-        PaymentRequestId:payload.payment_id,
+        InvoiceRequestId:payload.payment_id,
         Description:payload.description,
         FundCode:payload.fundcode,
         MainAccount:payload.mainaccount,
@@ -185,14 +182,14 @@ const modifyPaymentResponse = async (id, show_actions)=>{
          const data = await db_con('paymentrequests')
         .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
         .select('paymentrequests.*')
-        .where('paymentrequests.paymentrequestid', id);
+        .where('paymentrequests.invoicerequestid', id);
         const payment = data[0];
         return {
             head:'Invoice Request Id',
             actions : show_actions?[
-                {link:`/editPayment/${payment.paymentrequestid}`, name:'Edit'},
+                {link:`/editPayment/${payment.invoicerequestid}/${payment.invoiceid}`, name:'Edit'},
             ]:[],
-            id : payment.paymentrequestid,
+            id : payment.invoicerequestid,
             rows:payment_model.modifyForPaymentSummary(payment)
         }; 
 }
@@ -204,7 +201,7 @@ const BulkDataUpload = async (request) =>{
     for (const single_data of bulk_data) {
         await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoicelines/add`,{
             Value:single_data[0],
-            PaymentRequestId:payload.payment_id,
+            InvoiceRequestId:payload.payment_id,
             Description:single_data[1],
             DeliveryBody:single_data[2],
             FundCode:single_data[3],

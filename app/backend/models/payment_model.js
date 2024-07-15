@@ -27,7 +27,7 @@ const updatePayment = async (request)=>{
     const data = await db_con('paymentrequests')
     .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
     .select('paymentrequests.*')
-    .where('paymentrequests.paymentrequestid', request.params.id);
+    .where('paymentrequests.invoicerequestid', request.params.id);
     const paymentData = data[0];
     const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes,paymentData.currency);
     const invoice_data = await summaryPayments(paymentData.invoiceid);
@@ -45,7 +45,7 @@ const viewPayment = async (request)=>{
     const data = await db_con('paymentrequests')
     .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
     .select('paymentrequests.*')
-    .where('paymentrequests.paymentrequestid', request.params.id);
+    .where('paymentrequests.invoicerequestid', request.params.id);
     const paymentData = data[0];
     const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes,paymentData.currency);
     const invoice_data = await summaryPayments(paymentData.invoiceid);
@@ -62,21 +62,21 @@ const paymentStore = async (request)=>{
     const payload = request.payload;
     if(payload.payment_id)
     {
-        await db_con('paymentrequests')
-        .where('paymentrequestid',payload.payment_id)
-        .update({
-            frn:payload.frn,
-            sbi:payload.sbi,
-            vendor:payload.vendor,
-            currency:payload.currency,
-            description:payload.description
+        await external_request.sendExternalRequestPut(`${constant_model.request_host}/paymentrequest/update`,{
+            FRN:payload.frn,
+            SBI:payload.sbi,
+            Vendor:payload.vendor,
+            Currency:payload.currency,
+            Description:payload.description,
+            InvoiceRequestId:payload.payment_id,
+            ClaimReference:payload.claimreference,
+            ClaimReferenceNumber:payload.claimreferencenumber
         })
         request.yar.flash('success_message', constant_model.payment_update_success);
     }
     else
     {
     const payment_id = common_model.generateID();
-    console.log(payload);
     await external_request.sendExternalRequestPost(`${constant_model.request_host}/paymentrequest/add`,{
         InvoiceId:payload.inv_id,
         FRN:payload.frn,
@@ -84,7 +84,7 @@ const paymentStore = async (request)=>{
         Vendor:payload.vendor,
         Currency:payload.currency,
         Description:payload.description,
-        PaymentRequestId:payment_id,
+        InvoiceRequestId:payment_id,
         ClaimReference:payload.claimreference,
         ClaimReferenceNumber:payload.claimreferencenumber
     })
@@ -121,16 +121,11 @@ const getAllPayments = async (invoiceID)=>{
 }
 
 const deletePayment=async (request)=>{
-    const data = await db_con('paymentrequests')
-    .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
-    .select('paymentrequests.*')
-    .where('paymentrequests.paymentrequestid', request.params.id)
-    const paymentData = data[0];
-    await db_con('paymentrequests')
-    .where('paymentrequests.paymentrequestid', request.params.id)
-    .delete();
+    await external_request.sendExternalRequestDelete(`${constant_model.request_host}/invoicerequests/delete`,{
+        invoiceRequestId:request.params.id
+    });
     request.yar.flash('success_message', constant_model.payment_deletion_success);
-    return paymentData.invoiceid;
+    return request.params.invoiceid;
 };
 
 const modifyPaymentResponse = (payment_list)=>{
@@ -138,11 +133,11 @@ const modifyPaymentResponse = (payment_list)=>{
         return {
             head:'Invoice Request Id',
             actions : [
-                {link:`/viewPayment/${item.paymentrequestid}`, name:'View'},
-                {link:`/viewPaymentLine/${item.paymentrequestid}`, name:'Detail Line'},
-                {link:`/deletePayment/${item.paymentrequestid}`, name:'Delete'}
+                {link:`/viewPayment/${item.invoicerequestid}/${item.invoiceid}`, name:'View'},
+                {link:`/viewPaymentLine/${item.invoicerequestid}/${item.invoiceid}`, name:'Detail Line'},
+                {link:`/deletePayment/${item.invoicerequestid}/${item.invoiceid}`, name:'Delete'}
             ],
-            id : item.paymentrequestid,
+            id : item.invoicerequestid,
             rows:modifyForPaymentSummary(item)
         }
       }); 
