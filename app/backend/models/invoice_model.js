@@ -24,6 +24,7 @@ const createInvoice = async (request)=>{
     const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
     const account_type = common_model.modify_Response_Radio(options_data.referenceData.accountCodes);
     const delivery_body = options_data.referenceData.initialDeliveryBodies;
+    console.log(delivery_body);
     const invoice_template = options_data.referenceData.schemeInvoiceTemplates;
     const invoice_template_secondary = options_data.referenceData.schemeInvoiceTemplateSecondaryQuestions;
     const payment_type = common_model.modify_Response_Radio(options_data.referenceData.paymentTypes);

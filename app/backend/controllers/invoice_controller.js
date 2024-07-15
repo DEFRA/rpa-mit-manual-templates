@@ -16,6 +16,7 @@ const invoiceCreate = async (request, h) => {
       try 
       {
        const res = await invoice_model.createInvoice(request);
+       //console.log(res);
        return h.view('app_views/create_invoice', res);
        } 
        catch (error) 
