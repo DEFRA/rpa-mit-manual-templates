@@ -9,8 +9,8 @@ const getAllInvoices = async (request)=>{
     const data = await db_con('invoices')
     .join('lookup_accountcodes', 'invoices.accounttype', '=', 'lookup_accountcodes.code')
     .join('lookup_deliverybodyinitialselections', 'invoices.deliverybody', '=', 'lookup_deliverybodyinitialselections.code')
-    .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.id')
-    .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.id')
+    .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.name')
+    .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.name')
     .join('lookup_paymenttypes', 'invoices.paymenttype', '=', 'lookup_paymenttypes.code')
     .select('invoices.id as generated_id', 'invoices.status', 'invoices.created as created_at', 
         'lookup_accountcodes.description as account_type', 'lookup_deliverybodyinitialselections.deliverybodydescription as delivery_body', 'lookup_schemeinvoicetemplates.name as invoice_template',
@@ -52,14 +52,15 @@ const invoiceSummary = async (request)=>{
    const data = await db_con('invoices')
    .join('lookup_accountcodes', 'invoices.accounttype', '=', 'lookup_accountcodes.code')
    .join('lookup_deliverybodyinitialselections', 'invoices.deliverybody', '=', 'lookup_deliverybodyinitialselections.code')
-   .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.code')
-   .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.id')
+   .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.name')
+   .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.name')
    .join('lookup_paymenttypes', 'invoices.paymenttype', '=', 'lookup_paymenttypes.code')
    .select('invoices.id as generated_id', 'invoices.status', 'invoices.created as created_at', 
        'lookup_accountcodes.description as account_type', 'lookup_deliverybodyinitialselections.deliverybodydescription as delivery_body', 'lookup_schemeinvoicetemplates.name as invoice_template',
        'lookup_schemeinvoicetemplatessecondaryrpaquestions.name as invoice_template_secondary', 'lookup_paymenttypes.code as payment_type')
    .where('invoices.id',request.params.id);
    const summaryData = data[0];
+   console.log(summaryData);
    const summaryBox =  {head:'Invoice Id',actions : [], id : summaryData.generated_id,rows:await modifyForSummaryBox(summaryData)}
    const total_requests= summaryData["total_requests"];
    const summaryHeader = [ { text: "Account Type" }, { text: "Delivery Body" }, { text: "Scheme Type" }, { text: "Payment Type" } ];

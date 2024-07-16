@@ -132,8 +132,8 @@ function updateBodyOptions(selectedType , container_name , radio_name, heading) 
   options.forEach(option => {
     html += `
       <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="${radio_name}_${option.code?option.code:option.id}" name="${radio_name}" type="radio" value="${option.code?option.code:option.id}">
-        <label class="govuk-label govuk-radios__label" for="${radio_name}_${option.code?option.code:option.id}">
+        <input class="govuk-radios__input" id="${radio_name}_${option.code?option.code:option.id}" name="${radio_name}" type="radio" value="${option.code?option.code:option.name}">
+        <label class="govuk-label govuk-radios__label" for="${radio_name}_${option.code?option.code:option.name}">
           ${option.name?option.name:option.deliveryBodyDescription}
         </label>
       </div>

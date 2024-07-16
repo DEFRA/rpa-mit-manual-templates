@@ -4,7 +4,7 @@ const external_request = require('../custom_requests/external_requests')
 const constant_model = require('../app_constants/app_constant')
 
 const getTotalPayments = async (invoiceID)=>{
-    const total_payments = await db_con('paymentrequests').count('* as total').where('invoiceid', invoiceID); 
+    const total_payments = await db_con('invoicerequests').count('* as total').where('invoiceid', invoiceID); 
     return total_payments[0].total;
 }
 
@@ -24,10 +24,10 @@ const createPayment = async (request)=>{
 
 const updatePayment = async (request)=>{
     const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
-    const data = await db_con('paymentrequests')
-    .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
-    .select('paymentrequests.*')
-    .where('paymentrequests.invoicerequestid', request.params.id);
+    const data = await db_con('invoicerequests')
+    .join('lookup_paymenttypes', 'invoicerequests.currency', '=', 'lookup_paymenttypes.code')
+    .select('invoicerequests.*')
+    .where('invoicerequests.invoicerequestid', request.params.id);
     const paymentData = data[0];
     const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes,paymentData.currency);
     const invoice_data = await summaryPayments(paymentData.invoiceid);
@@ -42,10 +42,10 @@ const updatePayment = async (request)=>{
 
 const viewPayment = async (request)=>{
     const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
-    const data = await db_con('paymentrequests')
-    .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
-    .select('paymentrequests.*')
-    .where('paymentrequests.invoicerequestid', request.params.id);
+    const data = await db_con('invoicerequests')
+    .join('lookup_paymenttypes', 'invoicerequests.currency', '=', 'lookup_paymenttypes.code')
+    .select('invoicerequests.*')
+    .where('invoicerequests.invoicerequestid', request.params.id);
     const paymentData = data[0];
     const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes,paymentData.currency);
     const invoice_data = await summaryPayments(paymentData.invoiceid);
@@ -77,7 +77,7 @@ const paymentStore = async (request)=>{
     else
     {
     const payment_id = common_model.generateID();
-    await external_request.sendExternalRequestPost(`${constant_model.request_host}/paymentrequest/add`,{
+    await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoicerequests/add`,{
         InvoiceId:payload.inv_id,
         FRN:payload.frn,
         SBI:payload.sbi,
@@ -99,24 +99,26 @@ const summaryPayments = async (id) =>
     const data = await db_con('invoices')
     .join('lookup_accountcodes', 'invoices.accounttype', '=', 'lookup_accountcodes.code')
     .join('lookup_deliverybodyinitialselections', 'invoices.deliverybody', '=', 'lookup_deliverybodyinitialselections.code')
-    .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.code')
-    .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.id')
+    .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.name')
+    .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.name')
     .join('lookup_paymenttypes', 'invoices.paymenttype', '=', 'lookup_paymenttypes.code')
     .select('invoices.id as generated_id', 'invoices.status', 'invoices.created as created_at', 
         'lookup_accountcodes.description as account_type', 'lookup_deliverybodyinitialselections.deliverybodydescription as delivery_body', 'lookup_schemeinvoicetemplates.name as invoice_template',
         'lookup_schemeinvoicetemplatessecondaryrpaquestions.name as invoice_template_secondary', 'lookup_paymenttypes.code as payment_type')
     .where('invoices.id',id);
     const summaryData = data[0];
+    
     const summaryHeader = [ { text: "Account Type" }, { text: "Delivery Body" }, { text: "Scheme Type" }, { text: "Payment Type" } ];
     const summaryTable = common_model.modify_Response_Table(common_model.removeForSummaryTable(summaryData));
+    console.log(summaryTable);
     return {summaryTable:summaryTable, summaryHeader:summaryHeader};
 }
 
 const getAllPayments = async (invoiceID)=>{
-    const data = await db_con('paymentrequests')
-    .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
-    .select('paymentrequests.*')
-    .where('paymentrequests.invoiceid', invoiceID);
+    const data = await db_con('invoicerequests')
+    .join('lookup_paymenttypes', 'invoicerequests.currency', '=', 'lookup_paymenttypes.code')
+    .select('invoicerequests.*')
+    .where('invoicerequests.invoiceid', invoiceID);
     return modifyPaymentResponse(data);
 }
 

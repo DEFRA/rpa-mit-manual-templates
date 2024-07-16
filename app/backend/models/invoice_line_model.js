@@ -43,7 +43,7 @@ const getAllInvoiceLines = async (request)=>{
             'lookup_fundcodes.description as fundcode',
             'lookup_schemetypes.description as schemetypes')
     .where('invoicelines.invoicerequestid', request.params.id)
-    .orderBy('invoicelines.created_at', 'desc');
+    //.orderBy('invoicelines.created_at', 'desc');
     const lineData = data;
     const lineHeader = [ {text: "Fund Code"}, {text: "Main Account"}, {text: "Scheme Code"}, {text: "Marketing Year"}, {text: "Delivery Body"}, {text: "Line Value"}, {text: "Description"}, {text: "Action"}];
     const lineTable = common_model.addForSummaryTableLine(lineData);
@@ -179,10 +179,10 @@ const invoiceLineStore = async (request)=>{
 }
 
 const modifyPaymentResponse = async (id, show_actions)=>{
-         const data = await db_con('paymentrequests')
-        .join('lookup_paymenttypes', 'paymentrequests.currency', '=', 'lookup_paymenttypes.code')
-        .select('paymentrequests.*')
-        .where('paymentrequests.invoicerequestid', id);
+         const data = await db_con('invoicerequests')
+        .join('lookup_paymenttypes', 'invoicerequests.currency', '=', 'lookup_paymenttypes.code')
+        .select('invoicerequests.*')
+        .where('invoicerequests.invoicerequestid', id);
         const payment = data[0];
         return {
             head:'Invoice Request Id',
