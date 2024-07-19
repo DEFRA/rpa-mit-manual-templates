@@ -1,5 +1,5 @@
 $(function() {
-  try{
+
   $('.backButton').on('click', function() {
     window.history.back();
  });
@@ -102,7 +102,7 @@ function groupByKeys(data, key) {
   }, {});
 }
 
-
+try{
 const deliveryBodyOptions = delivery_body_data ? groupByKeys(delivery_body_data, 'accountCode') : [];
 const invoiceTemplateBodyOptions = invoice_template ? groupByKeys(invoice_template, 'deliveryBodyCode') : [];
 const deliveryBodyOptionsUnique = delivery_body_data ? groupByKeys(delivery_body_data, 'code') : [];
@@ -181,6 +181,9 @@ accountTypeRadios.forEach(radio => {
     updateBodyOptions(this.value, 'delivery-body-container', 'delivery_body', 'Select Delivery Body');
   });
 });
+}
+catch(e){}
+
 
 $('#bulk_upload').on('click', function(event) {
   event.preventDefault();
@@ -192,6 +195,5 @@ $('#bulk_file').on('change', function() {
       $('#uploadBulk').trigger('submit');
   }
 });
-}
-catch(e){}
+
 });
