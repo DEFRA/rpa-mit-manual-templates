@@ -15,13 +15,27 @@
   classes:"backButton"
 }) }}
 {% include "partials_views/page_title.njk" %}
+
+{% for item in invoices %}
+ {% include "partials_views/summary_box.njk" %}
+{% endfor %}
+
+{% set pageTitle = 'Invoice Header Lines' %}
+{% include "partials_views/page_title.njk" %}
+{% include "partials_views/summary_table.njk" %}
+
+
+{% set pageTitle = 'Invoice Detail Lines' %}
+{% include "partials_views/page_title.njk" %}
+{% set summaryHeader = summaryHeaderLine %}
+{% set summaryTable = summaryTableLine %}
 {% include "partials_views/summary_table.njk" %}
 
  <form action="/bulk_data_upload" method="POST" id="bulk_upload_data">
     <input name="payment_id" type="hidden" value="{{payment_id}}" />
     <input name="bulk_data" type="hidden" value="{{bulk_data}}" />
     <div class="govuk-button-group">
-     {{ govukButton({text: "Save and continue"}) }}
+     {{ govukButton({text: "Save and continue", disabled:true}) }}
      <a class="govuk-link backButton" href="#">Cancel</a>
     </div>
     </form>

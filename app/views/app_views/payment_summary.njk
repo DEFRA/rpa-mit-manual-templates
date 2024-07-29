@@ -27,27 +27,6 @@ href: lineLink
 }) 
 }}
 
-{{ 
-govukButton({
-text: "Download Sample File",
-classes: "fix-width float-right",
-href: "/sample_download"
-}) 
-}}
-
-{{ 
-govukButton({
-text: "Bulk Upload",
-classes: "fix-width",
-href: "#",
-id:"bulk_upload"
-}) 
-}}
-
-<form id="uploadBulk" action="/bulk_upload" method="POST" enctype="multipart/form-data" style="display: none;">
-<input type="file" id="bulk_file" name="bulk_file" style="display: none;" accept=".csv"/>
-<input type="hidden" id="payment_id" name="payment_id" value="{{payment_id}}"/>
-</form>
 
 {% include "partials_views/success_banner.njk" %}
 {% include "partials_views/error_message.njk" %}

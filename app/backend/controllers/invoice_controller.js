@@ -61,4 +61,51 @@ const invoiceCreate = async (request, h) => {
        } 
   }
 
-module.exports = {invoiceList, invoiceCreate, invoiceStore, invoiceSummary, invoiceDelete};
+  const downloadSample = async (request, h) => {
+     try 
+     { 
+      return await invoice_model.downloadFile(request, h);
+      } 
+      catch (error) 
+      {
+      return error_model.errorMessage(error,h); 
+      } 
+  }
+ 
+  const uploadBulk = async (request, h) => {
+     try 
+     { 
+     return await invoice_model.uploadBulk(request, h);
+     } 
+     catch (error) 
+     {
+      return error_model.errorMessage(error,h); 
+     } 
+  }
+
+  const BulkDataUpload= async (request, h) => {
+    try 
+    { 
+     await invoice_model.BulkDataUpload(request);
+     return h.redirect('/').temporary();
+     } 
+     catch (error) 
+     {
+     return error_model.errorMessage(error,h); 
+     } 
+}
+
+const Bulkview = async (request, h) => {
+     try 
+     {
+      const res = await invoice_model.createBulk(request);
+      return h.view('app_views/bulk_upload', res);
+      } 
+      catch (error) 
+      {
+      return error_model.errorMessage(error,h); 
+      } 
+}
+
+
+module.exports = {downloadSample, Bulkview, BulkDataUpload, uploadBulk, invoiceList, invoiceCreate, invoiceStore, invoiceSummary, invoiceDelete};

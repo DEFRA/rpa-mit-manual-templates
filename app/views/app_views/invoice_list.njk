@@ -14,6 +14,22 @@ classes: "fix-width",
 href: "/createInvoice"
 }) 
 }}
+{{ 
+govukButton({
+text: "Download Sample File",
+classes: "fix-width float-right",
+href: "/sample_download"
+}) 
+}}
+
+{{ 
+govukButton({
+text: "Bulk Upload",
+classes: "fix-width",
+href: "/bulkView"
+}) 
+}}
+
 {% include "partials_views/success_banner.njk" %}
 {% for item in invoices %}
  {% include "partials_views/summary_box.njk" %}

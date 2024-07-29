@@ -3,6 +3,7 @@ $(function() {
   $('.backButton').on('click', function() {
     window.history.back();
  });
+
  $('#invoiceForm').on('submit', function(event) {
   event.preventDefault();
   let allGroupsSelected = true;
@@ -16,6 +17,13 @@ $(function() {
       return false; 
     }
   });
+  const inputs = document.querySelectorAll('.invoice_inputs');
+  for (const input of inputs) {
+      console.log(input.value)
+      if (input.value.trim() === '') {
+        allGroupsSelected = false; 
+      }
+  }
   ard = [...new Set(ard)];
   if (!allGroupsSelected || ard.length != 5) {
     const messageElement = $('#error-message');
@@ -29,6 +37,36 @@ $(function() {
   }
 });
 
+
+$('#uploadBulk').on('submit', function(event) {
+  event.preventDefault();
+  let allGroupsSelected = true;
+  let ard = [];
+
+  $('input[type="radio"]').each(function() {
+    const radioGroup = $(this).attr('name');
+    ard.push(radioGroup)
+    if ($(`input[name="${radioGroup}"]:checked`).length === 0) {
+      allGroupsSelected = false;
+      return false; 
+    }
+  });
+  
+  if(!$('#bulk_file').val())
+    allGroupsSelected = false;
+  
+  ard = [...new Set(ard)];
+  if (!allGroupsSelected || ard.length != 3) {
+    const messageElement = $('#error-message');
+    messageElement.show();
+    setTimeout(function() {
+      messageElement.hide(); 
+    }, 3000);
+  } else {
+    $('#error-message').hide(); 
+    this.submit(); 
+  }
+});
 
 $('#paymentForm').on('submit', function(event) {
   event.preventDefault();
@@ -110,6 +148,7 @@ const invoiceTemplateSecondaryBodyOptions = invoice_template_secondary_data ? in
 
 function updateBodyOptions(selectedType , container_name , radio_name, heading) {
   const bodyContainer = document.getElementById(container_name);
+  if(!bodyContainer) return;
   let options = [];
   
   if(radio_name == 'invoice_template_secondary')
@@ -145,7 +184,10 @@ function updateBodyOptions(selectedType , container_name , radio_name, heading) 
         const deliveryTypeRadios = document.querySelectorAll('input[name="delivery_body"]');   
         deliveryTypeRadios.forEach(radio => {
           radio.addEventListener('change', function () {
-            updateBodyOptions(this.value, 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question');
+            if(invoice_template_secondary_data)
+             updateBodyOptions(this.value, 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question');
+            else
+             updateBodyOptions(this.value, 'invoice-template-body-container', 'invoice_template', 'Select Scheme Invoice Template');
           });
         });
       },50)
@@ -182,18 +224,9 @@ accountTypeRadios.forEach(radio => {
   });
 });
 }
-catch(e){}
+catch(e){
+  console.log(e)
+}
 
-
-$('#bulk_upload').on('click', function(event) {
-  event.preventDefault();
-  $('#bulk_file').trigger('click');
-});
-
-$('#bulk_file').on('change', function() {
-  if ($(this).val()) {
-      $('#uploadBulk').trigger('submit');
-  }
-});
 
 });

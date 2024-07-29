@@ -75,7 +75,7 @@ module.exports = [
     },
     {
       method: 'GET',
-      path: '/viewPaymentLine/{id}/{invoiceid}',
+      path: '/viewPaymentLine/{id}',
       options: {
         handler: invoice_line_controller.invoiceLineAll
       }, 
@@ -119,13 +119,20 @@ module.exports = [
       method: 'GET',
       path: '/sample_download',
       options: {
-        handler: invoice_line_controller.downloadSample
+        handler: invoice_controller.downloadSample
+      }, 
+    },
+    {
+      method: 'GET',
+      path: '/bulkView',
+      options: {
+        handler: invoice_controller.Bulkview
       }, 
     },
     {
       method: 'POST',
       path: '/bulk_upload',
-      handler: invoice_line_controller.uploadBulk,
+      handler: invoice_controller.uploadBulk,
       options: {
         payload: {
             output: 'stream',
@@ -140,7 +147,7 @@ module.exports = [
       method: 'POST',
       path: '/bulk_data_upload',
       options: {
-        handler: invoice_line_controller.BulkDataUpload
+        handler: invoice_controller.BulkDataUpload
       }, 
     },
   ]

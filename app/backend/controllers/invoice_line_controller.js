@@ -50,17 +50,6 @@ const invoiceLineEdit= async (request, h) => {
      } 
 }
 
-const BulkDataUpload= async (request, h) => {
-    try 
-    { 
-     const payment_id = await invoice_line_model.BulkDataUpload(request);
-     return h.redirect(`/viewPaymentLine/${payment_id}`).temporary();
-     } 
-     catch (error) 
-     {
-     return error_model.errorMessage(error,h); 
-     } 
-}
 
 const invoiceLineDelete= async (request, h) => {
     try 
@@ -86,26 +75,6 @@ const invoiceLineStore = async (request, h) => {
       } 
  }
 
- const downloadSample = async (request, h) => {
-    try 
-    { 
-     return await invoice_line_model.downloadFile(request, h);
-     } 
-     catch (error) 
-     {
-     return error_model.errorMessage(error,h); 
-     } 
- }
 
- const uploadBulk = async (request, h) => {
-    try 
-    { 
-    return await invoice_line_model.uploadBulk(request, h);
-    } 
-    catch (error) 
-    {
-     return error_model.errorMessage(error,h); 
-    } 
- }
 
-module.exports = {BulkDataUpload, uploadBulk, invoiceLineAll, invoiceLineCreate, downloadSample, invoiceLineStore, invoiceLineEdit, invoiceLineView, invoiceLineDelete};
+module.exports = {invoiceLineAll, invoiceLineCreate, invoiceLineStore, invoiceLineEdit, invoiceLineView, invoiceLineDelete};

@@ -1,23 +1,14 @@
-const db_con = require('../database/db_con');
 const common_model = require('./common_model')
-const payment_model = require('./payment_model')
 const external_request = require('../custom_requests/external_requests')
 const constant_model = require('../app_constants/app_constant')
+const payment_model = require('./payment_model')
+const Path = require('path');
 
 const getAllInvoices = async (request)=>{
     const success_message = request.yar.flash('success_message');
-    const data = await db_con('invoices')
-    .join('lookup_accountcodes', 'invoices.accounttype', '=', 'lookup_accountcodes.code')
-    .join('lookup_deliverybodyinitialselections', 'invoices.deliverybody', '=', 'lookup_deliverybodyinitialselections.code')
-    .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.name')
-    .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.name')
-    .join('lookup_paymenttypes', 'invoices.paymenttype', '=', 'lookup_paymenttypes.code')
-    .select('invoices.id as generated_id', 'invoices.status', 'invoices.created as created_at', 
-        'lookup_accountcodes.description as account_type', 'lookup_deliverybodyinitialselections.deliverybodydescription as delivery_body', 'lookup_schemeinvoicetemplates.name as invoice_template',
-        'lookup_schemeinvoicetemplatessecondaryrpaquestions.name as invoice_template_secondary', 'lookup_paymenttypes.code as payment_type')
-    .orderBy('invoices.created', 'desc');
+    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoices/getall`);
     request.yar.flash('success_message', '');
-    return {pageTitle:constant_model.invoice_list_title,invoices:modifyInvoiceResponse(data),success_message:success_message};
+    return {pageTitle:constant_model.invoice_list_title,invoices:modifyInvoiceResponse(data?.invoices || []),success_message:success_message};
 }
 
 const createInvoice = async (request)=>{
@@ -27,21 +18,33 @@ const createInvoice = async (request)=>{
     const invoice_template = options_data.referenceData.schemeInvoiceTemplates;
     const invoice_template_secondary = options_data.referenceData.schemeInvoiceTemplateSecondaryQuestions;
     const payment_type = common_model.modify_Response_Radio(options_data.referenceData.paymentTypes);
-    console.log(invoice_template);
     return {pageTitle:constant_model.invoice_add_title,account_type:account_type,delivery_body:delivery_body,
             invoice_template:invoice_template,invoice_template_secondary:invoice_template_secondary,
             payment_type:payment_type};
 }
 
+const createBulk= async (request)=>{
+    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
+    const account_type = common_model.modify_Response_Radio(options_data.referenceData.accountCodes);
+    const delivery_body = options_data.referenceData.initialDeliveryBodies;
+    const invoice_template = options_data.referenceData.schemeInvoiceTemplates;
+    return {
+            pageTitle:constant_model.bulk_upload,
+            account_type:account_type,
+            delivery_body:delivery_body,
+            invoice_template:invoice_template};
+}
+
 const invoiceStore = async (request)=>{
     const payload = request.payload;
-    console.log(payload);
     await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoices/add`,{
         AccountType:payload.account_type,
         DeliveryBody:payload.delivery_body,
         SchemeType:payload.invoice_template,
         SecondaryQuestion:payload.invoice_template_secondary,
-        PaymentType:payload.payment_type
+        PaymentType:payload.payment_type,
+        ClaimReference:payload.claimreference,
+        ClaimReferenceNumber:payload.claimreferencenumber
     })
     request.yar.flash('success_message', constant_model.invoice_creation_success);
 }
@@ -49,48 +52,37 @@ const invoiceStore = async (request)=>{
 
 const invoiceSummary = async (request)=>{
    const success_message = request.yar.flash('success_message');
-   const data = await db_con('invoices')
-   .join('lookup_accountcodes', 'invoices.accounttype', '=', 'lookup_accountcodes.code')
-   .join('lookup_deliverybodyinitialselections', 'invoices.deliverybody', '=', 'lookup_deliverybodyinitialselections.code')
-   .join('lookup_schemeinvoicetemplates', 'invoices.schemetype', '=', 'lookup_schemeinvoicetemplates.name')
-   .join('lookup_schemeinvoicetemplatessecondaryrpaquestions', 'invoices.secondaryquestion', '=', 'lookup_schemeinvoicetemplatessecondaryrpaquestions.name')
-   .join('lookup_paymenttypes', 'invoices.paymenttype', '=', 'lookup_paymenttypes.code')
-   .select('invoices.id as generated_id', 'invoices.status', 'invoices.created as created_at', 
-       'lookup_accountcodes.description as account_type', 'lookup_deliverybodyinitialselections.deliverybodydescription as delivery_body', 'lookup_schemeinvoicetemplates.name as invoice_template',
-       'lookup_schemeinvoicetemplatessecondaryrpaquestions.name as invoice_template_secondary', 'lookup_paymenttypes.code as payment_type')
-   .where('invoices.id',request.params.id);
-   const summaryData = data[0];
-   console.log(summaryData);
-   const summaryBox =  {head:'Invoice Id',actions : [], id : summaryData.generated_id,rows:await modifyForSummaryBox(summaryData)}
-   const total_requests= summaryData["total_requests"];
+   const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoices/getbyid`,{invoiceId:request.params.id});
+   const summaryData = data?.invoice || [];
+   const getAllPayments = await payment_model.getAllPayments(request.params.id);
+   summaryData['invoiceRequests'] = getAllPayments;
+   const summaryBox =  {head:'Invoice Id',actions : [], id : summaryData.id,rows:await modifyForSummaryBox(summaryData)}
+   const update_Data= Object.assign({},summaryData);
    const summaryHeader = [ { text: "Account Type" }, { text: "Delivery Body" }, { text: "Scheme Type" }, { text: "Payment Type" } ];
    const summaryTable = common_model.modify_Response_Table(common_model.removeForSummaryTable(summaryData));
-   const getAllPayments = await payment_model.getAllPayments(request.params.id)
    request.yar.flash('success_message', '');
    return {pageTitle:constant_model.invoice_summary_title, summaryTable:summaryTable,summaryBox:summaryBox, paymentLink:`/createPayment/${request.params.id}`,
-          total_requests:total_requests, summaryHeader:summaryHeader, allPayments:getAllPayments,success_message:success_message}
+          total_requests:(getAllPayments?.length || 0), summaryHeader:summaryHeader, allPayments:getAllPayments,success_message:success_message}
 }
 
 const modifyForSummaryBox = async (summaryData)=>{
     const summaryBoxData = [];
-    const total_requests = await payment_model.getTotalPayments(summaryData.generated_id)
-    summaryData["total_requests"] = total_requests;
     summaryBoxData.push({name:'Status',value:`<strong class="govuk-tag">${summaryData.status.toUpperCase()}</strong>`})
-    summaryBoxData.push({name:'Created On',value:common_model.formatTimestamp(summaryData.created_at)})
-    summaryBoxData.push({name:'Number Of Invoice Requests',value:total_requests.toString()})
+    summaryBoxData.push({name:'Created On',value:common_model.formatTimestamp(summaryData.created)})
+    summaryBoxData.push({name:'Number Of Invoice Requests',value:(summaryData?.invoiceRequests?.length || 0).toString()})
     return common_model.modify_Response_Summary(summaryBoxData);
 }
 
 
-const modifyInvoiceResponse = (invoice_list)=>{
+const modifyInvoiceResponse = (invoice_list,action=true)=>{
     return invoice_list.map((item) => {
         return {
             head:'Invoice Id',
-            actions : [
-                {link:`/viewInvoice/${item.generated_id}`, name:'View'},
-                {link:`/deleteInvoice/${item.generated_id}`, name:'Delete'}
-           ],
-            id : item.generated_id,
+            actions :action? [
+                {link:`/viewInvoice/${item.id}`, name:'View'},
+                {link:`/deleteInvoice/${item.id}`, name:'Delete'}
+           ]:[],
+            id : item.id,
             rows:modifyForSummary(item)
         }
       }); 
@@ -106,13 +98,62 @@ const deleteInvoice=async (request)=>{
 
 const modifyForSummary = (invoice)=>{
     const summaryData = [];
-    summaryData.push({name:'Account Type',value:invoice.account_type})
-    summaryData.push({name:'Delivery Body',value:invoice.delivery_body})
-    summaryData.push({name:'Invoice Template',value:invoice.invoice_template})
-    summaryData.push({name:'Invoice Template Secondary',value:invoice.invoice_template_secondary})
-    summaryData.push({name:'Payment Type',value:invoice.payment_type})
+    summaryData.push({name:'Account Type',value:invoice.accountType})
+    summaryData.push({name:'Delivery Body',value:invoice.deliveryBody})
+    summaryData.push({name:'Invoice Template',value:invoice.schemeType})
+    summaryData.push({name:'Invoice Template Secondary',value:invoice.secondaryQuestion})
+    summaryData.push({name:'Payment Type',value:invoice.paymentType})
     return common_model.modify_Response_Summary(summaryData);
 
 }
 
-module.exports = {getAllInvoices, deleteInvoice, createInvoice, invoiceStore, invoiceSummary}
+const downloadFile = async (request, h)=>{
+    const filePath = Path.join(__dirname, 'sample_files', 'sample.xlsx');
+    return h.file(filePath);
+}
+
+const BulkDataUpload = async (request) =>{
+    const { payload } = request;
+    const bulk_data = JSON.parse(payload.bulk_data)
+    for (const single_data of bulk_data) {
+        await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoicelines/add`,{
+            Value:single_data[0],
+            InvoiceRequestId:payload.payment_id,
+            Description:single_data[1],
+            DeliveryBody:single_data[2],
+            FundCode:single_data[3],
+            MainAccount:single_data[4],
+            SchemeCode:single_data[5],
+            MarketingYear:single_data[6]
+        })
+    }
+    request.yar.flash('success_message', constant_model.invoiceline_bulkupload_success);
+}
+
+const uploadBulk = async (request, h)=>{
+    const { payload } = request;
+    const bulk_data = await common_model.processUploadedCSV(payload.bulk_file);
+    if (!bulk_data) {
+        request.yar.flash('error_message', constant_model.invoiceline_bulkupload_failed);
+        return h.redirect(`/viewPaymentLine/${payload.payment_id}`).temporary();
+    }
+    else
+    {
+        const lineHeader = [ {text: "Claim Reference"}, {text: "Claim Reference Number"}, {text: "Currency"}, {text: "Total Amount"}, {text: "Description"}];
+        const lineHeaderTable = common_model.addForSummaryTableLineCSV((bulk_data?.bulkUploadInvoice?.bulkUploadApHeaderLines || []));
+        const lineDetail = [ {text: "Line Value"}, {text: "Description"}, {text: "Delivery Body"}, {text: "Fund Code"}, {text: "Main Account"}, {text: "Scheme Code"}, {text: "Marketing Year"}];
+        const lineTable = common_model.addForSummaryTableLineCSVTwo((bulk_data?.bulkUploadDetailLines || []));  
+        return h.view('app_views/bulk_view',{
+            pageTitle:constant_model.bulk_upload, 
+            invoices:modifyInvoiceResponse([bulk_data?.bulkUploadInvoice],action=false),
+            payment_id:payload.payment_id,
+            summaryHeader:lineHeader,
+            summaryTable:lineHeaderTable,
+            summaryHeaderLine:lineDetail, 
+            summaryTableLine:lineTable,
+            bulk_data:JSON.stringify(bulk_data)
+           });
+    }
+}
+
+module.exports = {createBulk, downloadFile, BulkDataUpload, uploadBulk, getAllInvoices, deleteInvoice, createInvoice, invoiceStore, invoiceSummary}

@@ -1,6 +1,10 @@
 const moment = require('moment'); 
 const crypto = require('crypto');
 const { parse } = require('csv-parse');
+const FormData = require('form-data');
+const external_request = require('../custom_requests/external_requests')
+const constant_model = require('../app_constants/app_constant')
+
 const generateID = ()=> {
   return crypto.randomUUID().toString();
 }
@@ -12,12 +16,12 @@ const formatTimestamp = (timestamp)=>{
 }
 
 const removeForSummaryTable = (summaryData)=>{
-  delete summaryData["generated_id"];
-  delete summaryData["status"];
-  delete summaryData["created_at"];
-  delete summaryData["invoice_template_secondary"];
-  delete summaryData["total_requests"];
-  return summaryData;
+  return {
+    'Account Type':summaryData.accountType,
+    'Delivery Body':summaryData.deliveryBody,
+    'Invoice Template':summaryData.schemeType,
+    'Payment Type':summaryData.paymentType
+  };
 }
 
 
@@ -62,19 +66,19 @@ const addForSummaryTableLine = (items)=>{
   return items.map((item) => {
     return [
       {
-        text: item.fundcode
+        text: item.fundCode
       },
       {
-        text: item.mainaccount
+        text: item.mainAccount
       },
       {
-        text: item.schemecode
+        text: item.schemeCode
       },
       {
-        text: item.marketingyear
+        text: item.marketingYear
       },
       {
-        text: item.deliverybody
+        text: item.deliveryBody
       },
       {
         text: item.value
@@ -84,9 +88,9 @@ const addForSummaryTableLine = (items)=>{
       },
       {
         html : `<div class="action-flex action-flex-other">
-               <a href="/viewInvoiceLine/${item.id}/${item.invoicerequestid}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">View</a>
-               <a href="/editInvoiceLine/${item.id}/${item.invoicerequestid}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">Edit</a>
-               <a href="/deleteInvoiceLine/${item.id}/${item.invoicerequestid}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">Delete</a>
+               <a href="/viewInvoiceLine/${item.id}/${item.invoiceRequestId}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">View</a>
+               <a href="/editInvoiceLine/${item.id}/${item.invoiceRequestId}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">Edit</a>
+               <a href="/deleteInvoiceLine/${item.id}/${item.invoiceRequestId}" class="govuk-heading-s remove-margin govuk-link govuk-link--no-visited-state">Delete</a>
                </div>`
       }
     ]
@@ -98,43 +102,63 @@ const addForSummaryTableLineCSV = (items)=>{
   return items.map((item) => {
     return [
       {
-        text: item[0]
+        text: item.claimReference
       },
       {
-        text:item[1]
+        text: item.claimReferenceNumber
       },
       {
-        text: item[2]
+        text: item.paymentType
       },
       {
-        text: item[3]
+        text:  item.totalAmount
       },
       {
-        text: item[4]
-      },
-      {
-        text: item[5]
-      },
-      {
-        text: item[6]
+        text:  item.description
       }
     ]
   })
 
 }
 
+
+const addForSummaryTableLineCSVTwo = (items)=>{
+  return items.map((item) => {
+    return [
+      {
+        text: item.value
+      },
+      {
+        text: item.description
+      },
+      {
+        text: item.deliveryBodyCode
+      },
+      {
+        text: item.fundCode
+      },
+      {
+        text: item.mainAccount
+      },
+      {
+        text: item.schemeCode
+      },
+      {
+        text: item.marketingYear
+      }
+    ]
+  })
+}
+
 async function processUploadedCSV(file) {
   if(!file) return null
   const extension = file.hapi.filename.split('.').pop().toLowerCase();
-  const validExtensions = ['csv'];
+  const validExtensions = ['csv','xlsx'];
   if (!validExtensions.includes(extension)) return null 
-  const parser = parse({ delimiter: ',' }); 
-  const results = [];
-  const stream = file.pipe(parser);
-  for await (const row of stream) {
-    results.push(row);
-  }
-  return results; 
+  const form = new FormData();
+  form.append('file', file, file.hapi.filename);
+  const results = await external_request.sendExternalRequestPost(`${constant_model.request_host}/bulkuploads/add`,form,{});
+  return (results?.bulkUploadApDataset || null); 
 }
 
-module.exports = {addForSummaryTableLineCSV, processUploadedCSV, addForSummaryTableLine, modify_Response_Radio, modify_Response_Select, modify_Response_Summary, modify_Response_Table, generateID, formatTimestamp, removeForSummaryTable};
+module.exports = {addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modify_Response_Radio, modify_Response_Select, modify_Response_Summary, modify_Response_Table, generateID, formatTimestamp, removeForSummaryTable};
