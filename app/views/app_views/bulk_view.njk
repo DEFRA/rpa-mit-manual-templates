@@ -20,19 +20,34 @@
  {% include "partials_views/summary_box.njk" %}
 {% endfor %}
 
-{% set pageTitle = 'Invoice Header Lines' %}
-{% include "partials_views/page_title.njk" %}
-{% include "partials_views/summary_table.njk" %}
-
-
-{% set pageTitle = 'Invoice Detail Lines' %}
-{% include "partials_views/page_title.njk" %}
-{% set summaryHeader = summaryHeaderLine %}
-{% set summaryTable = summaryTableLine %}
-{% include "partials_views/summary_table.njk" %}
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+{% for singleitem in invoiceRequests %}
+  <div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+         Invoice Request - ({{singleitem.id}})
+        </span>
+      </h2>
+    </div>
+    <div id="accordion-default-content-1" class="govuk-accordion__section-content">
+      <div class="govuk-heading-l color-heading">
+       Invoice Request Detail
+      </div>
+      {% set item = singleitem.summary_data %}
+      {% include "partials_views/summary_box.njk" %}
+      <div class="govuk-heading-l color-heading">
+       Invoice Line Details
+      </div>
+      {% set summaryHeader = singleitem.lines_data.lineDetail %}
+      {% set summaryTable = singleitem.lines_data.lineTable %}
+      {% include "partials_views/summary_table.njk" %}
+    </div>
+  </div>
+{% endfor %}
+</div>
 
  <form action="/bulk_data_upload" method="POST" id="bulk_upload_data">
-    <input name="payment_id" type="hidden" value="{{payment_id}}" />
     <input name="bulk_data" type="hidden" value="{{bulk_data}}" />
     <div class="govuk-button-group">
      {{ govukButton({text: "Save and continue", disabled:true}) }}

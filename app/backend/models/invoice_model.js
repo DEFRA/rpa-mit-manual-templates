@@ -42,9 +42,8 @@ const invoiceStore = async (request)=>{
         DeliveryBody:payload.delivery_body,
         SchemeType:payload.invoice_template,
         SecondaryQuestion:payload.invoice_template_secondary,
-        PaymentType:payload.payment_type,
-        ClaimReference:payload.claimreference,
-        ClaimReferenceNumber:payload.claimreferencenumber
+        PaymentType:payload.payment_type
+       
     })
     request.yar.flash('success_message', constant_model.invoice_creation_success);
 }
@@ -139,20 +138,45 @@ const uploadBulk = async (request, h)=>{
     }
     else
     {
-        const lineHeader = [ {text: "Claim Reference"}, {text: "Claim Reference Number"}, {text: "Currency"}, {text: "Total Amount"}, {text: "Description"}];
-        const lineHeaderTable = common_model.addForSummaryTableLineCSV((bulk_data?.bulkUploadInvoice?.bulkUploadApHeaderLines || []));
-        const lineDetail = [ {text: "Line Value"}, {text: "Description"}, {text: "Delivery Body"}, {text: "Fund Code"}, {text: "Main Account"}, {text: "Scheme Code"}, {text: "Marketing Year"}];
-        const lineTable = common_model.addForSummaryTableLineCSVTwo((bulk_data?.bulkUploadDetailLines || []));  
+         let invoiceRequests =bulk_data?.bulkUploadInvoice?.bulkUploadApHeaderLines.map((invRequest, ind)=>{
+           return {
+             'id':invRequest.invoiceRequestId,
+             'invid':invRequest.invoiceId,
+             'index':(ind+1),
+             'summary_data':BulkHeadData(invRequest),
+             'lines_data':BulkLineData(invRequest.bulkUploadApDetailLines),
+           }
+        })
         return h.view('app_views/bulk_view',{
             pageTitle:constant_model.bulk_upload, 
             invoices:modifyInvoiceResponse([bulk_data?.bulkUploadInvoice],action=false),
-            payment_id:payload.payment_id,
-            summaryHeader:lineHeader,
-            summaryTable:lineHeaderTable,
-            summaryHeaderLine:lineDetail, 
-            summaryTableLine:lineTable,
+            invoiceRequests:invoiceRequests,
             bulk_data:JSON.stringify(bulk_data)
            });
+    }
+}
+
+const BulkLineData = (data_pack) =>
+{
+    const lineDetail = [ {text: "Line Value"}, {text: "Line Description"}, {text: "Delivery Body"}, {text: "Fund Code"}, {text: "Main Account"}, {text: "Scheme Code"}, {text: "Marketing Year"}];
+    const lineTable = common_model.addForSummaryTableLineCSVTwo(data_pack);  
+    return {lineDetail:lineDetail, lineTable: lineTable};
+}
+
+const BulkHeadData = (data_pack) =>
+{
+   
+    const summaryData = [];
+    summaryData.push({name:'Claim Reference',value:data_pack.claimReference})
+    summaryData.push({name:'Claim Reference Number',value:data_pack.claimReferenceNumber})
+    summaryData.push({name:'Currency',value:data_pack.paymentType})
+    summaryData.push({name:'Total Amount',value:data_pack.totalAmount.toString()})
+    summaryData.push({name:'Description',value:data_pack.description})
+    return {
+        head:'Request Id',
+        actions :[],
+        id : data_pack.invoiceRequestId,
+        rows: common_model.modify_Response_Summary(summaryData)
     }
 }
 
