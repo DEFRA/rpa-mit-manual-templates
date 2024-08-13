@@ -2,6 +2,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% extends 'main_views/_layout.njk' %}
 {% block header %}
@@ -15,7 +16,51 @@
   classes:"backButton"
 }) }}
 {% include "partials_views/page_title.njk" %}
-
+{{ 
+govukButton({
+text: "Approve Invoice",
+classes: "fix-width",
+href: approveUrl
+}) 
+}}
+{{ govukButton({
+  text: "Reject Invoice",
+  classes: "govuk-button--warning",
+  id:"showPopup"
+}) }}
+<form id="reasonForm" action="/rejectInvoice" method="POST">
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup-content govuk-form-group">
+       <input name="invoice_id" type="hidden" value="{{invoiceId}}" />
+       {{ govukTextarea({
+          name: "reason",
+          id: "reason",
+          label: {
+           text: "Reason For Rejection?",
+           classes: "govuk-label--l",
+           isPageHeading: true
+        },
+         hint: {
+           text: "Enter Reason Please."
+         }
+        }) 
+        }}
+         {% set error_message %}
+          Fill All The Fields
+         {% endset %}
+        {% include "partials_views/error_banner.njk" %}
+        <div class="govuk-button-group">
+           {{ govukButton({text: "Submit"}) }}
+           {{ 
+            govukButton({
+            text: "Cancel",
+            classes: "govuk-button--warning",
+            id:"cancelPopup"
+            }) }}
+        </div>
+    </div>
+</div>
+ </form> 
 {% for item in invoices %}
  {% include "partials_views/summary_box.njk" %}
 {% endfor %}
@@ -46,14 +91,6 @@
   </div>
 {% endfor %}
 </div>
-
- <form action="/bulk_data_upload" method="POST" id="bulk_upload_data">
-    <input name="bulk_data" type="hidden" value="{{bulk_data}}" />
-    <div class="govuk-button-group">
-     {{ govukButton({text: "Save and continue"}) }}
-     <a class="govuk-link backButton" href="#">Cancel</a>
-    </div>
-    </form>
 </div>
 {% endblock %}
 

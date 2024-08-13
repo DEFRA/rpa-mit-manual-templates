@@ -10,27 +10,6 @@
 <div class="full-height">
 {% include "partials_views/page_title.njk" %}
  <form action="/createInvoice" method="POST" id="invoiceForm">
-    {{ govukInput({
-     label: {
-      text: "Claim Reference Number",
-      classes: "govuk-label--s",
-      isPageHeading: true
-    },
-    name: "claimreferencenumber",
-    classes:"invoice_inputs"
-    }) 
-    }}
-
-    {{ govukInput({
-     label: {
-      text: "Claim Reference (ClaimRef)",
-      classes: "govuk-label--s",
-      isPageHeading: true
-    },
-    name: "claimreference",
-    classes:"invoice_inputs"
-    }) 
-    }}
 
     {{ 
       govukRadios({

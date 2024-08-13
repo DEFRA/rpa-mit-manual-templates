@@ -1,4 +1,5 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% extends 'main_views/_layout.njk' %}
 {% block header %}
@@ -6,38 +7,12 @@
 
 {% block content %}
 <div class="full-height">
+{{ govukBackLink({
+  text: "Back",
+  href: "#",
+  classes:"backButton"
+}) }}
 {% include "partials_views/page_title.njk" %}
-
-{{ 
-govukButton({
-text: "Create Invoice",
-classes: "fix-width",
-href: "/createInvoice"
-}) 
-}}
-{{ 
-govukButton({
-text: "Invoices To Approve",
-classes: "fix-width",
-href: "/approvelist"
-}) 
-}}
-{{ 
-govukButton({
-text: "Download Sample File",
-classes: "fix-width float-right",
-href: "/sample_download"
-}) 
-}}
-
-{{ 
-govukButton({
-text: "Bulk Upload",
-classes: "fix-width",
-href: "/bulkView"
-}) 
-}}
-
 {% include "partials_views/success_banner.njk" %}
 {% for item in invoices %}
  {% include "partials_views/summary_box.njk" %}

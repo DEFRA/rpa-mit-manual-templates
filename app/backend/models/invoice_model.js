@@ -82,7 +82,7 @@ const modifyInvoiceResponse = (invoice_list,action=true)=>{
                 {link:`/deleteInvoice/${item.id}`, name:'Delete'}
            ]:[],
             id : item.id,
-            rows:modifyForSummary(item)
+            rows:common_model.modifyForSummary(item)
         }
       }); 
 }
@@ -95,16 +95,6 @@ const deleteInvoice=async (request)=>{
     return request.params.id;
 };
 
-const modifyForSummary = (invoice)=>{
-    const summaryData = [];
-    summaryData.push({name:'Account Type',value:invoice.accountType})
-    summaryData.push({name:'Delivery Body',value:invoice.deliveryBody})
-    summaryData.push({name:'Invoice Template',value:invoice.schemeType})
-    summaryData.push({name:'Invoice Template Secondary',value:invoice.secondaryQuestion})
-    summaryData.push({name:'Payment Type',value:invoice.paymentType})
-    return common_model.modify_Response_Summary(summaryData);
-
-}
 
 const downloadFile = async (request, h)=>{
     const filePath = Path.join(__dirname, 'sample_files', 'sample.xlsx');
@@ -114,18 +104,11 @@ const downloadFile = async (request, h)=>{
 const BulkDataUpload = async (request) =>{
     const { payload } = request;
     const bulk_data = JSON.parse(payload.bulk_data)
-    for (const single_data of bulk_data) {
-        await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoicelines/add`,{
-            Value:single_data[0],
-            InvoiceRequestId:payload.payment_id,
-            Description:single_data[1],
-            DeliveryBody:single_data[2],
-            FundCode:single_data[3],
-            MainAccount:single_data[4],
-            SchemeCode:single_data[5],
-            MarketingYear:single_data[6]
+        await external_request.sendExternalRequestPost(`${constant_model.request_host}/bulkuploads/confirm`,{
+            invoiceId:bulk_data.bulkUploadInvoice.id,
+            confirmUpload:true,
+            confirm:true
         })
-    }
     request.yar.flash('success_message', constant_model.invoiceline_bulkupload_success);
 }
 
@@ -143,8 +126,8 @@ const uploadBulk = async (request, h)=>{
              'id':invRequest.invoiceRequestId,
              'invid':invRequest.invoiceId,
              'index':(ind+1),
-             'summary_data':BulkHeadData(invRequest),
-             'lines_data':BulkLineData(invRequest.bulkUploadApDetailLines),
+             'summary_data':common_model.BulkHeadData(invRequest,true),
+             'lines_data':common_model.BulkLineData(invRequest.bulkUploadApDetailLines,true),
            }
         })
         return h.view('app_views/bulk_view',{
@@ -153,30 +136,6 @@ const uploadBulk = async (request, h)=>{
             invoiceRequests:invoiceRequests,
             bulk_data:JSON.stringify(bulk_data)
            });
-    }
-}
-
-const BulkLineData = (data_pack) =>
-{
-    const lineDetail = [ {text: "Line Value"}, {text: "Line Description"}, {text: "Delivery Body"}, {text: "Fund Code"}, {text: "Main Account"}, {text: "Scheme Code"}, {text: "Marketing Year"}];
-    const lineTable = common_model.addForSummaryTableLineCSVTwo(data_pack);  
-    return {lineDetail:lineDetail, lineTable: lineTable};
-}
-
-const BulkHeadData = (data_pack) =>
-{
-   
-    const summaryData = [];
-    summaryData.push({name:'Claim Reference',value:data_pack.claimReference})
-    summaryData.push({name:'Claim Reference Number',value:data_pack.claimReferenceNumber})
-    summaryData.push({name:'Currency',value:data_pack.paymentType})
-    summaryData.push({name:'Total Amount',value:data_pack.totalAmount.toString()})
-    summaryData.push({name:'Description',value:data_pack.description})
-    return {
-        head:'Request Id',
-        actions :[],
-        id : data_pack.invoiceRequestId,
-        rows: common_model.modify_Response_Summary(summaryData)
     }
 }
 

@@ -1,6 +1,7 @@
 const invoice_controller = require('../backend/controllers/invoice_controller')
 const payment_controller = require('../backend/controllers/payment_controller')
 const invoice_line_controller = require('../backend/controllers/invoice_line_controller')
+const approval_invoice_controller = require('../backend/controllers/approval_invoice_controller')
 
 module.exports = [
     {
@@ -148,6 +149,34 @@ module.exports = [
       path: '/bulk_data_upload',
       options: {
         handler: invoice_controller.BulkDataUpload
+      }, 
+    },
+    {
+      method: 'GET',
+      path: '/approvelist',
+      options: {
+        handler: approval_invoice_controller.approveInvoiceList
+      }, 
+    },
+    {
+      method: 'GET',
+      path: '/viewApprovalInvoice/{id}',
+      options: {
+        handler: approval_invoice_controller.approvalInvoiceSummary
+      }, 
+    },
+    {
+      method: 'GET',
+      path: '/approveInvoice/{id}',
+      options: {
+        handler: approval_invoice_controller.approveInvoice
+      }, 
+    },
+    {
+      method: 'POST',
+      path: '/rejectInvoice',
+      options: {
+        handler: approval_invoice_controller.rejectInvoice
       }, 
     },
   ]

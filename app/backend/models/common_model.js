@@ -39,6 +39,48 @@ const modify_Response_Select = (resp_data,selected)=>{
     return resp_data_updated;
 }
 
+const BulkLineData = (data_pack,bulk) =>
+  {
+      const lineDetail = [ {text: "Line Value"}, {text: "Description"}, {text: "Delivery Body"}, {text: "Fund Code"}, {text: "Main Account"}, {text: "Scheme Code"}, {text: "Marketing Year"}];
+      const lineTable = addForSummaryTableLineCSVTwo(data_pack);  
+      return {lineDetail:lineDetail, lineTable: lineTable};
+  }
+  
+  const BulkHeadData = (data_pack,bulk) =>
+  {
+      const summaryData = [];
+      if(bulk)
+      {
+      summaryData.push({name:'Claim Reference',value:data_pack.claimReference})
+      summaryData.push({name:'Claim Reference Number',value:data_pack.claimReferenceNumber})
+      summaryData.push({name:'Currency',value:data_pack.paymentType})
+      summaryData.push({name:'Total Amount',value:data_pack.totalAmount?.toString()})
+      summaryData.push({name:'Description',value:data_pack.description})
+      }
+      else
+      {
+      summaryData.push({name:'FRN',value:data_pack.frn})
+      summaryData.push({name:'Currency',value:data_pack.currency})
+      summaryData.push({name:'Description',value:data_pack.description})
+      summaryData.push({name:'Value',value:data_pack.value.toString()})  
+      }
+      return {
+          head:'Request Id',
+          actions :[],
+          id : data_pack.invoiceRequestId,
+          rows: modify_Response_Summary(summaryData)
+      }
+  }
+
+  const modifyForSummary = (invoice)=>{
+    const summaryData = [];
+    summaryData.push({name:'Account Type',value:invoice.accountType})
+    summaryData.push({name:'Delivery Body',value:invoice.deliveryBody})
+    summaryData.push({name:'Invoice Template',value:invoice.schemeType})
+    summaryData.push({name:'Invoice Template Secondary',value:invoice.secondaryQuestion})
+    summaryData.push({name:'Payment Type',value:invoice.paymentType})
+    return modify_Response_Summary(summaryData);
+}
 
 const modify_Response_Summary = (items)=>{
         return items.map((item) => {
@@ -161,4 +203,4 @@ async function processUploadedCSV(file) {
   return (results?.bulkUploadApDataset || null); 
 }
 
-module.exports = {addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modify_Response_Radio, modify_Response_Select, modify_Response_Summary, modify_Response_Table, generateID, formatTimestamp, removeForSummaryTable};
+module.exports = {BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modify_Response_Radio, modify_Response_Select, modify_Response_Summary, modify_Response_Table, generateID, formatTimestamp, removeForSummaryTable};

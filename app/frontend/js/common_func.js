@@ -225,8 +225,29 @@ accountTypeRadios.forEach(radio => {
 });
 }
 catch(e){
-  console.log(e)
 }
 
+$('#showPopup').on('click', function() {
+  $("#reason").val('')
+  $('#popupOverlay').fadeIn();
+});
 
+$('#cancelPopup').on('click', function(event) {
+  event.preventDefault();
+  $('#popupOverlay').fadeOut();
+});
+
+$('#reasonForm').on('submit', function(event) {
+  event.preventDefault();
+  if (!$("#reason").val()) {
+    const messageElement = $('#error-message');
+    messageElement.show();
+    setTimeout(function() {
+      messageElement.hide(); 
+    }, 3000);
+  } else {
+    $('#error-message').hide(); 
+    this.submit(); 
+  }
+})
 });

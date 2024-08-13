@@ -1,0 +1,315 @@
+2024-08-06T13:16:54.5183065Z ##[section]Starting: npm unit test
+2024-08-06T13:16:54.5188260Z ==============================================================================
+2024-08-06T13:16:54.5188584Z Task         : npm
+2024-08-06T13:16:54.5188738Z Description  : Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.
+2024-08-06T13:16:54.5189001Z Version      : 1.238.1
+2024-08-06T13:16:54.5189157Z Author       : Microsoft Corporation
+2024-08-06T13:16:54.5189308Z Help         : https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm
+2024-08-06T13:16:54.5189512Z ==============================================================================
+2024-08-06T13:16:54.9460342Z [command]/usr/local/bin/npm --version
+2024-08-06T13:16:55.0853634Z 10.7.0
+2024-08-06T13:16:55.4149614Z [command]/usr/local/bin/npm config list
+2024-08-06T13:16:55.5789527Z ; "env" config from environment
+2024-08-06T13:16:55.5790252Z 
+2024-08-06T13:16:55.5790737Z userconfig = "/agent/_work/1/npm/638381.npmrc" 
+2024-08-06T13:16:55.5791028Z 
+2024-08-06T13:16:55.5791484Z ; node bin location = /usr/local/bin/node
+2024-08-06T13:16:55.5792188Z ; node version = v18.20.4
+2024-08-06T13:16:55.5793206Z ; npm local prefix = /agent/_work/1/s
+2024-08-06T13:16:55.5793731Z ; npm version = 10.7.0
+2024-08-06T13:16:55.5794456Z ; cwd = /agent/_work/1/s
+2024-08-06T13:16:55.5794981Z ; HOME = /home/AzDevOps
+2024-08-06T13:16:55.5795791Z ; Run `npm config ls -l` to show all defaults.
+2024-08-06T13:16:55.5799308Z [command]/usr/local/bin/npm run --if-present test:unit
+2024-08-06T13:16:57.9593204Z PASS test/unit/insights.test.js
+2024-08-06T13:16:57.9594028Z   App Insight setup
+2024-08-06T13:16:57.9594255Z 
+2024-08-06T13:16:57.9594784Z     When process.env.APPINSIGHTS_CONNECTIONSTRING exists
+2024-08-06T13:16:57.9595809Z       ✓ should call mockApplicationInsights.setup (91 ms)
+2024-08-06T13:16:57.9596321Z       ✓ should call mockApplicationInsights.setup once (8 ms)
+2024-08-06T13:16:57.9596784Z       ✓ should call mockApplicationInsights.setup with process.env.APPINSIGHTS_CONNECTIONSTRING (2 ms)
+2024-08-06T13:16:57.9597199Z       ✓ should call mockApplicationInsights.setup.start (2 ms)
+2024-08-06T13:16:57.9597590Z       ✓ should call mockApplicationInsights.setup.start once (2 ms)
+2024-08-06T13:16:57.9598149Z       ✓ should have applicationName as value for mockApplicationInsights.defaultClient.context.tags[mockApplicationInsights.defaultClient.context.keys.cloudRole] key (2 ms)
+2024-08-06T13:16:57.9598553Z     When process.env.APPINSIGHTS_CONNECTIONSTRING does not exists
+2024-08-06T13:16:57.9598928Z       ✓ should not call mockApplicationInsights.setup (2 ms)
+2024-08-06T13:16:57.9599291Z       ✓ should not call mockApplicationInsights.setup.start (2 ms)
+2024-08-06T13:16:57.9599833Z       ✓ should have undefined as value for mockApplicationInsights.defaultClient.context.tags[mockApplicationInsights.defaultClient.context.keys.cloudRole] key (2 ms)
+2024-08-06T13:16:57.9600085Z 
+2024-08-06T13:16:57.9600298Z PASS test/unit/plugins/views.test.js
+2024-08-06T13:16:57.9600548Z   viewPlugin
+2024-08-06T13:16:57.9600841Z     ✓ should export the plugin object
+2024-08-06T13:16:57.9601188Z     ✓ should call the compile and prepare functions in njk (1 ms)
+2024-08-06T13:16:57.9601408Z 
+2024-08-06T13:16:57.9601719Z PASS test/unit/index.test.js
+2024-08-06T13:16:57.9602108Z   Server setup
+2024-08-06T13:16:57.9602561Z     ✓ start the server (21 ms)
+2024-08-06T13:16:57.9603308Z     ✓ should log error and exit process when server start fails
+2024-08-06T13:16:57.9603672Z 
+2024-08-06T13:16:57.9604036Z FAIL test/unit/plugins/router.test.js
+2024-08-06T13:16:57.9604392Z   router plugin
+2024-08-06T13:16:57.9604829Z     ✕ should register routes when register is called (7 ms)
+2024-08-06T13:16:57.9605026Z 
+2024-08-06T13:16:57.9605740Z   ● router plugin › should register routes when register is called
+2024-08-06T13:16:57.9605937Z 
+2024-08-06T13:16:57.9606489Z     expect(jest.fn()).toHaveBeenCalledWith(...expected)
+2024-08-06T13:16:57.9606878Z 
+2024-08-06T13:16:57.9607771Z     - Expected
+2024-08-06T13:16:57.9608246Z     + Received
+2024-08-06T13:16:57.9608480Z 
+2024-08-06T13:16:57.9608877Z       Array [
+2024-08-06T13:16:57.9609264Z         Object {
+2024-08-06T13:16:57.9609834Z     -     "path": "/home",
+2024-08-06T13:16:57.9610308Z     +     "method": "GET",
+2024-08-06T13:16:57.9610783Z     +     "options": Object {
+2024-08-06T13:16:57.9611325Z     +       "handler": [Function invoiceList],
+2024-08-06T13:16:57.9611813Z     +     },
+2024-08-06T13:16:57.9612263Z     +     "path": "/",
+2024-08-06T13:16:57.9612699Z         },
+2024-08-06T13:16:57.9613070Z         Object {
+2024-08-06T13:16:57.9613370Z     -     "path": "/healthy",
+2024-08-06T13:16:57.9613632Z     +     "method": "GET",
+2024-08-06T13:16:57.9613888Z     +     "options": Object {
+2024-08-06T13:16:57.9614154Z     +       "handler": [Function invoiceCreate],
+2024-08-06T13:16:57.9614419Z           },
+2024-08-06T13:16:57.9614654Z     +     "path": "/createInvoice",
+2024-08-06T13:16:57.9614905Z     +   },
+2024-08-06T13:16:57.9615131Z         Object {
+2024-08-06T13:16:57.9615422Z     -     "path": "/healthz",
+2024-08-06T13:16:57.9615681Z     +     "method": "POST",
+2024-08-06T13:16:57.9616075Z     +     "options": Object {
+2024-08-06T13:16:57.9616356Z     +       "handler": [Function invoiceStore],
+2024-08-06T13:16:57.9616604Z     +     },
+2024-08-06T13:16:57.9616851Z     +     "path": "/createInvoice",
+2024-08-06T13:16:57.9617093Z     +   },
+2024-08-06T13:16:57.9617327Z     +   Object {
+2024-08-06T13:16:57.9617560Z     +     "method": "GET",
+2024-08-06T13:16:57.9617818Z     +     "options": Object {
+2024-08-06T13:16:57.9618102Z     +       "handler": [Function invoiceSummary],
+2024-08-06T13:16:57.9618354Z     +     },
+2024-08-06T13:16:57.9618606Z     +     "path": "/viewInvoice/{id}",
+2024-08-06T13:16:57.9618845Z     +   },
+2024-08-06T13:16:57.9619079Z     +   Object {
+2024-08-06T13:16:57.9619313Z     +     "method": "GET",
+2024-08-06T13:16:57.9619569Z     +     "options": Object {
+2024-08-06T13:16:57.9619849Z     +       "handler": [Function invoiceDelete],
+2024-08-06T13:16:57.9620108Z     +     },
+2024-08-06T13:16:57.9620360Z     +     "path": "/deleteInvoice/{id}",
+2024-08-06T13:16:57.9620606Z     +   },
+2024-08-06T13:16:57.9620840Z     +   Object {
+2024-08-06T13:16:57.9621073Z     +     "method": "GET",
+2024-08-06T13:16:57.9621331Z     +     "options": Object {
+2024-08-06T13:16:57.9621611Z     +       "handler": [Function paymentCreate],
+2024-08-06T13:16:57.9622007Z     +     },
+2024-08-06T13:16:57.9622476Z     +     "path": "/createPayment/{id}",
+2024-08-06T13:16:57.9622955Z     +   },
+2024-08-06T13:16:57.9623395Z     +   Object {
+2024-08-06T13:16:57.9623822Z     +     "method": "POST",
+2024-08-06T13:16:57.9624317Z     +     "options": Object {
+2024-08-06T13:16:57.9624850Z     +       "handler": [Function paymentStore],
+2024-08-06T13:16:57.9625321Z     +     },
+2024-08-06T13:16:57.9625791Z     +     "path": "/createPayment",
+2024-08-06T13:16:57.9626224Z     +   },
+2024-08-06T13:16:57.9626572Z     +   Object {
+2024-08-06T13:16:57.9626921Z     +     "method": "GET",
+2024-08-06T13:16:57.9627244Z     +     "options": Object {
+2024-08-06T13:16:57.9627570Z     +       "handler": [Function paymentView],
+2024-08-06T13:16:57.9627900Z     +     },
+2024-08-06T13:16:57.9628232Z     +     "path": "/viewPayment/{id}/{invoiceid}",
+2024-08-06T13:16:57.9628552Z     +   },
+2024-08-06T13:16:57.9628904Z     +   Object {
+2024-08-06T13:16:57.9629408Z     +     "method": "GET",
+2024-08-06T13:16:57.9629837Z     +     "options": Object {
+2024-08-06T13:16:57.9630166Z     +       "handler": [Function paymentEdit],
+2024-08-06T13:16:57.9630490Z     +     },
+2024-08-06T13:16:57.9630819Z     +     "path": "/editPayment/{id}/{invoiceid}",
+2024-08-06T13:16:57.9631132Z     +   },
+2024-08-06T13:16:57.9631438Z     +   Object {
+2024-08-06T13:16:57.9631843Z     +     "method": "GET",
+2024-08-06T13:16:57.9632298Z     +     "options": Object {
+2024-08-06T13:16:57.9633135Z     +       "handler": [Function paymentDelete],
+2024-08-06T13:16:57.9633642Z     +     },
+2024-08-06T13:16:57.9634338Z     +     "path": "/deletePayment/{id}/{invoiceid}",
+2024-08-06T13:16:57.9634800Z     +   },
+2024-08-06T13:16:57.9635214Z     +   Object {
+2024-08-06T13:16:57.9635659Z     +     "method": "GET",
+2024-08-06T13:16:57.9636161Z     +     "options": Object {
+2024-08-06T13:16:57.9636685Z     +       "handler": [Function invoiceLineAll],
+2024-08-06T13:16:57.9637197Z     +     },
+2024-08-06T13:16:57.9637562Z     +     "path": "/viewPaymentLine/{id}",
+2024-08-06T13:16:57.9637812Z     +   },
+2024-08-06T13:16:57.9638046Z     +   Object {
+2024-08-06T13:16:57.9638281Z     +     "method": "GET",
+2024-08-06T13:16:57.9638538Z     +     "options": Object {
+2024-08-06T13:16:57.9638810Z     +       "handler": [Function invoiceLineCreate],
+2024-08-06T13:16:57.9639082Z     +     },
+2024-08-06T13:16:57.9639341Z     +     "path": "/createInvoiceLine/{id}",
+2024-08-06T13:16:57.9639586Z     +   },
+2024-08-06T13:16:57.9639820Z     +   Object {
+2024-08-06T13:16:57.9640058Z     +     "method": "POST",
+2024-08-06T13:16:57.9640320Z     +     "options": Object {
+2024-08-06T13:16:57.9640590Z     +       "handler": [Function invoiceLineStore],
+2024-08-06T13:16:57.9640858Z     +     },
+2024-08-06T13:16:57.9641224Z     +     "path": "/createInvoiceLine",
+2024-08-06T13:16:57.9641466Z     +   },
+2024-08-06T13:16:57.9641708Z     +   Object {
+2024-08-06T13:16:57.9641943Z     +     "method": "GET",
+2024-08-06T13:16:57.9642199Z     +     "options": Object {
+2024-08-06T13:16:57.9642468Z     +       "handler": [Function invoiceLineView],
+2024-08-06T13:16:57.9642737Z     +     },
+2024-08-06T13:16:57.9642995Z     +     "path": "/viewInvoiceLine/{id}/{invoiceid}",
+2024-08-06T13:16:57.9643263Z     +   },
+2024-08-06T13:16:57.9643569Z     +   Object {
+2024-08-06T13:16:57.9643971Z     +     "method": "GET",
+2024-08-06T13:16:57.9644453Z     +     "options": Object {
+2024-08-06T13:16:57.9644949Z     +       "handler": [Function invoiceLineEdit],
+2024-08-06T13:16:57.9645439Z     +     },
+2024-08-06T13:16:57.9645918Z     +     "path": "/editInvoiceLine/{id}/{invoiceid}",
+2024-08-06T13:16:57.9646415Z     +   },
+2024-08-06T13:16:57.9646872Z     +   Object {
+2024-08-06T13:16:57.9647432Z     +     "method": "GET",
+2024-08-06T13:16:57.9648083Z     +     "options": Object {
+2024-08-06T13:16:57.9648619Z     +       "handler": [Function invoiceLineDelete],
+2024-08-06T13:16:57.9649182Z     +     },
+2024-08-06T13:16:57.9649452Z     +     "path": "/deleteInvoiceLine/{id}/{invoiceid}",
+2024-08-06T13:16:57.9649716Z     +   },
+2024-08-06T13:16:57.9649951Z     +   Object {
+2024-08-06T13:16:57.9650428Z     +     "method": "GET",
+2024-08-06T13:16:57.9650815Z     +     "options": Object {
+2024-08-06T13:16:57.9651385Z     +       "handler": [Function downloadSample],
+2024-08-06T13:16:57.9651673Z     +     },
+2024-08-06T13:16:57.9651913Z     +     "path": "/sample_download",
+2024-08-06T13:16:57.9652245Z     +   },
+2024-08-06T13:16:57.9652553Z     +   Object {
+2024-08-06T13:16:57.9652877Z     +     "method": "GET",
+2024-08-06T13:16:57.9653242Z     +     "options": Object {
+2024-08-06T13:16:57.9653584Z     +       "handler": [Function Bulkview],
+2024-08-06T13:16:57.9653909Z     +     },
+2024-08-06T13:16:57.9654201Z     +     "path": "/bulkView",
+2024-08-06T13:16:57.9654582Z     +   },
+2024-08-06T13:16:57.9654884Z     +   Object {
+2024-08-06T13:16:57.9655197Z     +     "handler": [Function uploadBulk],
+2024-08-06T13:16:57.9655530Z     +     "method": "POST",
+2024-08-06T13:16:57.9655833Z     +     "options": Object {
+2024-08-06T13:16:57.9656153Z     +       "payload": Object {
+2024-08-06T13:16:57.9656612Z     +         "allow": "multipart/form-data",
+2024-08-06T13:16:57.9656956Z     +         "maxBytes": 10485760,
+2024-08-06T13:16:57.9657281Z     +         "multipart": true,
+2024-08-06T13:16:57.9657588Z     +         "output": "stream",
+2024-08-06T13:16:57.9657906Z     +         "parse": true,
+2024-08-06T13:16:57.9658197Z     +       },
+2024-08-06T13:16:57.9658496Z     +     },
+2024-08-06T13:16:57.9658786Z     +     "path": "/bulk_upload",
+2024-08-06T13:16:57.9659096Z     +   },
+2024-08-06T13:16:57.9659533Z     +   Object {
+2024-08-06T13:16:57.9659845Z     +     "method": "POST",
+2024-08-06T13:16:57.9660166Z     +     "options": Object {
+2024-08-06T13:16:57.9660503Z     +       "handler": [Function BulkDataUpload],
+2024-08-06T13:16:57.9660833Z     +     },
+2024-08-06T13:16:57.9661130Z     +     "path": "/bulk_data_upload",
+2024-08-06T13:16:57.9661459Z         },
+2024-08-06T13:16:57.9661738Z         Object {
+2024-08-06T13:16:57.9662049Z           "path": "/static",
+2024-08-06T13:16:57.9662370Z         },
+2024-08-06T13:16:57.9662649Z       ],
+2024-08-06T13:16:57.9662785Z 
+2024-08-06T13:16:57.9663115Z     Number of calls: 1
+2024-08-06T13:16:57.9663271Z 
+2024-08-06T13:16:57.9663622Z       19 |     router.plugin.register(mockServer)
+2024-08-06T13:16:57.9663957Z       20 |
+2024-08-06T13:16:57.9664297Z     > 21 |     expect(mockServer.route).toHaveBeenCalledWith(
+2024-08-06T13:16:57.9664643Z          |                              ^
+2024-08-06T13:16:57.9665017Z       22 |       [].concat(homeRoutes, healthyRoutes, healthzRoutes, staticRoutes)
+2024-08-06T13:16:57.9665363Z       23 |     )
+2024-08-06T13:16:57.9665663Z       24 |   })
+2024-08-06T13:16:57.9665920Z 
+2024-08-06T13:16:57.9666346Z       at Object.toHaveBeenCalledWith (test/unit/plugins/router.test.js:21:30)
+2024-08-06T13:16:57.9666562Z 
+2024-08-06T13:16:57.9666894Z PASS test/unit/server.test.js
+2024-08-06T13:16:57.9667220Z   Server setup
+2024-08-06T13:16:57.9667673Z     ✓ should setup app insights and start the server (72 ms)
+2024-08-06T13:16:57.9667872Z 
+2024-08-06T13:16:57.9668228Z PASS test/unit/routes/healthz.test.js
+2024-08-06T13:16:57.9668544Z   /healthz
+2024-08-06T13:16:57.9668917Z     ✓ should return success (1 ms)
+2024-08-06T13:16:57.9669072Z 
+2024-08-06T13:16:57.9669423Z PASS test/unit/routes/healthy.test.js
+2024-08-06T13:16:57.9669750Z   /healthy
+2024-08-06T13:16:57.9670092Z     ✓ should return success
+2024-08-06T13:16:57.9670257Z 
+2024-08-06T13:16:57.9670597Z PASS test/unit/routes/home.test.js
+2024-08-06T13:16:57.9670936Z   /home
+2024-08-06T13:16:57.9671288Z     ✓ should return success (2 ms)
+2024-08-06T13:16:57.9671458Z 
+2024-08-06T13:16:57.9671812Z PASS test/unit/routes/static.test.js
+2024-08-06T13:16:57.9672131Z   Routes tests
+2024-08-06T13:16:57.9672492Z     ✓ GET assets (1 ms)
+2024-08-06T13:16:57.9672801Z 
+2024-08-06T13:16:57.9673178Z Test Suites: 1 failed, 8 passed, 9 total
+2024-08-06T13:16:57.9673542Z Tests:       1 failed, 18 passed, 19 total
+2024-08-06T13:16:57.9673864Z Snapshots:   0 total
+2024-08-06T13:16:57.9674183Z Time:        1.744 s
+2024-08-06T13:16:57.9674561Z Ran all test suites matching /test\/unit/i.
+2024-08-06T13:16:57.9675140Z > rpa-mit-manual-templates@0.1.1 test:unit
+2024-08-06T13:16:57.9675975Z > jest --testPathPattern=test/unit --runInBand
+2024-08-06T13:16:57.9676244Z 
+2024-08-06T13:16:57.9676587Z   console.log
+2024-08-06T13:16:57.9676899Z     App Insights running
+2024-08-06T13:16:57.9677055Z 
+2024-08-06T13:16:57.9677421Z       at Object.log [as setup] (app/insights.js:6:13)
+2024-08-06T13:16:57.9677620Z 
+2024-08-06T13:16:57.9677943Z   console.log
+2024-08-06T13:16:57.9678258Z     App Insights running
+2024-08-06T13:16:57.9678414Z 
+2024-08-06T13:16:57.9678778Z       at Object.log [as setup] (app/insights.js:6:13)
+2024-08-06T13:16:57.9678970Z 
+2024-08-06T13:16:57.9679310Z   console.log
+2024-08-06T13:16:57.9679628Z     App Insights running
+2024-08-06T13:16:57.9679783Z 
+2024-08-06T13:16:57.9680156Z       at Object.log [as setup] (app/insights.js:6:13)
+2024-08-06T13:16:57.9680340Z 
+2024-08-06T13:16:57.9680662Z   console.log
+2024-08-06T13:16:57.9680985Z     App Insights running
+2024-08-06T13:16:57.9681147Z 
+2024-08-06T13:16:57.9681506Z       at Object.log [as setup] (app/insights.js:6:13)
+2024-08-06T13:16:57.9681689Z 
+2024-08-06T13:16:57.9682012Z   console.log
+2024-08-06T13:16:57.9682324Z     App Insights running
+2024-08-06T13:16:57.9682464Z 
+2024-08-06T13:16:57.9682839Z       at Object.log [as setup] (app/insights.js:6:13)
+2024-08-06T13:16:57.9683021Z 
+2024-08-06T13:16:57.9683340Z   console.log
+2024-08-06T13:16:57.9683813Z     App Insights running
+2024-08-06T13:16:57.9683956Z 
+2024-08-06T13:16:57.9684334Z       at Object.log [as setup] (app/insights.js:6:13)
+2024-08-06T13:16:57.9684523Z 
+2024-08-06T13:16:57.9684842Z   console.log
+2024-08-06T13:16:57.9685158Z     App Insights not running
+2024-08-06T13:16:57.9685306Z 
+2024-08-06T13:16:57.9685681Z       at Object.log [as setup] (app/insights.js:11:13)
+2024-08-06T13:16:57.9685866Z 
+2024-08-06T13:16:57.9686188Z   console.log
+2024-08-06T13:16:57.9686502Z     App Insights not running
+2024-08-06T13:16:57.9686646Z 
+2024-08-06T13:16:57.9687025Z       at Object.log [as setup] (app/insights.js:11:13)
+2024-08-06T13:16:57.9687191Z 
+2024-08-06T13:16:57.9687530Z   console.log
+2024-08-06T13:16:57.9687852Z     App Insights not running
+2024-08-06T13:16:57.9687995Z 
+2024-08-06T13:16:57.9688383Z       at Object.log [as setup] (app/insights.js:11:13)
+2024-08-06T13:16:57.9688553Z 
+2024-08-06T13:16:57.9688886Z   console.log
+2024-08-06T13:16:57.9689187Z     Server running on server-uri
+2024-08-06T13:16:57.9689353Z 
+2024-08-06T13:16:57.9689703Z       at log (app/index.js:6:11)
+2024-08-06T13:16:57.9689854Z 
+2024-08-06T13:16:57.9690026Z 
+2024-08-06T13:16:57.9690515Z =============================== Coverage summary ===============================
+2024-08-06T13:16:57.9690914Z Statements   : 36.78% ( 174/473 )
+2024-08-06T13:16:57.9691249Z Branches     : 6.77% ( 4/59 )
+2024-08-06T13:16:57.9691564Z Functions    : 10% ( 9/90 )
+2024-08-06T13:16:57.9691898Z Lines        : 36.94% ( 174/471 )
+2024-08-06T13:16:57.9692269Z ================================================================================
+2024-08-06T13:16:57.9990853Z ##[warning]Couldn't find a debug log in the cache or working directory
+2024-08-06T13:16:57.9993715Z ##[error]Error: Npm failed with return code: 1
+2024-08-06T13:16:57.9996225Z ##[section]Finishing: npm unit test
