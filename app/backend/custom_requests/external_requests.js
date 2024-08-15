@@ -1,17 +1,6 @@
 const axios = require('axios');
 
-const handleAxiosError = (error) => {
-  if (error.response) {
-    console.error('Error response data:', error.response.data);
-    console.error('Error response status:', error.response.status);
-    console.error('Error response headers:', error.response.headers);
-  } else if (error.request) {
-    console.error('Error request:', error.request);
-  } else {
-    console.error('Error message:', error.message);
-  }
-  console.error('Error config:', error.config);
-};
+const handleAxiosError = (error) => {};
 
 const sendExternalRequestGet = async (url, data, headers = {}) => {
   try {

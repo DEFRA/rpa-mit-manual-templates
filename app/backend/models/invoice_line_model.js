@@ -157,4 +157,4 @@ const modifyPaymentResponse = async (id, show_actions)=>{
 
 
 
-module.exports = {getTotalInvoiceLines, getAllInvoiceLines, deleteInvoiceLine, viewInvoiceLine, invoiceLineStore, updateInvoiceLine, viewInvoiceLine, deleteInvoiceLine, createInvoiceLine};
+module.exports = {getTotalInvoiceLines, modifyPaymentResponse, getAllInvoiceLines, deleteInvoiceLine, viewInvoiceLine, invoiceLineStore, updateInvoiceLine, viewInvoiceLine, deleteInvoiceLine, createInvoiceLine};

@@ -60,4 +60,4 @@ const invoiceSummary = async (request, h)=>{
         });
  }
 
-module.exports = {getAllInvoices, invoiceSummary, approveInvoice, rejectInvoice}
+module.exports = {getAllInvoices, modifyInvoiceResponse, invoiceSummary, approveInvoice, rejectInvoice}

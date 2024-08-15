@@ -139,4 +139,4 @@ const uploadBulk = async (request, h)=>{
     }
 }
 
-module.exports = {createBulk, downloadFile, BulkDataUpload, uploadBulk, getAllInvoices, deleteInvoice, createInvoice, invoiceStore, invoiceSummary}
+module.exports = {createBulk, modifyInvoiceResponse, modifyForSummaryBox, downloadFile, BulkDataUpload, uploadBulk, getAllInvoices, deleteInvoice, createInvoice, invoiceStore, invoiceSummary}

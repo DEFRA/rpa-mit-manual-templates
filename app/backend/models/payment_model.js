@@ -161,7 +161,7 @@ const modifyForPaymentSummary = (payment)=>{
     paymentData.push({name:'FRN',value:payment.frn})
     paymentData.push({name:'Currency',value:payment.currency})
     paymentData.push({name:'Description',value:payment.description})
-    paymentData.push({name:'Value',value:payment.value.toString()})
+    paymentData.push({name:'Value',value:payment.value?.toString()})
     return common_model.modify_Response_Summary(paymentData);
 }
 
