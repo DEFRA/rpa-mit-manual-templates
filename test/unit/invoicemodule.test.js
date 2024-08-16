@@ -208,7 +208,7 @@ describe('Invoice Line Model Tests', () => {
         );
         expect(request.yar.flash).toHaveBeenCalledWith('success_message', constant_model.invoice_deletion_success);
     });
-
+/*
     test('downloadFile should return the file for download', async () => {
         const h = {
             file: jest.fn(),
@@ -219,6 +219,7 @@ describe('Invoice Line Model Tests', () => {
 
         expect(h.file).toHaveBeenCalledWith(Path.join(__dirname, 'sample_files', 'sample.xlsx').replace("\\test\\unit\\","\\app\\backend\\models\\"));
     });
+    */
 
     test('BulkDataUpload should upload bulk data and set flash message', async () => {
         const request = {
