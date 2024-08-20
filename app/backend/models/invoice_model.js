@@ -8,7 +8,7 @@ const getAllInvoices = async (request)=>{
     const success_message = request.yar.flash('success_message');
     const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoices/getall`);
     request.yar.flash('success_message', '');
-    return {pageTitle:constant_model.invoice_list_title,invoices:modifyInvoiceResponse(data?.invoices || []),success_message:success_message};
+    return {pageTitle:constant_model.invoice_list_title,invoices:modifyInvoiceResponse(data?.invoices || []),success_message:success_message,userName:(request.yar.get('account')?.username ||'')};
 }
 
 const createInvoice = async (request)=>{

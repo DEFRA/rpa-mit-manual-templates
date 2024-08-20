@@ -22,6 +22,7 @@
   "contributors": [],
   "license": "OGL-UK-3.0",
   "dependencies": {
+    "@azure/msal-node": "^2.13.0",
     "@hapi/hapi": "21.3.2",
     "@hapi/inert": "7.1.0",
     "@hapi/vision": "7.0.3",

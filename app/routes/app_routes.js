@@ -2,13 +2,13 @@ const invoice_controller = require('../backend/controllers/invoice_controller')
 const payment_controller = require('../backend/controllers/payment_controller')
 const invoice_line_controller = require('../backend/controllers/invoice_line_controller')
 const approval_invoice_controller = require('../backend/controllers/approval_invoice_controller')
-
+const authProvider = require('../backend/auth/AuthProvider');
 module.exports = [
     {
       method: 'GET',
       path: '/',
       options: {
-        handler: invoice_controller.invoiceList
+        handler: invoice_controller.invoiceList,
       }, 
     },
     {
@@ -178,5 +178,25 @@ module.exports = [
       options: {
         handler: approval_invoice_controller.rejectInvoice
       }, 
+    },
+    {
+      method: 'GET',
+      path: '/login',
+      handler: authProvider.login.bind(authProvider)
+    },
+    {
+      method: 'GET',
+      path: '/acquire-token',
+      handler: authProvider.acquireToken.bind(authProvider)
+    },
+    {
+      method: 'POST',
+      path: '/redirect',
+      handler: authProvider.handleRedirect.bind(authProvider)
+    },
+    {
+      method: 'GET',
+      path: '/logout',
+      handler: authProvider.logout.bind(authProvider)
     },
   ]

@@ -1,5 +1,5 @@
+require('dotenv').config();
 const createServer = require('./server')
-
 const init = async () => {
   const server = await createServer()
   await server.start()

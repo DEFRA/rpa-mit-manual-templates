@@ -1,9 +1,27 @@
 const axios = require('axios');
+const constant_model = require('../app_constants/app_constant')
+const { getGlobal } = require('../hooks/custom_hook');
 
-const handleAxiosError = (error) => {};
+const handleAxiosError = (error) => {
+  console.error('Axios error:', error.message);
+};
+
+const addTokenHeader = (url, headers) => {
+  if(getGlobal('request') && getGlobal('request').yar.get('accessToken'))
+  {
+  if (url.startsWith(constant_model.request_host)) {
+    headers['Authorization'] = `Bearer ${getGlobal('request').yar.get('accessToken')}`;
+  }
+  return headers;
+  }
+};
 
 const sendExternalRequestGet = async (url, data, headers = {}) => {
   try {
+    headers = addTokenHeader(url, headers);
+    console.log('sendExternalRequestGet');
+    console.log(url);
+    console.log(headers);
     const response = await axios.get(url, {
       params: data,
       headers: headers
@@ -17,6 +35,10 @@ const sendExternalRequestGet = async (url, data, headers = {}) => {
 
 const sendExternalRequestPost = async (url, data, headers = {}) => {
   try {
+    console.log('sendExternalRequestPost');
+    console.log(url);
+    console.log(headers);
+    headers = addTokenHeader(url, headers);
     const response = await axios.post(url, data, {
       headers: headers
     });
@@ -28,7 +50,12 @@ const sendExternalRequestPost = async (url, data, headers = {}) => {
 };
 
 const sendExternalRequestPut = async (url, data, headers = {}) => {
+  
   try {
+    console.log('sendExternalRequestPut');
+    console.log(url);
+    console.log(headers);
+    headers = addTokenHeader(url, headers);
     const response = await axios.put(url, data, {
       headers: headers
     });
@@ -41,6 +68,7 @@ const sendExternalRequestPut = async (url, data, headers = {}) => {
 
 const sendExternalRequestDelete = async (url, data, headers = {}) => {
   try {
+    headers = addTokenHeader(url, headers);
     const response = await axios.delete(url, {
       headers: headers,
       data: data
