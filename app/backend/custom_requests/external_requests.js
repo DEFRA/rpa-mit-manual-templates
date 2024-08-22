@@ -24,7 +24,8 @@ const sendExternalRequestGet = async (url, data, headers = {}) => {
     console.log(headers);
     const response = await axios.get(url, {
       params: data,
-      headers: headers
+      headers: headers,
+      scopes: "api://442bf74f-8332-4b81-9335-8d4d45b24eb6/referencedata.getall"
     });
     return response.data;
   } catch (error) {
@@ -50,7 +51,7 @@ const sendExternalRequestPost = async (url, data, headers = {}) => {
 };
 
 const sendExternalRequestPut = async (url, data, headers = {}) => {
-  
+
   try {
     console.log('sendExternalRequestPut');
     console.log(url);
