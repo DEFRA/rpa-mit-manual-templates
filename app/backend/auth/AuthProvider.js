@@ -21,7 +21,7 @@ class AuthProvider {
 
         const authCodeUrlRequestParams = {
             state: state,
-            scopes: ["api://442bf74f-8332-4b81-9335-8d4d45b24eb6/referencedata.getall"],
+            scopes: ["env value"],
             redirectUri: REDIRECT_URI,
         };
 
