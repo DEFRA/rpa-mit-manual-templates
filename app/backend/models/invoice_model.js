@@ -6,13 +6,13 @@ const Path = require('path');
 
 const getAllInvoices = async (request)=>{
     const success_message = request.yar.flash('success_message');
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoices/getall`);
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getall`);
     request.yar.flash('success_message', '');
     return {pageTitle:constant_model.invoice_list_title,invoices:modifyInvoiceResponse(data?.invoices || []),success_message:success_message,userName:(request.yar.get('account')?.username ||'')};
 }
 
 const createInvoice = async (request)=>{
-    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
+    const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`);
     const account_type = common_model.modify_Response_Radio(options_data.referenceData.accountCodes);
     const delivery_body = options_data.referenceData.initialDeliveryBodies;
     const invoice_template = options_data.referenceData.schemeInvoiceTemplates;
@@ -24,7 +24,7 @@ const createInvoice = async (request)=>{
 }
 
 const createBulk= async (request)=>{
-    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
+    const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`);
     const account_type = common_model.modify_Response_Radio(options_data.referenceData.accountCodes);
     const delivery_body = options_data.referenceData.initialDeliveryBodies;
     const invoice_template = options_data.referenceData.schemeInvoiceTemplates;
@@ -37,7 +37,7 @@ const createBulk= async (request)=>{
 
 const invoiceStore = async (request)=>{
     const payload = request.payload;
-    await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoices/add`,{
+    await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoices/add`,{
         AccountType:payload.account_type,
         DeliveryBody:payload.delivery_body,
         SchemeType:payload.invoice_template,
@@ -51,7 +51,7 @@ const invoiceStore = async (request)=>{
 
 const invoiceSummary = async (request)=>{
    const success_message = request.yar.flash('success_message');
-   const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoices/getbyid`,{invoiceId:request.params.id});
+   const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getbyid`,{invoiceId:request.params.id});
    const summaryData = data?.invoice || [];
    const getAllPayments = await payment_model.getAllPayments(request.params.id);
    summaryData['invoiceRequests'] = getAllPayments;
@@ -88,7 +88,7 @@ const modifyInvoiceResponse = (invoice_list,action=true)=>{
 }
 
 const deleteInvoice=async (request)=>{
-    await external_request.sendExternalRequestDelete(`${constant_model.request_host}/invoices/delete`,{
+    await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoices/delete`,{
         invoiceId:request.params.id
     });
     request.yar.flash('success_message', constant_model.invoice_deletion_success);
@@ -104,7 +104,7 @@ const downloadFile = async (request, h)=>{
 const BulkDataUpload = async (request) =>{
     const { payload } = request;
     const bulk_data = JSON.parse(payload.bulk_data)
-        await external_request.sendExternalRequestPost(`${constant_model.request_host}/bulkuploads/confirm`,{
+        await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/bulkuploads/confirm`,{
             invoiceId:bulk_data.bulkUploadInvoice.id,
             confirmUpload:true,
             confirm:true

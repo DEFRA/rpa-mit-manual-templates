@@ -3,14 +3,14 @@ const external_request = require('../custom_requests/external_requests')
 const constant_model = require('../app_constants/app_constant')
 
 const getTotalPayments = async (invoiceID)=>{
-    const total_payments = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicerequests/getbyinvoiceid`,{
+    const total_payments = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyinvoiceid`,{
         invoiceId:invoiceID
     });
     return (total_payments?.invoiceRequests.length || 0);
 }
 
 const createPayment = async (request)=>{
-    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
+    const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`);
     const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes);
     const invoice_data = await summaryPayments(request.params.id);
     return {
@@ -31,8 +31,8 @@ const createPayment = async (request)=>{
 }
 
 const updatePayment = async (request)=>{
-    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicerequests/getbyid`,{invoiceRequestId:request.params.id});
+    const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`);
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`,{invoiceRequestId:request.params.id});
     const paymentData = data?.invoiceRequest || [];
     const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes,paymentData.currency);
     const invoice_data = await summaryPayments(request.params.invoiceid);
@@ -54,8 +54,8 @@ const updatePayment = async (request)=>{
 }
 
 const viewPayment = async (request)=>{
-    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicerequests/getbyid`,{invoiceRequestId:request.params.id});
+    const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`);
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`,{invoiceRequestId:request.params.id});
     const paymentData = data?.invoiceRequest || [];
     const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes,paymentData.currency);
     const invoice_data = await summaryPayments(request.params.invoiceid);
@@ -81,7 +81,7 @@ const paymentStore = async (request)=>{
     const payload = request.payload;
     if(payload.payment_id)
     {
-        await external_request.sendExternalRequestPut(`${constant_model.request_host}/invoicerequests/update`,{
+        await external_request.sendExternalRequestPut(`${process.env.REQUEST_HOST}/invoicerequests/update`,{
             FRN:payload.frn,
             SBI:payload.sbi,
             Vendor:payload.vendor,
@@ -98,7 +98,7 @@ const paymentStore = async (request)=>{
     }
     else
     {
-    await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoicerequests/add`,{
+    await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicerequests/add`,{
         InvoiceId:payload.inv_id,
         FRN:payload.frn,
         SBI:payload.sbi,
@@ -119,7 +119,7 @@ const paymentStore = async (request)=>{
 
 const summaryPayments = async (id) =>
 {
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoices/getbyid`,{invoiceId:id});
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getbyid`,{invoiceId:id});
     const summaryData = data?.invoice || [];
     const summaryHeader = [ { text: "Account Type" }, { text: "Delivery Body" }, { text: "Scheme Type" }, { text: "Payment Type" } ];
     const summaryTable = common_model.modify_Response_Table(common_model.removeForSummaryTable(summaryData));
@@ -127,14 +127,14 @@ const summaryPayments = async (id) =>
 }
 
 const getAllPayments = async (invoiceID)=>{
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicerequests/getbyinvoiceid`,{
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyinvoiceid`,{
         invoiceId:invoiceID
     });
     return modifyPaymentResponse((data?.invoiceRequests || []));
 }
 
 const deletePayment=async (request)=>{
-    await external_request.sendExternalRequestDelete(`${constant_model.request_host}/invoicerequests/delete`,{
+    await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicerequests/delete`,{
         invoiceRequestId:request.params.id
     });
     request.yar.flash('success_message', constant_model.payment_deletion_success);

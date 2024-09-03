@@ -199,7 +199,7 @@ async function processUploadedCSV(file) {
   if (!validExtensions.includes(extension)) return null 
   const form = new FormData();
   form.append('file', file, file.hapi.filename);
-  const results = await external_request.sendExternalRequestPost(`${constant_model.request_host}/bulkuploads/add`,form,{});
+  const results = await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/bulkuploads/add`,form,{});
   return (results?.bulkUploadApDataset || null); 
 }
 

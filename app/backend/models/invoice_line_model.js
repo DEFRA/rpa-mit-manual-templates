@@ -4,14 +4,14 @@ const payment_model = require('./payment_model')
 const constant_model = require('../app_constants/app_constant')
 
 const getTotalInvoiceLines = async (ID)=>{
-    const total_lines = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicelines/getbyinvoicerequestid`,{
+    const total_lines = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicerequestid`,{
         invoiceRequestId:ID
     });
     return (total_lines?.invoiceLines.length || 0);
 }
 
 const deleteInvoiceLine=async (request)=>{
-    await external_request.sendExternalRequestDelete(`${constant_model.request_host}/invoicelines/delete`,{
+    await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicelines/delete`,{
         invoiceLineId:request.params.id
     });
     request.yar.flash('success_message', constant_model.invoiceline_deletion_success);
@@ -21,7 +21,7 @@ const deleteInvoiceLine=async (request)=>{
 const getAllInvoiceLines = async (request)=>{
     const success_message = request.yar.flash('success_message');
     const error_message = request.yar.flash('error_message');
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicelines/getbyinvoicerequestid`,{
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicerequestid`,{
         invoiceRequestId:request.params.id
     });
     const lineData = data?.invoiceLines || [];
@@ -43,8 +43,8 @@ const getAllInvoiceLines = async (request)=>{
 }
 
 const viewInvoiceLine = async (request)=>{
-    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicelines/getbyinvoicelineid`,{invoiceLineId:request.params.id});
+    const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`);
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicelineid`,{invoiceLineId:request.params.id});
     const lineData = data?.invoiceLine || [];
     const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId,false);
     return {
@@ -66,7 +66,7 @@ const viewInvoiceLine = async (request)=>{
 }
 
 const createInvoiceLine = async (request)=>{
-    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
+    const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`);
     const summaryPayment = await modifyPaymentResponse(request.params.id,false);
     return {
         pageTitle:constant_model.invoiceline_add_title, 
@@ -86,8 +86,8 @@ const createInvoiceLine = async (request)=>{
 }
 
 const updateInvoiceLine = async (request)=>{
-    const options_data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/referencedata/getall`);
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicelines/getbyinvoicelineid`,{invoiceLineId:request.params.id});
+    const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`);
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicelineid`,{invoiceLineId:request.params.id});
     const lineData = data?.invoiceLine || [];
     const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId,false);
     return {
@@ -112,7 +112,7 @@ const invoiceLineStore = async (request)=>{
     const payload = request.payload;
     if(payload.line_id)
     {
-        await external_request.sendExternalRequestPut(`${constant_model.request_host}/invoicelines/update`,{
+        await external_request.sendExternalRequestPut(`${process.env.REQUEST_HOST}/invoicelines/update`,{
             Value:payload.paymentvalue,
             InvoiceRequestId:payload.payment_id,
             Description:payload.description,
@@ -127,7 +127,7 @@ const invoiceLineStore = async (request)=>{
     }
     else
     {
-    await external_request.sendExternalRequestPost(`${constant_model.request_host}/invoicelines/add`,{
+    await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicelines/add`,{
         Value:payload.paymentvalue,
         InvoiceRequestId:payload.payment_id,
         Description:payload.description,
@@ -143,7 +143,7 @@ const invoiceLineStore = async (request)=>{
 }
 
 const modifyPaymentResponse = async (id, show_actions)=>{
-    const data = await external_request.sendExternalRequestGet(`${constant_model.request_host}/invoicerequests/getbyid`,{invoiceRequestId:id});
+    const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`,{invoiceRequestId:id});
     const payment = data?.invoiceRequest || [];
         return {
             head:'Invoice Request Id',

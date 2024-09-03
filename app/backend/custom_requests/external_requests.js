@@ -9,7 +9,7 @@ const handleAxiosError = (error) => {
 const addTokenHeader = (url, headers) => {
   if(getGlobal('request') && getGlobal('request').yar.get('accessToken'))
   {
-  if (url.startsWith(constant_model.request_host)) {
+  if (url.startsWith(process.env.REQUEST_HOST)) {
     headers['Authorization'] = `Bearer ${getGlobal('request').yar.get('accessToken')}`;
   }
   return headers;

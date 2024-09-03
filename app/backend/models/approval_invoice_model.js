@@ -4,13 +4,13 @@ const constant_model = require('../app_constants/app_constant')
 
 const getAllInvoices = async (request)=>{
     const success_message = request.yar.flash('success_message');
-    const data = await external_request.sendExternalRequestPost(`${constant_model.request_host}/approvals/getmyapprovals`,{});
+    const data = await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/getmyapprovals`,{});
     request.yar.flash('success_message', '');
     return {pageTitle:constant_model.approveinvoice_list_title,invoices:modifyInvoiceResponse(data?.invoices || []),success_message:success_message};
 }
 
 const approveInvoice = async (request)=> {
-    await external_request.sendExternalRequestPost(`${constant_model.request_host}/approvals/approve`,{
+    await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/approve`,{
         id:request.params.id
     });
     request.yar.flash('success_message', constant_model.invoice_approve_success);
@@ -19,7 +19,7 @@ const approveInvoice = async (request)=> {
 
 const rejectInvoice = async (request)=> {
     const payload = request.payload;
-    await external_request.sendExternalRequestPost(`${constant_model.request_host}/approvals/reject`,{
+    await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/reject`,{
         id:payload.invoice_id,
         reason:payload.reason
     });
@@ -41,7 +41,7 @@ const modifyInvoiceResponse = (invoice_list,action=true)=>{
 }
 
 const invoiceSummary = async (request, h)=>{
-    const data = await external_request.sendExternalRequestPost(`${constant_model.request_host}/approvals/getinvoiceforapproval`,{invoiceId:request.params.id});
+    const data = await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/getinvoiceforapproval`,{invoiceId:request.params.id});
     let invoiceRequests = data?.invoice?.invoiceRequests.map((invRequest, ind)=>{
         return {
           'id':invRequest.invoiceRequestId,
