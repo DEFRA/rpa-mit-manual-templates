@@ -21,8 +21,8 @@ livenessProbe:
   path: /healthz
   port: 3000
   initialDelaySeconds: 20
-  periodSeconds: 10
-  failureThreshold: 3
+  periodSeconds: 20
+  failureThreshold: 10
   timeoutSeconds: 5
 
 # These may be changed. See here: https://github.com/DEFRA/adp-helm-library?tab=readme-ov-file#container-template
