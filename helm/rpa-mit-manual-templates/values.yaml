@@ -17,22 +17,22 @@ container:
   port: 3000
 
 # These may be changed. See here: https://github.com/DEFRA/adp-helm-library?tab=readme-ov-file#container-template
-livenessProbe:
-  path: /healthz
-  port: 3000
-  initialDelaySeconds: 70
-  periodSeconds: 10
-  failureThreshold: 3
-  timeoutSeconds: 5
+# livenessProbe:
+#   path: /healthz
+#   port: 3000
+#   initialDelaySeconds: 20
+#   periodSeconds: 10
+#   failureThreshold: 3
+#   timeoutSeconds: 5
 
 # These may be changed. See here: https://github.com/DEFRA/adp-helm-library?tab=readme-ov-file#container-template
-readinessProbe:
-  path: /healthy
-  port: 3000
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  failureThreshold: 3
-  timeoutSeconds: 5
+# readinessProbe:
+#   path: /healthy
+#   port: 3000
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   failureThreshold: 3
+#   timeoutSeconds: 5
 
 # These are populated when your service is created via the ADP Portal scaffolder. Do not change these, as they are abstracted from your service and are mandatory. They are for your reference here.
 # Your URL will be your <service-name>.<environment>.adp.defra.gov.uk for a front-end Web UI component. Azure Front Door is the Global Load Balancer, CDN and WAF. Nginx is the in-cluster ingress controller.
