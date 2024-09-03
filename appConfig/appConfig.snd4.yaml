@@ -22,8 +22,8 @@
 - key: EXPRESS__SESSION__SECRET
   value: "{{servicename}}-EXPRESS-SESSION-SECRET" 
   type: "keyvault"
-- key: SCOPE
-  value: "{{servicename}}-SCOPE" 
+- key: SCOPES
+  value: "{{servicename}}-SCOPES" 
   type: "keyvault"
 - key: REQUEST__HOST
   value: "{{servicename}}-REQUEST-HOST" 
