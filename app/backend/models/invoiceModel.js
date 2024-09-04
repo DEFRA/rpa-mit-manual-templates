@@ -1,7 +1,7 @@
 const commonModel = require('./commonModel')
 const external_request = require('../custom_requests/external_requests')
 const constant_model = require('../app_constants/app_constant')
-const payment_model = require('./paymentModel')
+const paymentModel = require('./paymentModel')
 const Path = require('path')
 
 const getAllInvoices = async (request) => {
@@ -58,7 +58,7 @@ const invoiceSummary = async (request) => {
   const success_message = request.yar.flash('success_message')
   const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getbyid`, { invoiceId: request.params.id })
   const summaryData = data?.invoice || []
-  const getAllPayments = await payment_model.getAllPayments(request.params.id)
+  const getAllPayments = await paymentModel.getAllPayments(request.params.id)
   summaryData.invoiceRequests = getAllPayments
   const summaryBox = { head: 'Invoice Id', actions: [], id: summaryData.id, rows: await modifyForSummaryBox(summaryData) }
   const update_Data = Object.assign({}, summaryData)

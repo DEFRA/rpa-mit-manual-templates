@@ -1,4 +1,4 @@
-const common_model = require('./common_model')
+const commonModel = require('./commonModel')
 const external_request = require('../custom_requests/external_requests')
 const constant_model = require('../app_constants/app_constant')
 
@@ -37,7 +37,7 @@ const modifyInvoiceResponse = (invoice_list, action = true) => {
           ]
         : [],
       id: item.id,
-      rows: common_model.modifyForSummary(item)
+      rows: commonModel.modifyForSummary(item)
     }
   })
 }
@@ -49,8 +49,8 @@ const invoiceSummary = async (request, h) => {
       id: invRequest.invoiceRequestId,
       invid: invRequest.invoiceId,
       index: (ind + 1),
-      summary_data: common_model.BulkHeadData(invRequest, false),
-      lines_data: common_model.BulkLineData(invRequest.invoiceLines, false)
+      summary_data: commonModel.BulkHeadData(invRequest, false),
+      lines_data: commonModel.BulkLineData(invRequest.invoiceLines, false)
     }
   })
   return h.view('app_views/approval_invoice_summary', {

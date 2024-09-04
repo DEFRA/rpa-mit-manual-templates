@@ -1,6 +1,6 @@
 const commonModel = require('./commonModel')
 const external_request = require('../custom_requests/external_requests')
-const payment_model = require('./paymentModel')
+const paymentModel = require('./paymentModel')
 const constant_model = require('../app_constants/app_constant')
 
 const getTotalInvoiceLines = async (ID) => {
@@ -150,7 +150,7 @@ const modifyPaymentResponse = async (id, show_actions) => {
         ]
       : [],
     id: payment.invoiceRequestId,
-    rows: payment_model.modifyForPaymentSummary(payment)
+    rows: paymentModel.modifyForPaymentSummary(payment)
   }
 }
 
