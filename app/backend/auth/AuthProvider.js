@@ -1,175 +1,175 @@
-const msal = require('@azure/msal-node');
-const axios = require('axios');
-const { msalConfig,REDIRECT_URI,POST_LOGOUT_REDIRECT_URI} = require('./authConfig');
+const msal = require('@azure/msal-node')
+const axios = require('axios')
+const { msalConfig, REDIRECT_URI, POST_LOGOUT_REDIRECT_URI } = require('./authConfig')
 
 class AuthProvider {
-    constructor(msalConfig) {
-        this.msalConfig = msalConfig;
-        this.cryptoProvider = new msal.CryptoProvider();
+  constructor (msalConfig) {
+    this.msalConfig = msalConfig
+    this.cryptoProvider = new msal.CryptoProvider()
+  }
+
+  getMsalInstance () {
+    return new msal.ConfidentialClientApplication(this.msalConfig)
+  }
+
+  async login (request, h) {
+    const state = this.cryptoProvider.base64Encode(
+      JSON.stringify({
+        successRedirect: '/'
+      })
+    )
+
+    const authCodeUrlRequestParams = {
+      state,
+      scopes: [process.env.SCOPES],
+      redirectUri: REDIRECT_URI
     }
 
-    getMsalInstance() {
-        return new msal.ConfidentialClientApplication(this.msalConfig);
+    if (!this.msalConfig.auth.cloudDiscoveryMetadata || !this.msalConfig.auth.authorityMetadata) {
+      const [cloudDiscoveryMetadata, authorityMetadata] = await Promise.all([
+        this.getCloudDiscoveryMetadata(this.msalConfig.auth.authority),
+        this.getAuthorityMetadata(this.msalConfig.auth.authority)
+      ])
+
+      this.msalConfig.auth.cloudDiscoveryMetadata = JSON.stringify(cloudDiscoveryMetadata)
+      this.msalConfig.auth.authorityMetadata = JSON.stringify(authorityMetadata)
     }
 
-    async login(request, h) {
-        const state = this.cryptoProvider.base64Encode(
-            JSON.stringify({
-                successRedirect: '/',
-            })
-        );
+    const msalInstance = this.getMsalInstance()
 
-        const authCodeUrlRequestParams = {
-            state: state,
-            scopes: [process.env.SCOPES],
-            redirectUri: REDIRECT_URI,
-        };
+    const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes()
 
-        if (!this.msalConfig.auth.cloudDiscoveryMetadata || !this.msalConfig.auth.authorityMetadata) {
-            const [cloudDiscoveryMetadata, authorityMetadata] = await Promise.all([
-                this.getCloudDiscoveryMetadata(this.msalConfig.auth.authority),
-                this.getAuthorityMetadata(this.msalConfig.auth.authority),
-            ]);
+    request.yar.set({
+      pkceCodes: {
+        challengeMethod: 'S256',
+        verifier,
+        challenge
+      },
+      authCodeUrlRequest: {
+        ...authCodeUrlRequestParams,
+        responseMode: msal.ResponseMode.FORM_POST,
+        codeChallenge: challenge,
+        codeChallengeMethod: 'S256'
+      },
+      authCodeRequest: {
+        ...authCodeUrlRequestParams,
+        code: ''
+      }
+    })
 
-            this.msalConfig.auth.cloudDiscoveryMetadata = JSON.stringify(cloudDiscoveryMetadata);
-            this.msalConfig.auth.authorityMetadata = JSON.stringify(authorityMetadata);
-        }
+    try {
+      const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(request.yar.get('authCodeUrlRequest'))
+      return h.redirect(authCodeUrlResponse)
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  }
 
-        const msalInstance = this.getMsalInstance();
+  async acquireToken (request, h) {
+    try {
+      const msalInstance = this.getMsalInstance()
 
-        const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes();
+      if (request.yar.get('tokenCache')) {
+        msalInstance.getTokenCache().deserialize(request.yar.get('tokenCache'))
+      }
 
-        request.yar.set({
-            pkceCodes: {
-                challengeMethod: 'S256',
-                verifier: verifier,
-                challenge: challenge,
-            },
-            authCodeUrlRequest: {
-                ...authCodeUrlRequestParams,
-                responseMode: msal.ResponseMode.FORM_POST,
-                codeChallenge: challenge,
-                codeChallengeMethod: 'S256',
-            },
-            authCodeRequest: {
-                ...authCodeUrlRequestParams,
-                code: '',
-            },
-        });
+      const tokenResponse = await msalInstance.acquireTokenSilent({
+        account: request.yar.get('account'),
+        scopes: ['User.Read']
+      })
 
-        try {
-            const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(request.yar.get('authCodeUrlRequest'));
-            return h.redirect(authCodeUrlResponse);
-        } catch (error) {
-            console.log(error)
-            throw error;
-        }
+      request.yar.set({
+        tokenCache: msalInstance.getTokenCache().serialize(),
+        accessToken: tokenResponse.accessToken,
+        idToken: tokenResponse.idToken,
+        account: tokenResponse.account
+      })
+
+      return h.redirect('/')
+    } catch (error) {
+      if (error instanceof msal.InteractionRequiredAuthError) {
+        return this.login(request, h)
+      }
+      throw error
+    }
+  }
+
+  async handleRedirect (request, h) {
+    if (!request.payload || !request.payload.state) {
+      throw new Error('Error: response not found')
     }
 
-    async acquireToken(request, h) {
-        try {
-            const msalInstance = this.getMsalInstance();
-
-            if (request.yar.get('tokenCache')) {
-                msalInstance.getTokenCache().deserialize(request.yar.get('tokenCache'));
-            }
-
-            const tokenResponse = await msalInstance.acquireTokenSilent({
-                account: request.yar.get('account'),
-                scopes: ['User.Read'],
-            });
-
-            request.yar.set({
-                tokenCache: msalInstance.getTokenCache().serialize(),
-                accessToken: tokenResponse.accessToken,
-                idToken: tokenResponse.idToken,
-                account: tokenResponse.account,
-            });
-
-            return h.redirect('/');
-        } catch (error) {
-            if (error instanceof msal.InteractionRequiredAuthError) {
-                return this.login(request, h);
-            }
-            throw error;
-        }
+    const authCodeRequest = {
+      ...request.yar.get('authCodeRequest'),
+      code: request.payload.code,
+      codeVerifier: request.yar.get('pkceCodes').verifier
     }
 
-    async handleRedirect(request, h) {
-        if (!request.payload || !request.payload.state) {
-            throw new Error('Error: response not found');
-        }
+    try {
+      const msalInstance = this.getMsalInstance()
 
-        const authCodeRequest = {
-            ...request.yar.get('authCodeRequest'),
-            code: request.payload.code,
-            codeVerifier: request.yar.get('pkceCodes').verifier,
-        };
+      if (request.yar.get('tokenCache')) {
+        msalInstance.getTokenCache().deserialize(request.yar.get('tokenCache'))
+      }
 
-        try {
-            const msalInstance = this.getMsalInstance();
+      const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest)
 
-            if (request.yar.get('tokenCache')) {
-                msalInstance.getTokenCache().deserialize(request.yar.get('tokenCache'));
-            }
+      request.yar.set({
+        accessToken: tokenResponse.accessToken,
+        tokenCache: msalInstance.getTokenCache().serialize(),
+        idToken: tokenResponse.idToken,
+        account: tokenResponse.account,
+        isAuthenticated: true
+      })
 
-            const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest);
+      const state = JSON.parse(this.cryptoProvider.base64Decode(request.payload.state))
+      return h.redirect(state.successRedirect)
+    } catch (error) {
+      throw error
+    }
+  }
 
-            request.yar.set({
-                accessToken: tokenResponse.accessToken,
-                tokenCache: msalInstance.getTokenCache().serialize(),
-                idToken: tokenResponse.idToken,
-                account: tokenResponse.account,
-                isAuthenticated: true,
-            });
+  async logout (request, h) {
+    let logoutUri = `${this.msalConfig.auth.authority}/oauth2/v2.0/`
 
-            const state = JSON.parse(this.cryptoProvider.base64Decode(request.payload.state));
-            return h.redirect(state.successRedirect);
-        } catch (error) {
-            throw error;
-        }
+    if (POST_LOGOUT_REDIRECT_URI) {
+      logoutUri += `logout?post_logout_redirect_uri=${POST_LOGOUT_REDIRECT_URI}`
     }
 
-    async logout(request, h) {
-        let logoutUri = `${this.msalConfig.auth.authority}/oauth2/v2.0/`;
+    request.yar.clear()
+    return h.redirect(logoutUri)
+  }
 
-        if (POST_LOGOUT_REDIRECT_URI) {
-            logoutUri += `logout?post_logout_redirect_uri=${POST_LOGOUT_REDIRECT_URI}`;
+  async getCloudDiscoveryMetadata (authority) {
+    const endpoint = 'https://login.microsoftonline.com/common/discovery/instance'
+
+    try {
+      const response = await axios.get(endpoint, {
+        params: {
+          'api-version': '1.1',
+          authorization_endpoint: `${authority}/oauth2/v2.0/authorize`
         }
+      })
 
-        request.yar.clear();
-        return h.redirect(logoutUri);
+      return response.data
+    } catch (error) {
+      throw error
     }
+  }
 
-    async getCloudDiscoveryMetadata(authority) {
-        const endpoint = 'https://login.microsoftonline.com/common/discovery/instance';
+  async getAuthorityMetadata (authority) {
+    const endpoint = `${authority}/v2.0/.well-known/openid-configuration`
 
-        try {
-            const response = await axios.get(endpoint, {
-                params: {
-                    'api-version': '1.1',
-                    'authorization_endpoint': `${authority}/oauth2/v2.0/authorize`,
-                },
-            });
-
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
+    try {
+      const response = await axios.get(endpoint)
+      return response.data
+    } catch (error) {
+      throw error
     }
-
-    async getAuthorityMetadata(authority) {
-        const endpoint = `${authority}/v2.0/.well-known/openid-configuration`;
-
-        try {
-            const response = await axios.get(endpoint);
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
-    }
+  }
 }
 
-const authProvider = new AuthProvider(msalConfig);
+const authProvider = new AuthProvider(msalConfig)
 
-module.exports = authProvider;
+module.exports = authProvider

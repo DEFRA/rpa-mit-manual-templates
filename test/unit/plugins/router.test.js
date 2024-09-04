@@ -3,7 +3,6 @@ const staticRoutes = require('../../../app/routes/static')
 
 const router = require('../../../app/plugins/router')
 
-
 describe('router plugin', () => {
   test('should register routes when register is called', () => {
     const mockServer = {

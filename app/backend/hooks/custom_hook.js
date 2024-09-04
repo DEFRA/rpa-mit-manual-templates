@@ -1,11 +1,11 @@
-const globalState = {};
+const globalState = {}
 
 const setGlobal = (key, value) => {
-    globalState[key] = value;
-};
+  globalState[key] = value
+}
 
 const getGlobal = (key) => {
-    return globalState[key];
-};
+  return globalState[key]
+}
 
-module.exports = { setGlobal, getGlobal };
+module.exports = { setGlobal, getGlobal }
