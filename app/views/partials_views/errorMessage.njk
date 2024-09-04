@@ -1,13 +1,13 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-{% if success_message and success_message!='' %}
+{% if errorMessage and errorMessage!='' %}
 {% set html %}
 <h3 class="govuk-notification-banner__heading">
-    {{success_message}}
+    {{errorMessage}}
 </h3>
 {% endset %}
 {{ govukNotificationBanner({
   html: html,
-  type: "success",
-  classes: "success_message"
+  type: "error",
+  classes: "error_message"
 }) }}
 {% endif %}

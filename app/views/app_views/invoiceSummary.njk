@@ -14,15 +14,15 @@
   classes:"backButton"
 }) }}
 
-{% include "partials_views/page_title.njk" %}
+{% include "partials_views/pageTitle.njk" %}
 
-{% include "partials_views/summary_table.njk" %}
+{% include "partials_views/summaryTable.njk" %}
 
 {% set item = summaryBox %}
-{% include "partials_views/summary_box.njk" %}
+{% include "partials_views/summaryBox.njk" %}
 
 {% set pageTitle = 'Invoice Requests' %}
-{% include "partials_views/page_title.njk" %}
+{% include "partials_views/pageTitle.njk" %}
 
 {{ 
 govukButton({
@@ -31,7 +31,7 @@ classes: "fix-width",
 href: paymentLink
 }) 
 }}
-{% include "partials_views/success_banner.njk" %}
+{% include "partials_views/successBanner.njk" %}
 
 {% if total_requests == 0 %}
 {% set html %}
@@ -47,7 +47,7 @@ href: paymentLink
 {% endif %}
 
 {% for item in allPayments %}
- {% include "partials_views/summary_box.njk" %}
+ {% include "partials_views/summaryBox.njk" %}
 {% endfor %}
 </div>
 {% endblock %}

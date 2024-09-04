@@ -1,139 +1,139 @@
-const invoice_controller = require('../backend/controllers/invoice_controller')
-const payment_controller = require('../backend/controllers/payment_controller')
-const invoice_line_controller = require('../backend/controllers/invoice_line_controller')
-const approval_invoice_controller = require('../backend/controllers/approval_invoice_controller')
+const invoiceController = require('../backend/controllers/invoiceController')
+const paymentController = require('../backend/controllers/paymentController')
+const invoiceLineController = require('../backend/controllers/invoiceLineController')
+const approvalInvoiceController = require('../backend/controllers/approvalInvoiceController')
 const authProvider = require('../backend/auth/AuthProvider')
 module.exports = [
   {
     method: 'GET',
     path: '/',
     options: {
-      handler: invoice_controller.invoiceList
+      handler: invoiceController.invoiceList
     }
   },
   {
     method: 'GET',
     path: '/createInvoice',
     options: {
-      handler: invoice_controller.invoiceCreate
+      handler: invoiceController.invoiceCreate
     }
   },
   {
     method: 'POST',
     path: '/createInvoice',
     options: {
-      handler: invoice_controller.invoiceStore
+      handler: invoiceController.invoiceStore
     }
   },
   {
     method: 'GET',
     path: '/viewInvoice/{id}',
     options: {
-      handler: invoice_controller.invoiceSummary
+      handler: invoiceController.invoiceSummary
     }
   },
   {
     method: 'GET',
     path: '/deleteInvoice/{id}',
     options: {
-      handler: invoice_controller.invoiceDelete
+      handler: invoiceController.invoiceDelete
     }
   },
   {
     method: 'GET',
     path: '/createPayment/{id}',
     options: {
-      handler: payment_controller.paymentCreate
+      handler: paymentController.paymentCreate
     }
   },
   {
     method: 'POST',
     path: '/createPayment',
     options: {
-      handler: payment_controller.paymentStore
+      handler: paymentController.paymentStore
     }
   },
   {
     method: 'GET',
     path: '/viewPayment/{id}/{invoiceid}',
     options: {
-      handler: payment_controller.paymentView
+      handler: paymentController.paymentView
     }
   },
   {
     method: 'GET',
     path: '/editPayment/{id}/{invoiceid}',
     options: {
-      handler: payment_controller.paymentEdit
+      handler: paymentController.paymentEdit
     }
   },
   {
     method: 'GET',
     path: '/deletePayment/{id}/{invoiceid}',
     options: {
-      handler: payment_controller.paymentDelete
+      handler: paymentController.paymentDelete
     }
   },
   {
     method: 'GET',
     path: '/viewPaymentLine/{id}',
     options: {
-      handler: invoice_line_controller.invoiceLineAll
+      handler: invoiceLineController.invoiceLineAll
     }
   },
   {
     method: 'GET',
     path: '/createInvoiceLine/{id}',
     options: {
-      handler: invoice_line_controller.invoiceLineCreate
+      handler: invoiceLineController.invoiceLineCreate
     }
   },
   {
     method: 'POST',
     path: '/createInvoiceLine',
     options: {
-      handler: invoice_line_controller.invoiceLineStore
+      handler: invoiceLineController.invoiceLineStore
     }
   },
   {
     method: 'GET',
     path: '/viewInvoiceLine/{id}/{invoiceid}',
     options: {
-      handler: invoice_line_controller.invoiceLineView
+      handler: invoiceLineController.invoiceLineView
     }
   },
   {
     method: 'GET',
     path: '/editInvoiceLine/{id}/{invoiceid}',
     options: {
-      handler: invoice_line_controller.invoiceLineEdit
+      handler: invoiceLineController.invoiceLineEdit
     }
   },
   {
     method: 'GET',
     path: '/deleteInvoiceLine/{id}/{invoiceid}',
     options: {
-      handler: invoice_line_controller.invoiceLineDelete
+      handler: invoiceLineController.invoiceLineDelete
     }
   },
   {
     method: 'GET',
     path: '/sample_download',
     options: {
-      handler: invoice_controller.downloadSample
+      handler: invoiceController.downloadSample
     }
   },
   {
     method: 'GET',
     path: '/bulkView',
     options: {
-      handler: invoice_controller.Bulkview
+      handler: invoiceController.Bulkview
     }
   },
   {
     method: 'POST',
-    path: '/bulk_upload',
-    handler: invoice_controller.uploadBulk,
+    path: '/bulkUpload',
+    handler: invoiceController.uploadBulk,
     options: {
       payload: {
         output: 'stream',
@@ -148,35 +148,35 @@ module.exports = [
     method: 'POST',
     path: '/bulk_data_upload',
     options: {
-      handler: invoice_controller.BulkDataUpload
+      handler: invoiceController.BulkDataUpload
     }
   },
   {
     method: 'GET',
     path: '/approvelist',
     options: {
-      handler: approval_invoice_controller.approveInvoiceList
+      handler: approval_invoiceController.approveInvoiceList
     }
   },
   {
     method: 'GET',
     path: '/viewApprovalInvoice/{id}',
     options: {
-      handler: approval_invoice_controller.approvalInvoiceSummary
+      handler: approval_invoiceController.approvalInvoiceSummary
     }
   },
   {
     method: 'GET',
     path: '/approveInvoice/{id}',
     options: {
-      handler: approval_invoice_controller.approveInvoice
+      handler: approval_invoiceController.approveInvoice
     }
   },
   {
     method: 'POST',
     path: '/rejectInvoice',
     options: {
-      handler: approval_invoice_controller.rejectInvoice
+      handler: approval_invoiceController.rejectInvoice
     }
   },
   {

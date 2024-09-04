@@ -2,8 +2,8 @@ const moment = require('moment')
 const crypto = require('crypto')
 const { parse } = require('csv-parse')
 const FormData = require('form-data')
-const external_request = require('../custom_requests/external_requests')
-const constant_model = require('../app_constants/app_constant')
+const externalRequest = require('../custom_requests/externalRequests')
+const constantModel = require('../app_constants/app_constant')
 
 const generateID = () => {
   return crypto.randomUUID().toString()
@@ -24,45 +24,45 @@ const removeForSummaryTable = (summaryData) => {
   }
 }
 
-const modify_Response_Radio = (resp_data, selected) => {
-  const resp_data_updated = resp_data.map((item) => {
+const modifyResponseRadio = (respData, selected) => {
+  const resp_data_updated = respData.map((item) => {
     return { text: item.description, value: item.code, checked: (selected == item.code) }
   })
   return resp_data_updated
 }
 
-const modify_Response_Select = (resp_data, selected) => {
-  const resp_data_updated = resp_data.map((item) => {
+const modifyResponseSelect = (respData, selected) => {
+  const resp_data_updated = respData.map((item) => {
     return { text: item.code.toUpperCase(), value: item.code, selected: (selected == item.code) }
   })
   return resp_data_updated
 }
 
-const BulkLineData = (data_pack, bulk) => {
+const BulkLineData = (dataPack, bulk) => {
   const lineDetail = [{ text: 'Line Value' }, { text: 'Description' }, { text: 'Delivery Body' }, { text: 'Fund Code' }, { text: 'Main Account' }, { text: 'Scheme Code' }, { text: 'Marketing Year' }]
-  const lineTable = addForSummaryTableLineCSVTwo(data_pack)
+  const lineTable = addForSummaryTableLineCSVTwo(dataPack)
   return { lineDetail, lineTable }
 }
 
-const BulkHeadData = (data_pack, bulk) => {
+const BulkHeadData = (dataPack, bulk) => {
   const summaryData = []
   if (bulk) {
-    summaryData.push({ name: 'Claim Reference', value: data_pack.claimReference })
-    summaryData.push({ name: 'Claim Reference Number', value: data_pack.claimReferenceNumber })
-    summaryData.push({ name: 'Currency', value: data_pack.paymentType })
-    summaryData.push({ name: 'Total Amount', value: data_pack.totalAmount?.toString() })
-    summaryData.push({ name: 'Description', value: data_pack.description })
+    summaryData.push({ name: 'Claim Reference', value: dataPack.claimReference })
+    summaryData.push({ name: 'Claim Reference Number', value: dataPack.claimReferenceNumber })
+    summaryData.push({ name: 'Currency', value: dataPack.paymentType })
+    summaryData.push({ name: 'Total Amount', value: dataPack.totalAmount?.toString() })
+    summaryData.push({ name: 'Description', value: dataPack.description })
   } else {
-    summaryData.push({ name: 'FRN', value: data_pack.frn })
-    summaryData.push({ name: 'Currency', value: data_pack.currency })
-    summaryData.push({ name: 'Description', value: data_pack.description })
-    summaryData.push({ name: 'Value', value: data_pack.value.toString() })
+    summaryData.push({ name: 'FRN', value: dataPack.frn })
+    summaryData.push({ name: 'Currency', value: dataPack.currency })
+    summaryData.push({ name: 'Description', value: dataPack.description })
+    summaryData.push({ name: 'Value', value: dataPack.value.toString() })
   }
   return {
     head: 'Request Id',
     actions: [],
-    id: data_pack.invoiceRequestId,
-    rows: modify_Response_Summary(summaryData)
+    id: dataPack.invoiceRequestId,
+    rows: modifyResponseSummary(summaryData)
   }
 }
 
@@ -73,10 +73,10 @@ const modifyForSummary = (invoice) => {
   summaryData.push({ name: 'Invoice Template', value: invoice.schemeType })
   summaryData.push({ name: 'Invoice Template Secondary', value: invoice.secondaryQuestion })
   summaryData.push({ name: 'Payment Type', value: invoice.paymentType })
-  return modify_Response_Summary(summaryData)
+  return modifyResponseSummary(summaryData)
 }
 
-const modify_Response_Summary = (items) => {
+const modifyResponseSummary = (items) => {
   return items.map((item) => {
     return {
       key: {
@@ -90,7 +90,7 @@ const modify_Response_Summary = (items) => {
   })
 }
 
-const modify_Response_Table = (items) => {
+const modifyResponseTable = (items) => {
   return [Object.values(items).map((item) => {
     return {
       text: item
@@ -190,8 +190,8 @@ async function processUploadedCSV (file) {
   if (!validExtensions.includes(extension)) return null
   const form = new FormData()
   form.append('file', file, file.hapi.filename)
-  const results = await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/bulkuploads/add`, form, {})
+  const results = await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/bulkuploads/add`, form, {})
   return (results?.bulkUploadApDataset || null)
 }
 
-module.exports = { BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modify_Response_Radio, modify_Response_Select, modify_Response_Summary, modify_Response_Table, generateID, formatTimestamp, removeForSummaryTable }
+module.exports = { BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modifyResponseRadio, modifyResponseSelect, modifyResponseSummary, modifyResponseTable, generateID, formatTimestamp, removeForSummaryTable }

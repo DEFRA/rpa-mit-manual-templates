@@ -1,5 +1,5 @@
 const axios = require('axios')
-const constant_model = require('../app_constants/app_constant')
+const constantModel = require('../app_constants/app_constant')
 const { getGlobal } = require('../hooks/custom_hook')
 
 const handleAxiosError = (error) => {

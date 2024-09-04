@@ -14,10 +14,10 @@
   classes:"backButton"
 }) }}
 
-{% include "partials_views/page_title.njk" %}
+{% include "partials_views/pageTitle.njk" %}
 
 {% set item = summaryPayment %}
-{% include "partials_views/summary_box.njk" %}
+{% include "partials_views/summaryBox.njk" %}
 
 {{ 
 govukButton({
@@ -28,10 +28,10 @@ href: lineLink
 }}
 
 
-{% include "partials_views/success_banner.njk" %}
-{% include "partials_views/error_message.njk" %}
+{% include "partials_views/successBanner.njk" %}
+{% include "partials_views/errorMessage.njk" %}
 
-{% include "partials_views/summary_table.njk" %}
+{% include "partials_views/summaryTable.njk" %}
 </div>
 {% endblock %}
 

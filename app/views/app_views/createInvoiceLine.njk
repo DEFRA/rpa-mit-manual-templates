@@ -16,11 +16,11 @@
   classes:"backButton"
 }) }}
 {% endif %}
-{% include "partials_views/page_title.njk" %}
+{% include "partials_views/pageTitle.njk" %}
 {% set item = summaryPayment %}
-{% include "partials_views/summary_box.njk" %}
+{% include "partials_views/summaryBox.njk" %}
  <form action="{% if view_type != 'view' %}/createInvoiceLine{% else %}#{% endif %}" method="POST" id="lineForm">
-    <input name="payment_id" type="hidden" value="{{payment_id}}" />
+    <input name="paymentId" type="hidden" value="{{paymentId}}" />
     {% if line_id and line_id!='' %}
       <input name="line_id" type="hidden" value="{{line_id}}" />
     {% endif %}
@@ -112,11 +112,11 @@
     </div>
     {% if view_type and view_type!='view' %}
 
-    {% set error_message %}
+    {% set errorMessage %}
     Fill All The Fields
     {% endset %}
 
-    {% include "partials_views/error_banner.njk" %}
+    {% include "partials_views/errorBanner.njk" %}
     
     <div class="govuk-button-group">
      {{ govukButton({text: "Save and continue"}) }}

@@ -16,13 +16,13 @@
   classes:"backButton"
 }) }}
 {% endif %}
-{% include "partials_views/page_title.njk" %}
-{% include "partials_views/summary_table.njk" %}
+{% include "partials_views/pageTitle.njk" %}
+{% include "partials_views/summaryTable.njk" %}
 
  <form action="{% if view_type != 'view' %}/createPayment{% else %}#{% endif %}" method="POST" id="paymentForm">
-    <input name="inv_id" type="hidden" value="{{invoice_id}}" />
-    {% if payment_id and payment_id!='' %}
-      <input name="payment_id" type="hidden" value="{{payment_id}}" />
+    <input name="inv_id" type="hidden" value="{{invoiceId}}" />
+    {% if paymentId and paymentId!='' %}
+      <input name="paymentId" type="hidden" value="{{paymentId}}" />
     {% endif %}
     {{ govukInput({
     label: {
@@ -69,7 +69,7 @@
       text: 'Currency',
       classes: "govuk-label--s"
      },
-    items: payment_type,
+    items: paymentType,
     classes:"full-width payment_inputs",
     disabled:disableditem
     }) 
@@ -116,11 +116,11 @@
 
     {% if view_type and view_type!='view' %}
 
-    {% set error_message %}
+    {% set errorMessage %}
     Fill All The Fields
     {% endset %}
 
-    {% include "partials_views/error_banner.njk" %}
+    {% include "partials_views/errorBanner.njk" %}
     
     <div class="govuk-button-group">
      {{ govukButton({text: "Save and continue"}) }}

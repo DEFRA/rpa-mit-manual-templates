@@ -3,7 +3,7 @@ const errorModel  = require('../models/commonError')
 const invoiceList = async (request, h) => {
   try {
     const res = await invoiceModel .getAllInvoices(request)
-    return h.view('app_views/invoice_list', res)
+    return h.view('app_views/invoiceList', res)
   } catch (error) {
     return errorModel .errorMessage(error, h)
   }
@@ -13,7 +13,7 @@ const invoiceCreate = async (request, h) => {
   try {
     const res = await invoiceModel .createInvoice(request)
     // console.log(res);
-    return h.view('app_views/create_invoice', res)
+    return h.view('app_views/createInvoice', res)
   } catch (error) {
     return errorModel .errorMessage(error, h)
   }
@@ -22,7 +22,7 @@ const invoiceCreate = async (request, h) => {
 const invoiceSummary = async (request, h) => {
   try {
     const res = await invoiceModel .invoiceSummary(request)
-    return h.view('app_views/invoice_summary', res)
+    return h.view('app_views/invoiceSummary', res)
   } catch (error) {
     return errorModel .errorMessage(error, h)
   }
@@ -74,7 +74,7 @@ const BulkDataUpload = async (request, h) => {
 const Bulkview = async (request, h) => {
   try {
     const res = await invoiceModel .createBulk(request)
-    return h.view('app_views/bulk_upload', res)
+    return h.view('app_views/bulkUpload', res)
   } catch (error) {
     return errorModel .errorMessage(error, h)
   }

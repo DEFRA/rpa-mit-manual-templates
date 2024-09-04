@@ -1,23 +1,23 @@
 const commonModel = require('./commonModel')
-const external_request = require('../custom_requests/external_requests')
-const constant_model = require('../app_constants/app_constant')
+const externalRequest = require('../custom_requests/externalRequests')
+const constantModel = require('../app_constants/app_constant')
 
 const getTotalPayments = async (invoiceID) => {
-  const total_payments = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyinvoiceid`, {
+  const totalPayments = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyinvoiceid`, {
     invoiceId: invoiceID
   })
-  return (total_payments?.invoiceRequests.length || 0)
+  return (totalPayments?.invoiceRequests.length || 0)
 }
 
 const createPayment = async (request) => {
-  const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const payment_type = commonModel.modify_Response_Select(options_data.referenceData.paymentTypes)
+  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const paymentType = commonModel.modifyResponseSelect(optionsData.referenceData.paymentTypes)
   const invoice_data = await summaryPayments(request.params.id)
   return {
-    pageTitle: constant_model.paymentAddTitle,
-    payment_type,
+    pageTitle: constantModel.paymentAddTitle,
+    paymentType,
     ...invoice_data,
-    invoice_id: request.params.id,
+    invoiceId: request.params.id,
     frn: '',
     sbi: '',
     vendor: '',
@@ -31,16 +31,16 @@ const createPayment = async (request) => {
 }
 
 const updatePayment = async (request) => {
-  const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`, { invoiceRequestId: request.params.id })
+  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`, { invoiceRequestId: request.params.id })
   const paymentData = data?.invoiceRequest || []
-  const payment_type = commonModel.modify_Response_Select(options_data.referenceData.paymentTypes, paymentData.currency)
+  const paymentType = commonModel.modifyResponseSelect(optionsData.referenceData.paymentTypes, paymentData.currency)
   const invoice_data = await summaryPayments(request.params.invoiceid)
   return {
-    pageTitle: constant_model.paymentEditTitle,
-    payment_type,
+    pageTitle: constantModel.paymentEditTitle,
+    paymentType,
     ...invoice_data,
-    invoice_id: request.params.invoiceid,
+    invoiceId: request.params.invoiceid,
     frn: paymentData.frn,
     sbi: paymentData.sbi,
     vendor: paymentData.vendor,
@@ -48,23 +48,23 @@ const updatePayment = async (request) => {
     claimreferencenumber: paymentData.claimReferenceNumber,
     claimreference: paymentData.claimReference,
     disableditem: false,
-    payment_id: request.params.id,
+    paymentId: request.params.id,
     attributesitem: {},
     view_type: 'edit'
   }
 }
 
 const viewPayment = async (request) => {
-  const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`, { invoiceRequestId: request.params.id })
+  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`, { invoiceRequestId: request.params.id })
   const paymentData = data?.invoiceRequest || []
-  const payment_type = commonModel.modify_Response_Select(options_data.referenceData.paymentTypes, paymentData.currency)
+  const paymentType = commonModel.modifyResponseSelect(optionsData.referenceData.paymentTypes, paymentData.currency)
   const invoice_data = await summaryPayments(request.params.invoiceid)
   return {
-    pageTitle: constant_model.paymentViewTitle,
-    payment_type,
+    pageTitle: constantModel.paymentViewTitle,
+    paymentType,
     ...invoice_data,
-    invoice_id: request.params.invoiceid,
+    invoiceId: request.params.invoiceid,
     frn: paymentData.frn,
     sbi: paymentData.sbi,
     vendor: paymentData.vendor,
@@ -79,23 +79,23 @@ const viewPayment = async (request) => {
 
 const paymentStore = async (request) => {
   const payload = request.payload
-  if (payload.payment_id) {
-    await external_request.sendExternalRequestPut(`${process.env.REQUEST_HOST}/invoicerequests/update`, {
+  if (payload.paymentId) {
+    await externalRequest.sendExternalRequestPut(`${process.env.REQUEST_HOST}/invoicerequests/update`, {
       FRN: payload.frn,
       SBI: payload.sbi,
       Vendor: payload.vendor,
       Currency: payload.currency,
       Description: payload.description,
-      InvoiceRequestId: payload.payment_id,
+      InvoiceRequestId: payload.paymentId,
       ClaimReference: payload.claimreference,
       ClaimReferenceNumber: payload.claimreferencenumber,
       AgreementNumber: '',
       MarketingYear: '',
       AccountType: ''
     })
-    request.yar.flash('success_message', constant_model.paymentUpdateSuccess)
+    request.yar.flash('successMessage', constantModel.paymentUpdateSuccess)
   } else {
-    await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicerequests/add`, {
+    await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicerequests/add`, {
       InvoiceId: payload.inv_id,
       FRN: payload.frn,
       SBI: payload.sbi,
@@ -108,31 +108,31 @@ const paymentStore = async (request) => {
       MarketingYear: '',
       AccountType: ''
     })
-    request.yar.flash('success_message', constant_model.paymentCreationSuccess)
+    request.yar.flash('successMessage', constantModel.paymentCreationSuccess)
   }
   return payload.inv_id
 }
 
 const summaryPayments = async (id) => {
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getbyid`, { invoiceId: id })
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getbyid`, { invoiceId: id })
   const summaryData = data?.invoice || []
   const summaryHeader = [{ text: 'Account Type' }, { text: 'Delivery Body' }, { text: 'Scheme Type' }, { text: 'Payment Type' }]
-  const summaryTable = commonModel.modify_Response_Table(commonModel.removeForSummaryTable(summaryData))
+  const summaryTable = commonModel.modifyResponseTable(commonModel.removeForSummaryTable(summaryData))
   return { summaryTable, summaryHeader }
 }
 
 const getAllPayments = async (invoiceID) => {
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyinvoiceid`, {
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyinvoiceid`, {
     invoiceId: invoiceID
   })
   return modifyPaymentResponse((data?.invoiceRequests || []))
 }
 
 const deletePayment = async (request) => {
-  await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicerequests/delete`, {
+  await externalRequest.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicerequests/delete`, {
     invoiceRequestId: request.params.id
   })
-  request.yar.flash('success_message', constant_model.paymentDeletionSuccess)
+  request.yar.flash('successMessage', constantModel.paymentDeletionSuccess)
   return request.params.invoiceid
 }
 
@@ -157,7 +157,7 @@ const modifyForPaymentSummary = (payment) => {
   paymentData.push({ name: 'Currency', value: payment.currency })
   paymentData.push({ name: 'Description', value: payment.description })
   paymentData.push({ name: 'Value', value: payment.value?.toString() })
-  return commonModel.modify_Response_Summary(paymentData)
+  return commonModel.modifyResponseSummary(paymentData)
 }
 
 module.exports = { modifyForPaymentSummary, getTotalPayments, getAllPayments, createPayment, paymentStore, updatePayment, viewPayment, deletePayment }

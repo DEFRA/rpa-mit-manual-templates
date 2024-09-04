@@ -3,7 +3,7 @@ const errorModel  = require('../models/commonError')
 const approveInvoiceList = async (request, h) => {
   try {
     const res = await approvalInvoiceModel .getAllInvoices(request)
-    return h.view('app_views/approval_invoice_list', res)
+    return h.view('app_views/approvalInvoiceList', res)
   } catch (error) {
     return errorModel .errorMessage(error, h)
   }

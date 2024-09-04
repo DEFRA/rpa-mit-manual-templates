@@ -29,7 +29,7 @@
 2024-08-13T11:10:37.4696934Z     ✓ formatTimestamp should format timestamp correctly (1 ms)
 2024-08-13T11:10:37.4697772Z     ✓ removeForSummaryTable should return expected summary (1 ms)
 2024-08-13T11:10:37.4698622Z     ✓ modify_Response_Radio should format response data correctly (1 ms)
-2024-08-13T11:10:37.4699468Z     ✓ modify_Response_Select should format response data correctly
+2024-08-13T11:10:37.4699468Z     ✓ modifyResponseSelect should format response data correctly
 2024-08-13T11:10:37.4700247Z     ✓ BulkLineData should return line details and table data (1 ms)
 2024-08-13T11:10:37.4700914Z     ✓ BulkHeadData should return correct header data
 2024-08-13T11:10:37.4701449Z     ✓ modifyForSummary should return modified summary data
@@ -59,7 +59,7 @@
 2024-08-13T11:10:37.4722112Z     ✓ GET /deleteInvoiceLine/{id}/{invoiceid} should call the appropriate handler (1 ms)
 2024-08-13T11:10:37.4723232Z     ✓ GET /sample_download should call the appropriate handler (1 ms)
 2024-08-13T11:10:37.4724313Z     ✕ GET /bulkView should call the appropriate handler (7 ms)
-2024-08-13T11:10:37.4725365Z     ✓ POST /bulk_upload should call the appropriate handler (1 ms)
+2024-08-13T11:10:37.4725365Z     ✓ POST /bulkUpload should call the appropriate handler (1 ms)
 2024-08-13T11:10:37.4726453Z     ✓ POST /bulk_data_upload should call the appropriate handler
 2024-08-13T11:10:37.4727518Z     ✓ GET /approvelist should call the appropriate handler (1 ms)
 2024-08-13T11:10:37.4728609Z     ✓ GET /viewApprovalInvoice/{id} should call the appropriate handler (1 ms)
@@ -286,7 +286,7 @@
 2024-08-13T11:10:37.4853470Z       at error (app/backend/custom_requests/external_requests.js:9:13)
 2024-08-13T11:10:37.4854139Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.4854856Z       at Object.createInvoice (app/backend/models/invoiceModel.js:15:26)
-2024-08-13T11:10:37.4855447Z       at invoiceCreate (app/backend/controllers/invoice_controller.js:18:20)
+2024-08-13T11:10:37.4855447Z       at invoiceCreate (app/backend/controllers/invoiceController.js:18:20)
 2024-08-13T11:10:37.4856054Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.4856330Z 
 2024-08-13T11:10:37.4856703Z   console.error
@@ -334,7 +334,7 @@
 2024-08-13T11:10:37.4876528Z       at error (app/backend/custom_requests/external_requests.js:13:11)
 2024-08-13T11:10:37.4877203Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.4877940Z       at Object.createInvoice (app/backend/models/invoiceModel.js:15:26)
-2024-08-13T11:10:37.4878599Z       at invoiceCreate (app/backend/controllers/invoice_controller.js:18:20)
+2024-08-13T11:10:37.4878599Z       at invoiceCreate (app/backend/controllers/invoiceController.js:18:20)
 2024-08-13T11:10:37.4879246Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.4879548Z 
 2024-08-13T11:10:37.4879946Z   console.error
@@ -557,7 +557,7 @@
 2024-08-13T11:10:37.5008568Z       at error (app/backend/custom_requests/external_requests.js:9:13)
 2024-08-13T11:10:37.5009102Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5009746Z       at Object.createPayment (app/backend/models/payment_model.js:13:26)
-2024-08-13T11:10:37.5010214Z       at paymentCreate (app/backend/controllers/payment_controller.js:7:18)
+2024-08-13T11:10:37.5010214Z       at paymentCreate (app/backend/controllers/paymentController.js:7:18)
 2024-08-13T11:10:37.5010756Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5011001Z 
 2024-08-13T11:10:37.5011518Z   console.error
@@ -605,7 +605,7 @@
 2024-08-13T11:10:37.5203079Z       at error (app/backend/custom_requests/external_requests.js:13:11)
 2024-08-13T11:10:37.5203984Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5204521Z       at Object.createPayment (app/backend/models/payment_model.js:13:26)
-2024-08-13T11:10:37.5204984Z       at paymentCreate (app/backend/controllers/payment_controller.js:7:18)
+2024-08-13T11:10:37.5204984Z       at paymentCreate (app/backend/controllers/paymentController.js:7:18)
 2024-08-13T11:10:37.5205442Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5205668Z 
 2024-08-13T11:10:37.5206025Z   console.error
@@ -828,7 +828,7 @@
 2024-08-13T11:10:37.5328140Z       at error (app/backend/custom_requests/external_requests.js:9:13)
 2024-08-13T11:10:37.5328597Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5329069Z       at Object.viewPayment (app/backend/models/payment_model.js:57:26)
-2024-08-13T11:10:37.5329508Z       at paymentView (app/backend/controllers/payment_controller.js:19:18)
+2024-08-13T11:10:37.5329508Z       at paymentView (app/backend/controllers/paymentController.js:19:18)
 2024-08-13T11:10:37.5329920Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5330126Z 
 2024-08-13T11:10:37.5330474Z   console.error
@@ -876,7 +876,7 @@
 2024-08-13T11:10:37.5345514Z       at error (app/backend/custom_requests/external_requests.js:13:11)
 2024-08-13T11:10:37.5345967Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5346436Z       at Object.viewPayment (app/backend/models/payment_model.js:57:26)
-2024-08-13T11:10:37.5346868Z       at paymentView (app/backend/controllers/payment_controller.js:19:18)
+2024-08-13T11:10:37.5346868Z       at paymentView (app/backend/controllers/paymentController.js:19:18)
 2024-08-13T11:10:37.5347296Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5347499Z 
 2024-08-13T11:10:37.5347823Z   console.error
@@ -1099,7 +1099,7 @@
 2024-08-13T11:10:37.5426029Z       at error (app/backend/custom_requests/external_requests.js:9:13)
 2024-08-13T11:10:37.5426533Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5427015Z       at Object.updatePayment (app/backend/models/payment_model.js:34:26)
-2024-08-13T11:10:37.5427468Z       at paymentEdit (app/backend/controllers/payment_controller.js:31:18)
+2024-08-13T11:10:37.5427468Z       at paymentEdit (app/backend/controllers/paymentController.js:31:18)
 2024-08-13T11:10:37.5427914Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5428125Z 
 2024-08-13T11:10:37.5428486Z   console.error
@@ -1147,7 +1147,7 @@
 2024-08-13T11:10:37.5444432Z       at error (app/backend/custom_requests/external_requests.js:13:11)
 2024-08-13T11:10:37.5445057Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5445565Z       at Object.updatePayment (app/backend/models/payment_model.js:34:26)
-2024-08-13T11:10:37.5446021Z       at paymentEdit (app/backend/controllers/payment_controller.js:31:18)
+2024-08-13T11:10:37.5446021Z       at paymentEdit (app/backend/controllers/paymentController.js:31:18)
 2024-08-13T11:10:37.5446453Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5446668Z 
 2024-08-13T11:10:37.5447007Z   console.error
@@ -1370,7 +1370,7 @@
 2024-08-13T11:10:37.5527342Z       at error (app/backend/custom_requests/external_requests.js:9:13)
 2024-08-13T11:10:37.5527839Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5528327Z       at Object.createInvoiceLine (app/backend/models/invoiceLineModel.js:69:26)
-2024-08-13T11:10:37.5528818Z       at invoiceLineCreate (app/backend/controllers/invoice_line_controller.js:20:18)
+2024-08-13T11:10:37.5528818Z       at invoiceLineCreate (app/backend/controllers/invoiceLineController.js:20:18)
 2024-08-13T11:10:37.5529286Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5529477Z 
 2024-08-13T11:10:37.5529840Z   console.error
@@ -1418,7 +1418,7 @@
 2024-08-13T11:10:37.5545689Z       at error (app/backend/custom_requests/external_requests.js:13:11)
 2024-08-13T11:10:37.5546165Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5546667Z       at Object.createInvoiceLine (app/backend/models/invoiceLineModel.js:69:26)
-2024-08-13T11:10:37.5547139Z       at invoiceLineCreate (app/backend/controllers/invoice_line_controller.js:20:18)
+2024-08-13T11:10:37.5547139Z       at invoiceLineCreate (app/backend/controllers/invoiceLineController.js:20:18)
 2024-08-13T11:10:37.5547576Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5547790Z 
 2024-08-13T11:10:37.5548166Z   console.error
@@ -1641,7 +1641,7 @@
 2024-08-13T11:10:37.5628245Z       at error (app/backend/custom_requests/external_requests.js:9:13)
 2024-08-13T11:10:37.5628887Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5629375Z       at Object.viewInvoiceLine (app/backend/models/invoiceLineModel.js:46:26)
-2024-08-13T11:10:37.5629842Z       at invoiceLineView (app/backend/controllers/invoice_line_controller.js:32:18)
+2024-08-13T11:10:37.5629842Z       at invoiceLineView (app/backend/controllers/invoiceLineController.js:32:18)
 2024-08-13T11:10:37.5630299Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5630500Z 
 2024-08-13T11:10:37.5630858Z   console.error
@@ -1689,7 +1689,7 @@
 2024-08-13T11:10:37.5646670Z       at error (app/backend/custom_requests/external_requests.js:13:11)
 2024-08-13T11:10:37.5647180Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5647664Z       at Object.viewInvoiceLine (app/backend/models/invoiceLineModel.js:46:26)
-2024-08-13T11:10:37.5648182Z       at invoiceLineView (app/backend/controllers/invoice_line_controller.js:32:18)
+2024-08-13T11:10:37.5648182Z       at invoiceLineView (app/backend/controllers/invoiceLineController.js:32:18)
 2024-08-13T11:10:37.5648628Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5648835Z 
 2024-08-13T11:10:37.5649197Z   console.error
@@ -1912,7 +1912,7 @@
 2024-08-13T11:10:37.5729311Z       at error (app/backend/custom_requests/external_requests.js:9:13)
 2024-08-13T11:10:37.5729816Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5730321Z       at Object.updateInvoiceLine (app/backend/models/invoiceLineModel.js:89:26)
-2024-08-13T11:10:37.5730787Z       at invoiceLineEdit (app/backend/controllers/invoice_line_controller.js:44:18)
+2024-08-13T11:10:37.5730787Z       at invoiceLineEdit (app/backend/controllers/invoiceLineController.js:44:18)
 2024-08-13T11:10:37.5731286Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5731488Z 
 2024-08-13T11:10:37.5731858Z   console.error
@@ -1960,7 +1960,7 @@
 2024-08-13T11:10:37.5747630Z       at error (app/backend/custom_requests/external_requests.js:13:11)
 2024-08-13T11:10:37.5748128Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5748750Z       at Object.updateInvoiceLine (app/backend/models/invoiceLineModel.js:89:26)
-2024-08-13T11:10:37.5749220Z       at invoiceLineEdit (app/backend/controllers/invoice_line_controller.js:44:18)
+2024-08-13T11:10:37.5749220Z       at invoiceLineEdit (app/backend/controllers/invoiceLineController.js:44:18)
 2024-08-13T11:10:37.5749689Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5749881Z 
 2024-08-13T11:10:37.5750241Z   console.error
@@ -2310,7 +2310,7 @@
 2024-08-13T11:10:37.5883846Z     +         "parse": true,
 2024-08-13T11:10:37.5884099Z     +       },
 2024-08-13T11:10:37.5884333Z     +     },
-2024-08-13T11:10:37.5884584Z     +     "path": "/bulk_upload",
+2024-08-13T11:10:37.5884584Z     +     "path": "/bulkUpload",
 2024-08-13T11:10:37.5884841Z     +   },
 2024-08-13T11:10:37.5885076Z     +   Object {
 2024-08-13T11:10:37.5885329Z     +     "method": "POST",
@@ -2475,7 +2475,7 @@
 2024-08-13T11:10:37.5929108Z       at error (app/backend/custom_requests/external_requests.js:9:13)
 2024-08-13T11:10:37.5929514Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5929906Z       at Object.createBulk (app/backend/models/invoiceModel.js:27:26)
-2024-08-13T11:10:37.5930273Z       at Bulkview (app/backend/controllers/invoice_controller.js:103:19)
+2024-08-13T11:10:37.5930273Z       at Bulkview (app/backend/controllers/invoiceController.js:103:19)
 2024-08-13T11:10:37.5930641Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5930827Z 
 2024-08-13T11:10:37.5931035Z   console.error
@@ -2523,7 +2523,7 @@
 2024-08-13T11:10:37.5943288Z       at error (app/backend/custom_requests/external_requests.js:13:11)
 2024-08-13T11:10:37.5943698Z       at Object.handleAxiosError [as sendExternalRequestGet] (app/backend/custom_requests/external_requests.js:24:5)
 2024-08-13T11:10:37.5944090Z       at Object.createBulk (app/backend/models/invoiceModel.js:27:26)
-2024-08-13T11:10:37.5944455Z       at Bulkview (app/backend/controllers/invoice_controller.js:103:19)
+2024-08-13T11:10:37.5944455Z       at Bulkview (app/backend/controllers/invoiceController.js:103:19)
 2024-08-13T11:10:37.5944805Z       at Object.<anonymous> (test/unit/routes/approutes.test.js:55:7)
 2024-08-13T11:10:37.5945002Z 
 2024-08-13T11:10:37.5945211Z   console.log

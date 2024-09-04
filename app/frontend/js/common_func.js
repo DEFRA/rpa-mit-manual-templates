@@ -109,14 +109,14 @@ $(function () {
     }
   })
 
-  const messageElement = $('.success_message')
+  const messageElement = $('.successMessage')
   if (messageElement) {
     setTimeout(function () {
       messageElement.hide()
     }, 3000)
   }
 
-  const messageElementSecond = $('.error_message')
+  const messageElementSecond = $('.errorMessage')
   if (messageElementSecond) {
     setTimeout(function () {
       messageElementSecond.hide()
@@ -136,7 +136,7 @@ $(function () {
 
   try {
     const deliveryBodyOptions = delivery_body_data ? groupByKeys(delivery_body_data, 'accountCode') : []
-    const invoiceTemplateBodyOptions = invoice_template ? groupByKeys(invoice_template, 'deliveryBodyCode') : []
+    const invoiceTemplateBodyOptions = invoiceTemplate ? groupByKeys(invoiceTemplate, 'deliveryBodyCode') : []
     const deliveryBodyOptionsUnique = delivery_body_data ? groupByKeys(delivery_body_data, 'code') : []
     const invoiceTemplateSecondaryBodyOptions = invoice_template_secondary_data || []
 
@@ -147,12 +147,12 @@ $(function () {
 
       if (radio_name == 'invoice_template_secondary') {
         options = deliveryBodyOptionsUnique[selectedType] ? invoiceTemplateSecondaryBodyOptions : []
-        updateBodyOptions('', 'invoice-template-body-container', 'invoice_template', 'Select Scheme Invoice Template')
-      } else if (radio_name == 'invoice_template') {
+        updateBodyOptions('', 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template')
+      } else if (radio_name == 'invoiceTemplate') {
         options = invoiceTemplateBodyOptions[selectedType] || []
       } else {
         options = deliveryBodyOptions[selectedType] || []
-        updateBodyOptions('', 'invoice-template-body-container', 'invoice_template', 'Select Scheme Invoice Template')
+        updateBodyOptions('', 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template')
         updateBodyOptions('', 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question')
       }
 
@@ -167,12 +167,12 @@ $(function () {
       </div>
     `
 
-        if (radio_name == 'delivery_body') {
+        if (radio_name == 'deliveryBody') {
           setTimeout(() => {
-            const deliveryTypeRadios = document.querySelectorAll('input[name="delivery_body"]')
+            const deliveryTypeRadios = document.querySelectorAll('input[name="deliveryBody"]')
             deliveryTypeRadios.forEach(radio => {
               radio.addEventListener('change', function () {
-                if (invoice_template_secondary_data) { updateBodyOptions(this.value, 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question') } else { updateBodyOptions(this.value, 'invoice-template-body-container', 'invoice_template', 'Select Scheme Invoice Template') }
+                if (invoice_template_secondary_data) { updateBodyOptions(this.value, 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question') } else { updateBodyOptions(this.value, 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template') }
               })
             })
           }, 50)
@@ -183,7 +183,7 @@ $(function () {
             const secondaryTypeRadios = document.querySelectorAll('input[name="invoice_template_secondary"]')
             secondaryTypeRadios.forEach(radio => {
               radio.addEventListener('change', function () {
-                updateBodyOptions(document.querySelector('input[name="delivery_body"]:checked').value, 'invoice-template-body-container', 'invoice_template', 'Select Scheme Invoice Template')
+                updateBodyOptions(document.querySelector('input[name="deliveryBody"]:checked').value, 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template')
               })
             })
           }, 50)
@@ -200,10 +200,10 @@ $(function () {
   `
     }
 
-    const accountTypeRadios = document.querySelectorAll('input[name="account_type"]')
+    const accountTypeRadios = document.querySelectorAll('input[name="accountType"]')
     accountTypeRadios.forEach(radio => {
       radio.addEventListener('change', function () {
-        updateBodyOptions(this.value, 'delivery-body-container', 'delivery_body', 'Select Delivery Body')
+        updateBodyOptions(this.value, 'delivery-body-container', 'deliveryBody', 'Select Delivery Body')
       })
     })
   } catch (e) {

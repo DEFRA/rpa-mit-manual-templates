@@ -1,64 +1,64 @@
 const commonModel = require('./commonModel')
-const external_request = require('../custom_requests/external_requests')
+const externalRequest = require('../custom_requests/externalRequests')
 const paymentModel = require('./paymentModel')
-const constant_model = require('../app_constants/app_constant')
+const constantModel = require('../app_constants/app_constant')
 
 const getTotalInvoiceLines = async (ID) => {
-  const total_lines = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicerequestid`, {
+  const totalLines = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicerequestid`, {
     invoiceRequestId: ID
   })
-  return (total_lines?.invoiceLines.length || 0)
+  return (totalLines?.invoiceLines.length || 0)
 }
 
 const deleteInvoiceLine = async (request) => {
-  await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicelines/delete`, {
+  await externalRequest.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicelines/delete`, {
     invoiceLineId: request.params.id
   })
-  request.yar.flash('success_message', constant_model.invoiceLineDeletionSuccess)
+  request.yar.flash('successMessage', constantModel.invoiceLineDeletionSuccess)
   return request.params.invoiceid
 }
 
 const getAllInvoiceLines = async (request) => {
-  const success_message = request.yar.flash('success_message')
-  const error_message = request.yar.flash('error_message')
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicerequestid`, {
+  const successMessage = request.yar.flash('successMessage')
+  const errorMessage = request.yar.flash('errorMessage')
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicerequestid`, {
     invoiceRequestId: request.params.id
   })
   const lineData = data?.invoiceLines || []
   const lineHeader = [{ text: 'Fund Code' }, { text: 'Main Account' }, { text: 'Scheme Code' }, { text: 'Marketing Year' }, { text: 'Delivery Body' }, { text: 'Line Value' }, { text: 'Description' }, { text: 'Action' }]
   const lineTable = commonModel.addForSummaryTableLine(lineData)
   const summaryPayment = await modifyPaymentResponse(request.params.id, true)
-  request.yar.flash('success_message', '')
-  request.yar.flash('error_message', '')
+  request.yar.flash('successMessage', '')
+  request.yar.flash('errorMessage', '')
   return {
-    pageTitle: constant_model.invoiceLineSummaryTitle,
-    payment_id: request.params.id,
+    pageTitle: constantModel.invoiceLineSummaryTitle,
+    paymentId: request.params.id,
     lineLink: `/createInvoiceLine/${request.params.id}`,
     summaryTable: lineTable,
     summaryHeader: lineHeader,
-    success_message,
-    error_message,
+    successMessage,
+    errorMessage,
     summaryPayment
   }
 }
 
 const viewInvoiceLine = async (request) => {
-  const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
+  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
   const lineData = data?.invoiceLine || []
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
   return {
-    pageTitle: constant_model.invoiceLineViewTitle,
+    pageTitle: constantModel.invoiceLineViewTitle,
     summaryPayment,
-    payment_id: lineData.invoiceRequestId,
+    paymentId: lineData.invoiceRequestId,
     line_id: request.params.id,
     paymentvalue: lineData.value,
-    description: commonModel.modify_Response_Select(options_data.referenceData.schemeTypes, lineData.description),
-    fundcode: commonModel.modify_Response_Select(options_data.referenceData.fundCodes, lineData.fundCode),
-    mainaccount: commonModel.modify_Response_Select(options_data.referenceData.accountCodes, lineData.mainAccount),
-    schemecode: commonModel.modify_Response_Select(options_data.referenceData.schemeCodes, lineData.schemeCode),
-    marketingyear: commonModel.modify_Response_Select(options_data.referenceData.marketingYears, lineData.marketingYear),
-    deliverybody: commonModel.modify_Response_Select(options_data.referenceData.deliveryBodies, lineData.deliveryBody),
+    description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes, lineData.description),
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes, lineData.fundCode),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes, lineData.mainAccount),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes, lineData.schemeCode),
+    marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, lineData.marketingYear),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies, lineData.deliveryBody),
     disableditem: true,
     attributesitem: { readonly: 'readonly' },
     view_type: 'view'
@@ -66,19 +66,19 @@ const viewInvoiceLine = async (request) => {
 }
 
 const createInvoiceLine = async (request) => {
-  const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
   const summaryPayment = await modifyPaymentResponse(request.params.id, false)
   return {
-    pageTitle: constant_model.invoiceLineAddTitle,
+    pageTitle: constantModel.invoiceLineAddTitle,
     summaryPayment,
-    payment_id: request.params.id,
+    paymentId: request.params.id,
     paymentvalue: '0.00',
-    description: commonModel.modify_Response_Select(options_data.referenceData.schemeTypes),
-    fundcode: commonModel.modify_Response_Select(options_data.referenceData.fundCodes),
-    mainaccount: commonModel.modify_Response_Select(options_data.referenceData.accountCodes),
-    schemecode: commonModel.modify_Response_Select(options_data.referenceData.schemeCodes),
-    marketingyear: commonModel.modify_Response_Select(options_data.referenceData.marketingYears),
-    deliverybody: commonModel.modify_Response_Select(options_data.referenceData.deliveryBodies),
+    description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes),
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes),
+    marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies),
     disableditem: false,
     attributesitem: {},
     view_type: 'create'
@@ -86,22 +86,22 @@ const createInvoiceLine = async (request) => {
 }
 
 const updateInvoiceLine = async (request) => {
-  const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
+  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
   const lineData = data?.invoiceLine || []
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
   return {
-    pageTitle: constant_model.invoiceline_edit_title,
+    pageTitle: constantModel.invoiceline_edit_title,
     summaryPayment,
-    payment_id: lineData.invoiceRequestId,
+    paymentId: lineData.invoiceRequestId,
     line_id: request.params.id,
     paymentvalue: lineData.value,
-    description: commonModel.modify_Response_Select(options_data.referenceData.schemeTypes, lineData.description),
-    fundcode: commonModel.modify_Response_Select(options_data.referenceData.fundCodes, lineData.fundCode),
-    mainaccount: commonModel.modify_Response_Select(options_data.referenceData.accountCodes, lineData.mainAccount),
-    schemecode: commonModel.modify_Response_Select(options_data.referenceData.schemeCodes, lineData.schemeCodes),
-    marketingyear: commonModel.modify_Response_Select(options_data.referenceData.marketingYears, lineData.marketingYears),
-    deliverybody: commonModel.modify_Response_Select(options_data.referenceData.deliveryBodies, lineData.deliveryBodies),
+    description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes, lineData.description),
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes, lineData.fundCode),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes, lineData.mainAccount),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes, lineData.schemeCodes),
+    marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, lineData.marketingYears),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies, lineData.deliveryBodies),
     disableditem: false,
     attributesitem: {},
     view_type: 'edit'
@@ -111,9 +111,9 @@ const updateInvoiceLine = async (request) => {
 const invoiceLineStore = async (request) => {
   const payload = request.payload
   if (payload.line_id) {
-    await external_request.sendExternalRequestPut(`${process.env.REQUEST_HOST}/invoicelines/update`, {
+    await externalRequest.sendExternalRequestPut(`${process.env.REQUEST_HOST}/invoicelines/update`, {
       Value: payload.paymentvalue,
-      InvoiceRequestId: payload.payment_id,
+      InvoiceRequestId: payload.paymentId,
       Description: payload.description,
       FundCode: payload.fundcode,
       MainAccount: payload.mainaccount,
@@ -122,11 +122,11 @@ const invoiceLineStore = async (request) => {
       DeliveryBody: payload.deliverybody,
       Id: payload.line_id
     })
-    request.yar.flash('success_message', constant_model.invoiceLineUpdateSuccess)
+    request.yar.flash('successMessage', constantModel.invoiceLineUpdateSuccess)
   } else {
-    await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicelines/add`, {
+    await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicelines/add`, {
       Value: payload.paymentvalue,
-      InvoiceRequestId: payload.payment_id,
+      InvoiceRequestId: payload.paymentId,
       Description: payload.description,
       FundCode: payload.fundcode,
       MainAccount: payload.mainaccount,
@@ -134,13 +134,13 @@ const invoiceLineStore = async (request) => {
       MarketingYear: payload.marketingyear,
       DeliveryBody: payload.deliverybody
     })
-    request.yar.flash('success_message', constant_model.invoiceLineCreationSuccess)
+    request.yar.flash('successMessage', constantModel.invoiceLineCreationSuccess)
   }
-  return payload.payment_id
+  return payload.paymentId
 }
 
 const modifyPaymentResponse = async (id, show_actions) => {
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`, { invoiceRequestId: id })
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`, { invoiceRequestId: id })
   const payment = data?.invoiceRequest || []
   return {
     head: 'Invoice Request Id',

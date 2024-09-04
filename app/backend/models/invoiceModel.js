@@ -1,79 +1,79 @@
 const commonModel = require('./commonModel')
-const external_request = require('../custom_requests/external_requests')
-const constant_model = require('../app_constants/app_constant')
+const externalRequest = require('../custom_requests/externalRequests')
+const constantModel = require('../app_constants/app_constant')
 const paymentModel = require('./paymentModel')
 const Path = require('path')
 
 const getAllInvoices = async (request) => {
-  const success_message = request.yar.flash('success_message')
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getall`)
-  request.yar.flash('success_message', '')
-  return { pageTitle: constant_model.invoiceListTitle, invoices: modifyInvoiceResponse(data?.invoices || []), success_message, userName: (request.yar.get('account')?.username || '') }
+  const successMessage = request.yar.flash('successMessage')
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getall`)
+  request.yar.flash('successMessage', '')
+  return { pageTitle: constantModel.invoiceListTitle, invoices: modifyInvoiceResponse(data?.invoices || []), successMessage, userName: (request.yar.get('account')?.username || '') }
 }
 
 const createInvoice = async (request) => {
-  const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const account_type = commonModel.modify_Response_Radio(options_data.referenceData.accountCodes)
-  const delivery_body = options_data.referenceData.initialDeliveryBodies
-  const invoice_template = options_data.referenceData.schemeInvoiceTemplates
-  const invoice_template_secondary = options_data.referenceData.schemeInvoiceTemplateSecondaryQuestions
-  const payment_type = commonModel.modify_Response_Radio(options_data.referenceData.paymentTypes)
+  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const accountType = commonModel.modifyResponseRadio(optionsData.referenceData.accountCodes)
+  const deliveryBody = optionsData.referenceData.initialDeliveryBodies
+  const invoiceTemplate = optionsData.referenceData.schemeInvoiceTemplates
+  const invoice_template_secondary = optionsData.referenceData.schemeInvoiceTemplateSecondaryQuestions
+  const paymentType = commonModel.modifyResponseRadio(optionsData.referenceData.paymentTypes)
   return {
-    pageTitle: constant_model.invoiceAddTitle,
-    account_type,
-    delivery_body,
-    invoice_template,
+    pageTitle: constantModel.invoiceAddTitle,
+    accountType,
+    deliveryBody,
+    invoiceTemplate,
     invoice_template_secondary,
-    payment_type
+    paymentType
   }
 }
 
 const createBulk = async (request) => {
-  const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const account_type = commonModel.modify_Response_Radio(options_data.referenceData.accountCodes)
-  const delivery_body = options_data.referenceData.initialDeliveryBodies
-  const invoice_template = options_data.referenceData.schemeInvoiceTemplates
+  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const accountType = commonModel.modifyResponseRadio(optionsData.referenceData.accountCodes)
+  const deliveryBody = optionsData.referenceData.initialDeliveryBodies
+  const invoiceTemplate = optionsData.referenceData.schemeInvoiceTemplates
   return {
-    pageTitle: constant_model.bulkUpload,
-    account_type,
-    delivery_body,
-    invoice_template
+    pageTitle: constantModel.bulkUpload,
+    accountType,
+    deliveryBody,
+    invoiceTemplate
   }
 }
 
 const invoiceStore = async (request) => {
   const payload = request.payload
-  await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoices/add`, {
-    AccountType: payload.account_type,
-    DeliveryBody: payload.delivery_body,
-    SchemeType: payload.invoice_template,
+  await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoices/add`, {
+    AccountType: payload.accountType,
+    DeliveryBody: payload.deliveryBody,
+    SchemeType: payload.invoiceTemplate,
     SecondaryQuestion: payload.invoice_template_secondary,
-    PaymentType: payload.payment_type
+    PaymentType: payload.paymentType
 
   })
-  request.yar.flash('success_message', constant_model.invoiceCreationSuccess)
+  request.yar.flash('successMessage', constantModel.invoiceCreationSuccess)
 }
 
 const invoiceSummary = async (request) => {
-  const success_message = request.yar.flash('success_message')
-  const data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getbyid`, { invoiceId: request.params.id })
+  const successMessage = request.yar.flash('successMessage')
+  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoices/getbyid`, { invoiceId: request.params.id })
   const summaryData = data?.invoice || []
   const getAllPayments = await paymentModel.getAllPayments(request.params.id)
   summaryData.invoiceRequests = getAllPayments
   const summaryBox = { head: 'Invoice Id', actions: [], id: summaryData.id, rows: await modifyForSummaryBox(summaryData) }
   const update_Data = Object.assign({}, summaryData)
   const summaryHeader = [{ text: 'Account Type' }, { text: 'Delivery Body' }, { text: 'Scheme Type' }, { text: 'Payment Type' }]
-  const summaryTable = commonModel.modify_Response_Table(commonModel.removeForSummaryTable(summaryData))
-  request.yar.flash('success_message', '')
+  const summaryTable = commonModel.modifyResponseTable(commonModel.removeForSummaryTable(summaryData))
+  request.yar.flash('successMessage', '')
   return {
-    pageTitle: constant_model.invoiceSummaryTitle,
+    pageTitle: constantModel.invoiceSummaryTitle,
     summaryTable,
     summaryBox,
     paymentLink: `/createPayment/${request.params.id}`,
     total_requests: (getAllPayments?.length || 0),
     summaryHeader,
     allPayments: getAllPayments,
-    success_message
+    successMessage
   }
 }
 
@@ -82,11 +82,11 @@ const modifyForSummaryBox = async (summaryData) => {
   summaryBoxData.push({ name: 'Status', value: `<strong class="govuk-tag">${summaryData.status.toUpperCase()}</strong>` })
   summaryBoxData.push({ name: 'Created On', value: commonModel.formatTimestamp(summaryData.created) })
   summaryBoxData.push({ name: 'Number Of Invoice Requests', value: (summaryData?.invoiceRequests?.length || 0).toString() })
-  return commonModel.modify_Response_Summary(summaryBoxData)
+  return commonModel.modifyResponseSummary(summaryBoxData)
 }
 
-const modifyInvoiceResponse = (invoice_list, action = true) => {
-  return invoice_list.map((item) => {
+const modifyInvoiceResponse = (invoiceList, action = true) => {
+  return invoiceList.map((item) => {
     return {
       head: 'Invoice Id',
       actions: action
@@ -102,10 +102,10 @@ const modifyInvoiceResponse = (invoice_list, action = true) => {
 }
 
 const deleteInvoice = async (request) => {
-  await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoices/delete`, {
+  await externalRequest.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoices/delete`, {
     invoiceId: request.params.id
   })
-  request.yar.flash('success_message', constant_model.invoiceDeletionSuccess)
+  request.yar.flash('successMessage', constantModel.invoiceDeletionSuccess)
   return request.params.id
 }
 
@@ -116,23 +116,23 @@ const downloadFile = async (request, h) => {
 
 const BulkDataUpload = async (request) => {
   const { payload } = request
-  const bulk_data = JSON.parse(payload.bulk_data)
-  await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/bulkuploads/confirm`, {
-    invoiceId: bulk_data.bulkUploadInvoice.id,
+  const bulkData = JSON.parse(payload.bulkData)
+  await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/bulkuploads/confirm`, {
+    invoiceId: bulkData.bulkUploadInvoice.id,
     confirmUpload: true,
     confirm: true
   })
-  request.yar.flash('success_message', constant_model.invoiceLineBulkUploadSuccess)
+  request.yar.flash('successMessage', constantModel.invoiceLineBulkUploadSuccess)
 }
 
 const uploadBulk = async (request, h) => {
   const { payload } = request
-  const bulk_data = await commonModel.processUploadedCSV(payload.bulk_file)
-  if (!bulk_data) {
-    request.yar.flash('error_message', constant_model.invoiceLineBulkUploadFailed)
-    return h.redirect(`/viewPaymentLine/${payload.payment_id}`).temporary()
+  const bulkData = await commonModel.processUploadedCSV(payload.bulk_file)
+  if (!bulkData) {
+    request.yar.flash('errorMessage', constantModel.invoiceLineBulkUploadFailed)
+    return h.redirect(`/viewPaymentLine/${payload.paymentId}`).temporary()
   } else {
-    const invoiceRequests = bulk_data?.bulkUploadInvoice?.bulkUploadApHeaderLines.map((invRequest, ind) => {
+    const invoiceRequests = bulkData?.bulkUploadInvoice?.bulkUploadApHeaderLines.map((invRequest, ind) => {
       return {
         id: invRequest.invoiceRequestId,
         invid: invRequest.invoiceId,
@@ -141,11 +141,11 @@ const uploadBulk = async (request, h) => {
         lines_data: commonModel.BulkLineData(invRequest.bulkUploadApDetailLines, true)
       }
     })
-    return h.view('app_views/bulk_view', {
-      pageTitle: constant_model.bulkUpload,
-      invoices: modifyInvoiceResponse([bulk_data?.bulkUploadInvoice], action = false),
+    return h.view('app_views/bulkView', {
+      pageTitle: constantModel.bulkUpload,
+      invoices: modifyInvoiceResponse([bulkData?.bulkUploadInvoice], action = false),
       invoiceRequests,
-      bulk_data: JSON.stringify(bulk_data)
+      bulkData: JSON.stringify(bulkData)
     })
   }
 }

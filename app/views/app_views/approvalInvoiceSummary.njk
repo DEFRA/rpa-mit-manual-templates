@@ -15,7 +15,7 @@
   href: "#",
   classes:"backButton"
 }) }}
-{% include "partials_views/page_title.njk" %}
+{% include "partials_views/pageTitle.njk" %}
 {{ 
 govukButton({
 text: "Approve Invoice",
@@ -31,7 +31,7 @@ href: approveUrl
 <form id="reasonForm" action="/rejectInvoice" method="POST">
 <div class="popup-overlay" id="popupOverlay">
     <div class="popup-content govuk-form-group">
-       <input name="invoice_id" type="hidden" value="{{invoiceId}}" />
+       <input name="invoiceId" type="hidden" value="{{invoiceId}}" />
        {{ govukTextarea({
           name: "reason",
           id: "reason",
@@ -45,10 +45,10 @@ href: approveUrl
          }
         }) 
         }}
-         {% set error_message %}
+         {% set errorMessage %}
           Fill All The Fields
          {% endset %}
-        {% include "partials_views/error_banner.njk" %}
+        {% include "partials_views/errorBanner.njk" %}
         <div class="govuk-button-group">
            {{ govukButton({text: "Submit"}) }}
            {{ 
@@ -62,7 +62,7 @@ href: approveUrl
 </div>
  </form> 
 {% for item in invoices %}
- {% include "partials_views/summary_box.njk" %}
+ {% include "partials_views/summaryBox.njk" %}
 {% endfor %}
 
 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
@@ -80,13 +80,13 @@ href: approveUrl
        Request Detail
       </div>
       {% set item = singleitem.summary_data %}
-      {% include "partials_views/summary_box.njk" %}
+      {% include "partials_views/summaryBox.njk" %}
       <div class="govuk-heading-l color-heading">
        Line Details
       </div>
       {% set summaryHeader = singleitem.lines_data.lineDetail %}
       {% set summaryTable = singleitem.lines_data.lineTable %}
-      {% include "partials_views/summary_table.njk" %}
+      {% include "partials_views/summaryTable.njk" %}
     </div>
   </div>
 {% endfor %}
