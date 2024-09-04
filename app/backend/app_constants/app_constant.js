@@ -2,7 +2,7 @@ const requestHost = 'http://localhost:5161'
 /* invoice model */
 const invoiceListTitle = 'Invoice List'
 const approveInvoiceListTitle = 'Approval Invoices List'
-const approval_invoice_summary = 'Approval Invoice Summary'
+const approvalInvoiceSummary = 'Approval Invoice Summary'
 const invoiceApproveSuccess = 'Invoice Approved Successfully'
 const invoiceRejectSuccess = 'Invoice Rejected Successfully'
 
@@ -33,7 +33,7 @@ module.exports = {
   requestHost,
   invoiceListTitle,
   approveInvoiceListTitle,
-  approval_invoice_summary,
+  approvalInvoiceSummary,
   invoiceApproveSuccess,
   invoiceRejectSuccess,
   invoiceAddTitle,
