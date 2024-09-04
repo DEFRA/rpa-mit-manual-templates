@@ -20,7 +20,7 @@ const paymentDeletionSuccess = 'Invoice Request Deleted Successfully'
 /* invoice line model */
 const invoiceLineSummaryTitle = 'Invoice Request Summary'
 const invoiceLineAddTitle = 'Add Invoice Line'
-const invoiceline_edit_title = 'Edit Invoice Line'
+const invoiceLineEditTitle = 'Edit Invoice Line'
 const invoiceLineViewTitle = 'View Invoice Line'
 const invoiceLineUpdateSuccess = 'Invoice Line Updated Successfully'
 const invoiceLineCreationSuccess = 'Invoice Line Created Successfully'
@@ -48,11 +48,10 @@ module.exports = {
   paymentDeletionSuccess,
   invoiceLineSummaryTitle,
   invoiceLineAddTitle,
-  invoiceline_edit_title,
+  invoiceLineEditTitle,
   invoiceLineViewTitle,
   invoiceLineUpdateSuccess,
   invoiceLineCreationSuccess,
-  invoiceLineDeletionSuccess,
   invoiceLineDeletionSuccess,
   invoiceLineBulkUploadFailed,
   invoiceLineBulkUploadSuccess,

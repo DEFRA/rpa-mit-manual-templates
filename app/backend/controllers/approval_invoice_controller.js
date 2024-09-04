@@ -1,37 +1,37 @@
-const approval_invoice_model = require('../models/approval_invoice_model')
-const error_model = require('../models/common_error')
+const approvalInvoiceModel  = require('../models/approvalInvoiceModel ')
+const errorModel  = require('../models/commonError')
 const approveInvoiceList = async (request, h) => {
   try {
-    const res = await approval_invoice_model.getAllInvoices(request)
+    const res = await approvalInvoiceModel .getAllInvoices(request)
     return h.view('app_views/approval_invoice_list', res)
   } catch (error) {
-    return error_model.errorMessage(error, h)
+    return errorModel .errorMessage(error, h)
   }
 }
 
 const approvalInvoiceSummary = async (request, h) => {
   try {
-    return await approval_invoice_model.invoiceSummary(request, h)
+    return await approvalInvoiceModel .invoiceSummary(request, h)
   } catch (error) {
-    return error_model.errorMessage(error, h)
+    return errorModel .errorMessage(error, h)
   }
 }
 
 const approveInvoice = async (request, h) => {
   try {
-    await approval_invoice_model.approveInvoice(request)
+    await approvalInvoiceModel .approveInvoice(request)
     return h.redirect('/approvelist').temporary()
   } catch (error) {
-    return error_model.errorMessage(error, h)
+    return errorModel .errorMessage(error, h)
   }
 }
 
 const rejectInvoice = async (request, h) => {
   try {
-    await approval_invoice_model.rejectInvoice(request)
+    await approvalInvoiceModel .rejectInvoice(request)
     return h.redirect('/approvelist').temporary()
   } catch (error) {
-    return error_model.errorMessage(error, h)
+    return errorModel .errorMessage(error, h)
   }
 }
 

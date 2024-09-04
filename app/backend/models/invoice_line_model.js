@@ -1,6 +1,6 @@
-const common_model = require('./common_model')
+const commonModel = require('./commonModel')
 const external_request = require('../custom_requests/external_requests')
-const payment_model = require('./payment_model')
+const payment_model = require('./paymentModel')
 const constant_model = require('../app_constants/app_constant')
 
 const getTotalInvoiceLines = async (ID) => {
@@ -26,7 +26,7 @@ const getAllInvoiceLines = async (request) => {
   })
   const lineData = data?.invoiceLines || []
   const lineHeader = [{ text: 'Fund Code' }, { text: 'Main Account' }, { text: 'Scheme Code' }, { text: 'Marketing Year' }, { text: 'Delivery Body' }, { text: 'Line Value' }, { text: 'Description' }, { text: 'Action' }]
-  const lineTable = common_model.addForSummaryTableLine(lineData)
+  const lineTable = commonModel.addForSummaryTableLine(lineData)
   const summaryPayment = await modifyPaymentResponse(request.params.id, true)
   request.yar.flash('success_message', '')
   request.yar.flash('error_message', '')
@@ -53,12 +53,12 @@ const viewInvoiceLine = async (request) => {
     payment_id: lineData.invoiceRequestId,
     line_id: request.params.id,
     paymentvalue: lineData.value,
-    description: common_model.modify_Response_Select(options_data.referenceData.schemeTypes, lineData.description),
-    fundcode: common_model.modify_Response_Select(options_data.referenceData.fundCodes, lineData.fundCode),
-    mainaccount: common_model.modify_Response_Select(options_data.referenceData.accountCodes, lineData.mainAccount),
-    schemecode: common_model.modify_Response_Select(options_data.referenceData.schemeCodes, lineData.schemeCode),
-    marketingyear: common_model.modify_Response_Select(options_data.referenceData.marketingYears, lineData.marketingYear),
-    deliverybody: common_model.modify_Response_Select(options_data.referenceData.deliveryBodies, lineData.deliveryBody),
+    description: commonModel.modify_Response_Select(options_data.referenceData.schemeTypes, lineData.description),
+    fundcode: commonModel.modify_Response_Select(options_data.referenceData.fundCodes, lineData.fundCode),
+    mainaccount: commonModel.modify_Response_Select(options_data.referenceData.accountCodes, lineData.mainAccount),
+    schemecode: commonModel.modify_Response_Select(options_data.referenceData.schemeCodes, lineData.schemeCode),
+    marketingyear: commonModel.modify_Response_Select(options_data.referenceData.marketingYears, lineData.marketingYear),
+    deliverybody: commonModel.modify_Response_Select(options_data.referenceData.deliveryBodies, lineData.deliveryBody),
     disableditem: true,
     attributesitem: { readonly: 'readonly' },
     view_type: 'view'
@@ -73,12 +73,12 @@ const createInvoiceLine = async (request) => {
     summaryPayment,
     payment_id: request.params.id,
     paymentvalue: '0.00',
-    description: common_model.modify_Response_Select(options_data.referenceData.schemeTypes),
-    fundcode: common_model.modify_Response_Select(options_data.referenceData.fundCodes),
-    mainaccount: common_model.modify_Response_Select(options_data.referenceData.accountCodes),
-    schemecode: common_model.modify_Response_Select(options_data.referenceData.schemeCodes),
-    marketingyear: common_model.modify_Response_Select(options_data.referenceData.marketingYears),
-    deliverybody: common_model.modify_Response_Select(options_data.referenceData.deliveryBodies),
+    description: commonModel.modify_Response_Select(options_data.referenceData.schemeTypes),
+    fundcode: commonModel.modify_Response_Select(options_data.referenceData.fundCodes),
+    mainaccount: commonModel.modify_Response_Select(options_data.referenceData.accountCodes),
+    schemecode: commonModel.modify_Response_Select(options_data.referenceData.schemeCodes),
+    marketingyear: commonModel.modify_Response_Select(options_data.referenceData.marketingYears),
+    deliverybody: commonModel.modify_Response_Select(options_data.referenceData.deliveryBodies),
     disableditem: false,
     attributesitem: {},
     view_type: 'create'
@@ -96,12 +96,12 @@ const updateInvoiceLine = async (request) => {
     payment_id: lineData.invoiceRequestId,
     line_id: request.params.id,
     paymentvalue: lineData.value,
-    description: common_model.modify_Response_Select(options_data.referenceData.schemeTypes, lineData.description),
-    fundcode: common_model.modify_Response_Select(options_data.referenceData.fundCodes, lineData.fundCode),
-    mainaccount: common_model.modify_Response_Select(options_data.referenceData.accountCodes, lineData.mainAccount),
-    schemecode: common_model.modify_Response_Select(options_data.referenceData.schemeCodes, lineData.schemeCodes),
-    marketingyear: common_model.modify_Response_Select(options_data.referenceData.marketingYears, lineData.marketingYears),
-    deliverybody: common_model.modify_Response_Select(options_data.referenceData.deliveryBodies, lineData.deliveryBodies),
+    description: commonModel.modify_Response_Select(options_data.referenceData.schemeTypes, lineData.description),
+    fundcode: commonModel.modify_Response_Select(options_data.referenceData.fundCodes, lineData.fundCode),
+    mainaccount: commonModel.modify_Response_Select(options_data.referenceData.accountCodes, lineData.mainAccount),
+    schemecode: commonModel.modify_Response_Select(options_data.referenceData.schemeCodes, lineData.schemeCodes),
+    marketingyear: commonModel.modify_Response_Select(options_data.referenceData.marketingYears, lineData.marketingYears),
+    deliverybody: commonModel.modify_Response_Select(options_data.referenceData.deliveryBodies, lineData.deliveryBodies),
     disableditem: false,
     attributesitem: {},
     view_type: 'edit'

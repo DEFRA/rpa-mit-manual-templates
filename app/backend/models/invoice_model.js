@@ -1,7 +1,7 @@
-const common_model = require('./common_model')
+const commonModel = require('./commonModel')
 const external_request = require('../custom_requests/external_requests')
 const constant_model = require('../app_constants/app_constant')
-const payment_model = require('./payment_model')
+const payment_model = require('./paymentModel')
 const Path = require('path')
 
 const getAllInvoices = async (request) => {
@@ -13,11 +13,11 @@ const getAllInvoices = async (request) => {
 
 const createInvoice = async (request) => {
   const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const account_type = common_model.modify_Response_Radio(options_data.referenceData.accountCodes)
+  const account_type = commonModel.modify_Response_Radio(options_data.referenceData.accountCodes)
   const delivery_body = options_data.referenceData.initialDeliveryBodies
   const invoice_template = options_data.referenceData.schemeInvoiceTemplates
   const invoice_template_secondary = options_data.referenceData.schemeInvoiceTemplateSecondaryQuestions
-  const payment_type = common_model.modify_Response_Radio(options_data.referenceData.paymentTypes)
+  const payment_type = commonModel.modify_Response_Radio(options_data.referenceData.paymentTypes)
   return {
     pageTitle: constant_model.invoiceAddTitle,
     account_type,
@@ -30,7 +30,7 @@ const createInvoice = async (request) => {
 
 const createBulk = async (request) => {
   const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const account_type = common_model.modify_Response_Radio(options_data.referenceData.accountCodes)
+  const account_type = commonModel.modify_Response_Radio(options_data.referenceData.accountCodes)
   const delivery_body = options_data.referenceData.initialDeliveryBodies
   const invoice_template = options_data.referenceData.schemeInvoiceTemplates
   return {
@@ -63,7 +63,7 @@ const invoiceSummary = async (request) => {
   const summaryBox = { head: 'Invoice Id', actions: [], id: summaryData.id, rows: await modifyForSummaryBox(summaryData) }
   const update_Data = Object.assign({}, summaryData)
   const summaryHeader = [{ text: 'Account Type' }, { text: 'Delivery Body' }, { text: 'Scheme Type' }, { text: 'Payment Type' }]
-  const summaryTable = common_model.modify_Response_Table(common_model.removeForSummaryTable(summaryData))
+  const summaryTable = commonModel.modify_Response_Table(commonModel.removeForSummaryTable(summaryData))
   request.yar.flash('success_message', '')
   return {
     pageTitle: constant_model.invoiceSummaryTitle,
@@ -80,9 +80,9 @@ const invoiceSummary = async (request) => {
 const modifyForSummaryBox = async (summaryData) => {
   const summaryBoxData = []
   summaryBoxData.push({ name: 'Status', value: `<strong class="govuk-tag">${summaryData.status.toUpperCase()}</strong>` })
-  summaryBoxData.push({ name: 'Created On', value: common_model.formatTimestamp(summaryData.created) })
+  summaryBoxData.push({ name: 'Created On', value: commonModel.formatTimestamp(summaryData.created) })
   summaryBoxData.push({ name: 'Number Of Invoice Requests', value: (summaryData?.invoiceRequests?.length || 0).toString() })
-  return common_model.modify_Response_Summary(summaryBoxData)
+  return commonModel.modify_Response_Summary(summaryBoxData)
 }
 
 const modifyInvoiceResponse = (invoice_list, action = true) => {
@@ -96,7 +96,7 @@ const modifyInvoiceResponse = (invoice_list, action = true) => {
           ]
         : [],
       id: item.id,
-      rows: common_model.modifyForSummary(item)
+      rows: commonModel.modifyForSummary(item)
     }
   })
 }
@@ -127,7 +127,7 @@ const BulkDataUpload = async (request) => {
 
 const uploadBulk = async (request, h) => {
   const { payload } = request
-  const bulk_data = await common_model.processUploadedCSV(payload.bulk_file)
+  const bulk_data = await commonModel.processUploadedCSV(payload.bulk_file)
   if (!bulk_data) {
     request.yar.flash('error_message', constant_model.invoiceLineBulkUploadFailed)
     return h.redirect(`/viewPaymentLine/${payload.payment_id}`).temporary()
@@ -137,8 +137,8 @@ const uploadBulk = async (request, h) => {
         id: invRequest.invoiceRequestId,
         invid: invRequest.invoiceId,
         index: (ind + 1),
-        summary_data: common_model.BulkHeadData(invRequest, true),
-        lines_data: common_model.BulkLineData(invRequest.bulkUploadApDetailLines, true)
+        summary_data: commonModel.BulkHeadData(invRequest, true),
+        lines_data: commonModel.BulkLineData(invRequest.bulkUploadApDetailLines, true)
       }
     })
     return h.view('app_views/bulk_view', {
