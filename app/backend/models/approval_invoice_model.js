@@ -6,7 +6,7 @@ const getAllInvoices = async (request) => {
   const success_message = request.yar.flash('success_message')
   const data = await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/getmyapprovals`, {})
   request.yar.flash('success_message', '')
-  return { pageTitle: constant_model.approveInvoiceListTitle , invoices: modifyInvoiceResponse(data?.invoices || []), success_message }
+  return { pageTitle: constant_model.approveInvoiceListTitle, invoices: modifyInvoiceResponse(data?.invoices || []), success_message }
 }
 
 const approveInvoice = async (request) => {

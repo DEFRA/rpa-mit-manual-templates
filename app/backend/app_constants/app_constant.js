@@ -1,7 +1,7 @@
-const requestHost  = 'http://localhost:5161'
+const requestHost = 'http://localhost:5161'
 /* invoice model */
 const invoiceListTitle = 'Invoice List'
-const approveInvoiceListTitle  = 'Approval Invoices List'
+const approveInvoiceListTitle = 'Approval Invoices List'
 const approval_invoice_summary = 'Approval Invoice Summary'
 const invoiceApproveSuccess = 'Invoice Approved Successfully'
 const invoiceRejectSuccess = 'Invoice Rejected Successfully'
@@ -30,9 +30,9 @@ const invoiceLineBulkUploadFailed = 'Invoice Bulk Upload Failed'
 const invoiceLineBulkUploadSuccess = 'Invoice Bulk Uploaded Successfully'
 const bulkUpload = 'Bulk Upload'
 module.exports = {
-  requestHost ,
+  requestHost,
   invoiceListTitle,
-  approveInvoiceListTitle ,
+  approveInvoiceListTitle,
   approval_invoice_summary,
   invoiceApproveSuccess,
   invoiceRejectSuccess,
