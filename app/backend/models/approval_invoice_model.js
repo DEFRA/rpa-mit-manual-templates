@@ -13,7 +13,7 @@ const approveInvoice = async (request) => {
   await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/approve`, {
     id: request.params.id
   })
-  request.yar.flash('success_message', constant_model.invoice_approve_success)
+  request.yar.flash('success_message', constant_model.invoiceApproveSuccess)
   return request.params.id
 }
 
@@ -23,7 +23,7 @@ const rejectInvoice = async (request) => {
     id: payload.invoice_id,
     reason: payload.reason
   })
-  request.yar.flash('success_message', constant_model.invoice_reject_success)
+  request.yar.flash('success_message', constant_model.invoiceRejectSuccess)
   return request.params.id
 }
 

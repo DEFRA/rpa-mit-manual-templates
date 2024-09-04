@@ -14,7 +14,7 @@ const createPayment = async (request) => {
   const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes)
   const invoice_data = await summaryPayments(request.params.id)
   return {
-    pageTitle: constant_model.payment_add_title,
+    pageTitle: constant_model.paymentAddTitle,
     payment_type,
     ...invoice_data,
     invoice_id: request.params.id,
@@ -37,7 +37,7 @@ const updatePayment = async (request) => {
   const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes, paymentData.currency)
   const invoice_data = await summaryPayments(request.params.invoiceid)
   return {
-    pageTitle: constant_model.payment_edit_title,
+    pageTitle: constant_model.paymentEditTitle,
     payment_type,
     ...invoice_data,
     invoice_id: request.params.invoiceid,
@@ -61,7 +61,7 @@ const viewPayment = async (request) => {
   const payment_type = common_model.modify_Response_Select(options_data.referenceData.paymentTypes, paymentData.currency)
   const invoice_data = await summaryPayments(request.params.invoiceid)
   return {
-    pageTitle: constant_model.payment_view_title,
+    pageTitle: constant_model.paymentViewTitle,
     payment_type,
     ...invoice_data,
     invoice_id: request.params.invoiceid,
@@ -93,7 +93,7 @@ const paymentStore = async (request) => {
       MarketingYear: '',
       AccountType: ''
     })
-    request.yar.flash('success_message', constant_model.payment_update_success)
+    request.yar.flash('success_message', constant_model.paymentUpdateSuccess)
   } else {
     await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicerequests/add`, {
       InvoiceId: payload.inv_id,
@@ -108,7 +108,7 @@ const paymentStore = async (request) => {
       MarketingYear: '',
       AccountType: ''
     })
-    request.yar.flash('success_message', constant_model.payment_creation_success)
+    request.yar.flash('success_message', constant_model.paymentCreationSuccess)
   }
   return payload.inv_id
 }
@@ -132,7 +132,7 @@ const deletePayment = async (request) => {
   await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicerequests/delete`, {
     invoiceRequestId: request.params.id
   })
-  request.yar.flash('success_message', constant_model.payment_deletion_success)
+  request.yar.flash('success_message', constant_model.paymentDeletionSuccess)
   return request.params.invoiceid
 }
 

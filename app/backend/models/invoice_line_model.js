@@ -14,7 +14,7 @@ const deleteInvoiceLine = async (request) => {
   await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicelines/delete`, {
     invoiceLineId: request.params.id
   })
-  request.yar.flash('success_message', constant_model.invoiceline_deletion_success)
+  request.yar.flash('success_message', constant_model.invoiceLineDeletionSuccess)
   return request.params.invoiceid
 }
 
@@ -31,7 +31,7 @@ const getAllInvoiceLines = async (request) => {
   request.yar.flash('success_message', '')
   request.yar.flash('error_message', '')
   return {
-    pageTitle: constant_model.invoiceline_summary_title,
+    pageTitle: constant_model.invoiceLineSummaryTitle,
     payment_id: request.params.id,
     lineLink: `/createInvoiceLine/${request.params.id}`,
     summaryTable: lineTable,
@@ -48,7 +48,7 @@ const viewInvoiceLine = async (request) => {
   const lineData = data?.invoiceLine || []
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
   return {
-    pageTitle: constant_model.invoiceline_view_title,
+    pageTitle: constant_model.invoiceLineViewTitle,
     summaryPayment,
     payment_id: lineData.invoiceRequestId,
     line_id: request.params.id,
@@ -69,7 +69,7 @@ const createInvoiceLine = async (request) => {
   const options_data = await external_request.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
   const summaryPayment = await modifyPaymentResponse(request.params.id, false)
   return {
-    pageTitle: constant_model.invoiceline_add_title,
+    pageTitle: constant_model.invoiceLineAddTitle,
     summaryPayment,
     payment_id: request.params.id,
     paymentvalue: '0.00',
@@ -122,7 +122,7 @@ const invoiceLineStore = async (request) => {
       DeliveryBody: payload.deliverybody,
       Id: payload.line_id
     })
-    request.yar.flash('success_message', constant_model.invoiceline_update_success)
+    request.yar.flash('success_message', constant_model.invoiceLineUpdateSuccess)
   } else {
     await external_request.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicelines/add`, {
       Value: payload.paymentvalue,
@@ -134,7 +134,7 @@ const invoiceLineStore = async (request) => {
       MarketingYear: payload.marketingyear,
       DeliveryBody: payload.deliverybody
     })
-    request.yar.flash('success_message', constant_model.invoiceline_creation_success)
+    request.yar.flash('success_message', constant_model.invoiceLineCreationSuccess)
   }
   return payload.payment_id
 }

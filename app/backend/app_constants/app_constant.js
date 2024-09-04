@@ -3,58 +3,58 @@ const requestHost  = 'http://localhost:5161'
 const invoiceListTitle = 'Invoice List'
 const approveInvoiceListTitle  = 'Approval Invoices List'
 const approval_invoice_summary = 'Approval Invoice Summary'
-const invoice_approve_success = 'Invoice Approved Successfully'
-const invoice_reject_success = 'Invoice Rejected Successfully'
+const invoiceApproveSuccess = 'Invoice Approved Successfully'
+const invoiceRejectSuccess = 'Invoice Rejected Successfully'
 
-const invoice_add_title = 'Invoice Header'
-const invoice_creation_success = 'Invoice Created Successfully'
-const invoice_summary_title = 'Invoice Summary'
-const invoice_deletion_success = 'Invoice Deleted Successfully'
+const invoiceAddTitle = 'Invoice Header'
+const invoiceCreationSuccess = 'Invoice Created Successfully'
+const invoiceSummaryTitle = 'Invoice Summary'
+const invoiceDeletionSuccess = 'Invoice Deleted Successfully'
 /* payment model */
-const payment_add_title = 'Add Invoice Requests'
-const payment_edit_title = 'Edit Invoice Requests'
-const payment_view_title = 'View Invoice Requests'
-const payment_update_success = 'Invoice Request Updated Successfully'
-const payment_creation_success = 'Invoice Request Created Successfully'
-const payment_deletion_success = 'Invoice Request Deleted Successfully'
+const paymentAddTitle = 'Add Invoice Requests'
+const paymentEditTitle = 'Edit Invoice Requests'
+const paymentViewTitle = 'View Invoice Requests'
+const paymentUpdateSuccess = 'Invoice Request Updated Successfully'
+const paymentCreationSuccess = 'Invoice Request Created Successfully'
+const paymentDeletionSuccess = 'Invoice Request Deleted Successfully'
 /* invoice line model */
-const invoiceline_summary_title = 'Invoice Request Summary'
-const invoiceline_add_title = 'Add Invoice Line'
+const invoiceLineSummaryTitle = 'Invoice Request Summary'
+const invoiceLineAddTitle = 'Add Invoice Line'
 const invoiceline_edit_title = 'Edit Invoice Line'
-const invoiceline_view_title = 'View Invoice Line'
-const invoiceline_update_success = 'Invoice Line Updated Successfully'
-const invoiceline_creation_success = 'Invoice Line Created Successfully'
-const invoiceline_deletion_success = 'Invoice Line Deleted Successfully'
+const invoiceLineViewTitle = 'View Invoice Line'
+const invoiceLineUpdateSuccess = 'Invoice Line Updated Successfully'
+const invoiceLineCreationSuccess = 'Invoice Line Created Successfully'
+const invoiceLineDeletionSuccess = 'Invoice Line Deleted Successfully'
 
-const invoiceline_bulkupload_failed = 'Invoice Bulk Upload Failed'
-const invoiceline_bulkupload_success = 'Invoice Bulk Uploaded Successfully'
-const bulk_upload = 'Bulk Upload'
+const invoiceLineBulkUploadFailed = 'Invoice Bulk Upload Failed'
+const invoiceLineBulkUploadSuccess = 'Invoice Bulk Uploaded Successfully'
+const bulkUpload = 'Bulk Upload'
 module.exports = {
   requestHost ,
   invoiceListTitle,
   approveInvoiceListTitle ,
   approval_invoice_summary,
-  invoice_approve_success,
-  invoice_reject_success,
-  invoice_add_title,
-  invoice_creation_success,
-  invoice_summary_title,
-  invoice_deletion_success,
-  payment_add_title,
-  payment_edit_title,
-  payment_view_title,
-  payment_update_success,
-  payment_creation_success,
-  payment_deletion_success,
-  invoiceline_summary_title,
-  invoiceline_add_title,
+  invoiceApproveSuccess,
+  invoiceRejectSuccess,
+  invoiceAddTitle,
+  invoiceCreationSuccess,
+  invoiceSummaryTitle,
+  invoiceDeletionSuccess,
+  paymentAddTitle,
+  paymentEditTitle,
+  paymentViewTitle,
+  paymentUpdateSuccess,
+  paymentCreationSuccess,
+  paymentDeletionSuccess,
+  invoiceLineSummaryTitle,
+  invoiceLineAddTitle,
   invoiceline_edit_title,
-  invoiceline_view_title,
-  invoiceline_update_success,
-  invoiceline_creation_success,
-  invoiceline_deletion_success,
-  invoiceline_deletion_success,
-  invoiceline_bulkupload_failed,
-  invoiceline_bulkupload_success,
-  bulk_upload
+  invoiceLineViewTitle,
+  invoiceLineUpdateSuccess,
+  invoiceLineCreationSuccess,
+  invoiceLineDeletionSuccess,
+  invoiceLineDeletionSuccess,
+  invoiceLineBulkUploadFailed,
+  invoiceLineBulkUploadSuccess,
+  bulkUpload
 }

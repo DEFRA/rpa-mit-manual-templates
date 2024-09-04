@@ -19,7 +19,7 @@ const createInvoice = async (request) => {
   const invoice_template_secondary = options_data.referenceData.schemeInvoiceTemplateSecondaryQuestions
   const payment_type = common_model.modify_Response_Radio(options_data.referenceData.paymentTypes)
   return {
-    pageTitle: constant_model.invoice_add_title,
+    pageTitle: constant_model.invoiceAddTitle,
     account_type,
     delivery_body,
     invoice_template,
@@ -34,7 +34,7 @@ const createBulk = async (request) => {
   const delivery_body = options_data.referenceData.initialDeliveryBodies
   const invoice_template = options_data.referenceData.schemeInvoiceTemplates
   return {
-    pageTitle: constant_model.bulk_upload,
+    pageTitle: constant_model.bulkUpload,
     account_type,
     delivery_body,
     invoice_template
@@ -51,7 +51,7 @@ const invoiceStore = async (request) => {
     PaymentType: payload.payment_type
 
   })
-  request.yar.flash('success_message', constant_model.invoice_creation_success)
+  request.yar.flash('success_message', constant_model.invoiceCreationSuccess)
 }
 
 const invoiceSummary = async (request) => {
@@ -66,7 +66,7 @@ const invoiceSummary = async (request) => {
   const summaryTable = common_model.modify_Response_Table(common_model.removeForSummaryTable(summaryData))
   request.yar.flash('success_message', '')
   return {
-    pageTitle: constant_model.invoice_summary_title,
+    pageTitle: constant_model.invoiceSummaryTitle,
     summaryTable,
     summaryBox,
     paymentLink: `/createPayment/${request.params.id}`,
@@ -105,7 +105,7 @@ const deleteInvoice = async (request) => {
   await external_request.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoices/delete`, {
     invoiceId: request.params.id
   })
-  request.yar.flash('success_message', constant_model.invoice_deletion_success)
+  request.yar.flash('success_message', constant_model.invoiceDeletionSuccess)
   return request.params.id
 }
 
@@ -122,14 +122,14 @@ const BulkDataUpload = async (request) => {
     confirmUpload: true,
     confirm: true
   })
-  request.yar.flash('success_message', constant_model.invoiceline_bulkupload_success)
+  request.yar.flash('success_message', constant_model.invoiceLineBulkUploadSuccess)
 }
 
 const uploadBulk = async (request, h) => {
   const { payload } = request
   const bulk_data = await common_model.processUploadedCSV(payload.bulk_file)
   if (!bulk_data) {
-    request.yar.flash('error_message', constant_model.invoiceline_bulkupload_failed)
+    request.yar.flash('error_message', constant_model.invoiceLineBulkUploadFailed)
     return h.redirect(`/viewPaymentLine/${payload.payment_id}`).temporary()
   } else {
     const invoiceRequests = bulk_data?.bulkUploadInvoice?.bulkUploadApHeaderLines.map((invRequest, ind) => {
@@ -142,7 +142,7 @@ const uploadBulk = async (request, h) => {
       }
     })
     return h.view('app_views/bulk_view', {
-      pageTitle: constant_model.bulk_upload,
+      pageTitle: constant_model.bulkUpload,
       invoices: modifyInvoiceResponse([bulk_data?.bulkUploadInvoice], action = false),
       invoiceRequests,
       bulk_data: JSON.stringify(bulk_data)
