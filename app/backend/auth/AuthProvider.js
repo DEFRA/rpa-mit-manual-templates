@@ -56,14 +56,8 @@ class AuthProvider {
         code: ''
       }
     })
-
-    try {
-      const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(request.yar.get('authCodeUrlRequest'))
-      return h.redirect(authCodeUrlResponse)
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
+    const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(request.yar.get('authCodeUrlRequest'))
+    return h.redirect(authCodeUrlResponse)
   }
 
   async acquireToken (request, h) {
@@ -106,28 +100,24 @@ class AuthProvider {
       codeVerifier: request.yar.get('pkceCodes').verifier
     }
 
-    try {
-      const msalInstance = this.getMsalInstance()
+    const msalInstance = this.getMsalInstance()
 
-      if (request.yar.get('tokenCache')) {
-        msalInstance.getTokenCache().deserialize(request.yar.get('tokenCache'))
-      }
-
-      const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest)
-
-      request.yar.set({
-        accessToken: tokenResponse.accessToken,
-        tokenCache: msalInstance.getTokenCache().serialize(),
-        idToken: tokenResponse.idToken,
-        account: tokenResponse.account,
-        isAuthenticated: true
-      })
-
-      const state = JSON.parse(this.cryptoProvider.base64Decode(request.payload.state))
-      return h.redirect(state.successRedirect)
-    } catch (error) {
-      throw error
+    if (request.yar.get('tokenCache')) {
+      msalInstance.getTokenCache().deserialize(request.yar.get('tokenCache'))
     }
+
+    const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest)
+
+    request.yar.set({
+      accessToken: tokenResponse.accessToken,
+      tokenCache: msalInstance.getTokenCache().serialize(),
+      idToken: tokenResponse.idToken,
+      account: tokenResponse.account,
+      isAuthenticated: true
+    })
+
+    const state = JSON.parse(this.cryptoProvider.base64Decode(request.payload.state))
+    return h.redirect(state.successRedirect)
   }
 
   async logout (request, h) {
@@ -144,29 +134,20 @@ class AuthProvider {
   async getCloudDiscoveryMetadata (authority) {
     const endpoint = 'https://login.microsoftonline.com/common/discovery/instance'
 
-    try {
-      const response = await axios.get(endpoint, {
-        params: {
-          'api-version': '1.1',
-          authorization_endpoint: `${authority}/oauth2/v2.0/authorize`
-        }
-      })
+    const response = await axios.get(endpoint, {
+      params: {
+        'api-version': '1.1',
+        authorization_endpoint: `${authority}/oauth2/v2.0/authorize`
+      }
+    })
 
-      return response.data
-    } catch (error) {
-      throw error
-    }
+    return response.data
   }
 
   async getAuthorityMetadata (authority) {
     const endpoint = `${authority}/v2.0/.well-known/openid-configuration`
-
-    try {
-      const response = await axios.get(endpoint)
-      return response.data
-    } catch (error) {
-      throw error
-    }
+    const response = await axios.get(endpoint)
+    return response.data
   }
 }
 

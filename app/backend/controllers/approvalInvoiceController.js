@@ -1,4 +1,4 @@
-const approvalInvoiceModel = require('../models/approvalInvoiceModel ')
+const approvalInvoiceModel = require('../models/approvalInvoiceModel')
 const errorModel = require('../models/commonError')
 const approveInvoiceList = async (request, h) => {
   try {

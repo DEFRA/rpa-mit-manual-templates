@@ -155,28 +155,28 @@ module.exports = [
     method: 'GET',
     path: '/approvelist',
     options: {
-      handler: approval_invoiceController.approveInvoiceList
+      handler: approvalInvoiceController.approveInvoiceList
     }
   },
   {
     method: 'GET',
     path: '/viewApprovalInvoice/{id}',
     options: {
-      handler: approval_invoiceController.approvalInvoiceSummary
+      handler: approvalInvoiceController.approvalInvoiceSummary
     }
   },
   {
     method: 'GET',
     path: '/approveInvoice/{id}',
     options: {
-      handler: approval_invoiceController.approveInvoice
+      handler: approvalInvoiceController.approveInvoice
     }
   },
   {
     method: 'POST',
     path: '/rejectInvoice',
     options: {
-      handler: approval_invoiceController.rejectInvoice
+      handler: approvalInvoiceController.rejectInvoice
     }
   },
   {

@@ -1,9 +1,8 @@
 const moment = require('moment')
 const crypto = require('crypto')
-const { parse } = require('csv-parse')
 const FormData = require('form-data')
 const externalRequest = require('../custom_requests/externalRequests')
-const constantModel = require('../app_constants/app_constant')
+const constantModel = require('../app_constants/appConstant')
 
 const generateID = () => {
   return crypto.randomUUID().toString()
@@ -25,17 +24,17 @@ const removeForSummaryTable = (summaryData) => {
 }
 
 const modifyResponseRadio = (respData, selected) => {
-  const resp_data_updated = respData.map((item) => {
-    return { text: item.description, value: item.code, checked: (selected == item.code) }
+  const respDataUpdated = respData.map((item) => {
+    return { text: item.description, value: item.code, checked: (selected === item.code) }
   })
-  return resp_data_updated
+  return respDataUpdated
 }
 
 const modifyResponseSelect = (respData, selected) => {
-  const resp_data_updated = respData.map((item) => {
-    return { text: item.code.toUpperCase(), value: item.code, selected: (selected == item.code) }
+  const respDataUpdated = respData.map((item) => {
+    return { text: item.code.toUpperCase(), value: item.code, selected: (selected === item.code) }
   })
-  return resp_data_updated
+  return respDataUpdated
 }
 
 const BulkLineData = (dataPack, bulk) => {
@@ -190,7 +189,7 @@ async function processUploadedCSV (file) {
   if (!validExtensions.includes(extension)) return null
   const form = new FormData()
   form.append('file', file, file.hapi.filename)
-  const results = await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/bulkuploads/add`, form, {})
+  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/add`, form, {})
   return (results?.bulkUploadApDataset || null)
 }
 

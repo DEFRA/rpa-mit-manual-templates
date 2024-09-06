@@ -1,3 +1,5 @@
+/* global $, deliveryBodyData, invoiceTemplate, invoiceTemplateSecondaryData */
+
 $(function () {
   $('.backButton').on('click', function () {
     window.history.back()
@@ -16,15 +18,16 @@ $(function () {
         return false
       }
     })
+
     const inputs = document.querySelectorAll('.invoice_inputs')
     for (const input of inputs) {
-      console.log(input.value)
       if (input.value.trim() === '') {
         allGroupsSelected = false
       }
     }
+
     ard = [...new Set(ard)]
-    if (!allGroupsSelected || ard.length != 5) {
+    if (!allGroupsSelected || ard.length !== 5) {
       const messageElement = $('#error-message')
       messageElement.show()
       setTimeout(function () {
@@ -53,7 +56,7 @@ $(function () {
     if (!$('#bulk_file').val()) { allGroupsSelected = false }
 
     ard = [...new Set(ard)]
-    if (!allGroupsSelected || ard.length != 3) {
+    if (!allGroupsSelected || ard.length !== 3) {
       const messageElement = $('#error-message')
       messageElement.show()
       setTimeout(function () {
@@ -70,7 +73,6 @@ $(function () {
     let allGroupsSelected = true
     const inputs = document.querySelectorAll('.payment_inputs')
     for (const input of inputs) {
-      console.log(input.value)
       if (input.value.trim() === '') {
         allGroupsSelected = false
       }
@@ -92,7 +94,6 @@ $(function () {
     let allGroupsSelected = true
     const inputs = document.querySelectorAll('.line_inputs')
     for (const input of inputs) {
-      console.log(input.value)
       if (input.value.trim() === '') {
         allGroupsSelected = false
       }
@@ -109,14 +110,14 @@ $(function () {
     }
   })
 
-  const messageElement = $('.successMessage')
+  const messageElement = $('.success_message')
   if (messageElement) {
     setTimeout(function () {
       messageElement.hide()
     }, 3000)
   }
 
-  const messageElementSecond = $('.errorMessage')
+  const messageElementSecond = $('.error_message')
   if (messageElementSecond) {
     setTimeout(function () {
       messageElementSecond.hide()
@@ -135,20 +136,20 @@ $(function () {
   }
 
   try {
-    const deliveryBodyOptions = delivery_body_data ? groupByKeys(delivery_body_data, 'accountCode') : []
+    const deliveryBodyOptions = deliveryBodyData ? groupByKeys(deliveryBodyData, 'accountCode') : []
     const invoiceTemplateBodyOptions = invoiceTemplate ? groupByKeys(invoiceTemplate, 'deliveryBodyCode') : []
-    const deliveryBodyOptionsUnique = delivery_body_data ? groupByKeys(delivery_body_data, 'code') : []
-    const invoiceTemplateSecondaryBodyOptions = invoice_template_secondary_data || []
+    const deliveryBodyOptionsUnique = deliveryBodyData ? groupByKeys(deliveryBodyData, 'code') : []
+    const invoiceTemplateSecondaryBodyOptions = invoiceTemplateSecondaryData || []
 
-    function updateBodyOptions (selectedType, container_name, radio_name, heading) {
-      const bodyContainer = document.getElementById(container_name)
+    function updateBodyOptions (selectedType, containerName, radioName, heading) {
+      const bodyContainer = document.getElementById(containerName)
       if (!bodyContainer) return
       let options = []
 
-      if (radio_name == 'invoice_template_secondary') {
+      if (radioName === 'invoice_template_secondary') {
         options = deliveryBodyOptionsUnique[selectedType] ? invoiceTemplateSecondaryBodyOptions : []
         updateBodyOptions('', 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template')
-      } else if (radio_name == 'invoiceTemplate') {
+      } else if (radioName === 'invoiceTemplate') {
         options = invoiceTemplateBodyOptions[selectedType] || []
       } else {
         options = deliveryBodyOptions[selectedType] || []
@@ -160,25 +161,29 @@ $(function () {
       options.forEach(option => {
         html += `
       <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="${radio_name}_${option.code ? option.code : option.id}" name="${radio_name}" type="radio" value="${option.code ? option.code : option.name}">
-        <label class="govuk-label govuk-radios__label" for="${radio_name}_${option.code ? option.code : option.name}">
+        <input class="govuk-radios__input" id="${radioName}_${option.code ? option.code : option.id}" name="${radioName}" type="radio" value="${option.code ? option.code : option.name}">
+        <label class="govuk-label govuk-radios__label" for="${radioName}_${option.code ? option.code : option.name}">
           ${option.name ? option.name : option.deliveryBodyDescription}
         </label>
       </div>
     `
 
-        if (radio_name == 'deliveryBody') {
+        if (radioName === 'deliveryBody') {
           setTimeout(() => {
             const deliveryTypeRadios = document.querySelectorAll('input[name="deliveryBody"]')
             deliveryTypeRadios.forEach(radio => {
               radio.addEventListener('change', function () {
-                if (invoice_template_secondary_data) { updateBodyOptions(this.value, 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question') } else { updateBodyOptions(this.value, 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template') }
+                if (invoiceTemplateSecondaryData) {
+                  updateBodyOptions(this.value, 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question')
+                } else {
+                  updateBodyOptions(this.value, 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template')
+                }
               })
             })
           }, 50)
         }
 
-        if (radio_name == 'invoice_template_secondary') {
+        if (radioName === 'invoice_template_secondary') {
           setTimeout(() => {
             const secondaryTypeRadios = document.querySelectorAll('input[name="invoice_template_secondary"]')
             secondaryTypeRadios.forEach(radio => {

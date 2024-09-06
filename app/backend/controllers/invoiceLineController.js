@@ -1,4 +1,4 @@
-const invoiceLineModel = require('../models/invoiceLineModel ')
+const invoiceLineModel = require('../models/invoiceLineModel')
 const errorModel = require('../models/commonError')
 
 const invoiceLineAll = async (request, h) => {

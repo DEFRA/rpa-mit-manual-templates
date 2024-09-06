@@ -108,8 +108,8 @@
 {% endblock %}
 {% block footer %}
 <script>
-    const delivery_body_data = {{ deliveryBody | dump | safe }};
+    const deliveryBodyData = {{ deliveryBody | dump | safe }};
     const invoiceTemplate = {{ invoiceTemplate | dump | safe }};
-    const invoice_template_secondary_data = {{ invoice_template_secondary | dump | safe }};
+    const invoiceTemplateSecondaryData = {{ invoiceTemplateSecondary | dump | safe }};
 </script>
 {% endblock %}

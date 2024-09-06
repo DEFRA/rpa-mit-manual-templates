@@ -1,4 +1,4 @@
-const invoiceModel = require('../models/invoiceModel ')
+const invoiceModel = require('../models/invoiceModel')
 const errorModel = require('../models/commonError')
 const invoiceList = async (request, h) => {
   try {
@@ -12,7 +12,6 @@ const invoiceList = async (request, h) => {
 const invoiceCreate = async (request, h) => {
   try {
     const res = await invoiceModel.createInvoice(request)
-    // console.log(res);
     return h.view('app_views/createInvoice', res)
   } catch (error) {
     return errorModel.errorMessage(error, h)

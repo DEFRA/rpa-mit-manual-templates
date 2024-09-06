@@ -10,7 +10,7 @@
 {% block content %}
 <div class="full-height">
 {% include "partials_views/pageTitle.njk" %}
- <form id="uploadBulk" action="/bulk_upload" method="POST" enctype="multipart/form-data" >
+ <form id="uploadBulk" action="/bulkUpload" method="POST" enctype="multipart/form-data" >
 
     {{ 
       govukRadios({
@@ -86,8 +86,8 @@
 {% endblock %}
 {% block footer %}
 <script>
-    const delivery_body_data = {{ deliveryBody | dump | safe }};
+    const deliveryBodyData = {{ deliveryBody | dump | safe }};
     const invoiceTemplate = {{ invoiceTemplate | dump | safe }};
-    const invoice_template_secondary_data = null;
+    const invoiceTemplateSecondaryData = null;
 </script>
 {% endblock %}

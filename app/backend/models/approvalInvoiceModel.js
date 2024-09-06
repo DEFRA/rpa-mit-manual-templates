@@ -1,16 +1,16 @@
 const commonModel = require('./commonModel')
 const externalRequest = require('../custom_requests/externalRequests')
-const constantModel = require('../app_constants/app_constant')
+const constantModel = require('../app_constants/appConstant')
 
 const getAllInvoices = async (request) => {
   const successMessage = request.yar.flash('successMessage')
-  const data = await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/getmyapprovals`, {})
+  const data = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/getmyapprovals`, {})
   request.yar.flash('successMessage', '')
   return { pageTitle: constantModel.approveInvoiceListTitle, invoices: modifyInvoiceResponse(data?.invoices || []), successMessage }
 }
 
 const approveInvoice = async (request) => {
-  await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/approve`, {
+  await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/approve`, {
     id: request.params.id
   })
   request.yar.flash('successMessage', constantModel.invoiceApproveSuccess)
@@ -19,7 +19,7 @@ const approveInvoice = async (request) => {
 
 const rejectInvoice = async (request) => {
   const payload = request.payload
-  await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/reject`, {
+  await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/reject`, {
     id: payload.invoiceId,
     reason: payload.reason
   })
@@ -43,7 +43,7 @@ const modifyInvoiceResponse = (invoiceList, action = true) => {
 }
 
 const invoiceSummary = async (request, h) => {
-  const data = await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/approvals/getinvoiceforapproval`, { invoiceId: request.params.id })
+  const data = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/getinvoiceforapproval`, { invoiceId: request.params.id })
   const invoiceRequests = data?.invoice?.invoiceRequests.map((invRequest, ind) => {
     return {
       id: invRequest.invoiceRequestId,
@@ -53,9 +53,11 @@ const invoiceSummary = async (request, h) => {
       lines_data: commonModel.BulkLineData(invRequest.invoiceLines, false)
     }
   })
+  const modifiedInvoiceResponse = modifyInvoiceResponse([data?.invoice], false)
+
   return h.view('app_views/approvalInvoiceSummary', {
     pageTitle: constantModel.approvalInvoiceSummary,
-    invoices: modifyInvoiceResponse([data?.invoice], action = false),
+    invoices: modifiedInvoiceResponse,
     invoiceRequests,
     invoiceId: data?.invoice?.id,
     approveUrl: `/approveInvoice/${data?.invoice?.id}`

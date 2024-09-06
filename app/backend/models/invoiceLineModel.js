@@ -1,17 +1,17 @@
 const commonModel = require('./commonModel')
 const externalRequest = require('../custom_requests/externalRequests')
 const paymentModel = require('./paymentModel')
-const constantModel = require('../app_constants/app_constant')
+const constantModel = require('../app_constants/appConstant')
 
 const getTotalInvoiceLines = async (ID) => {
-  const totalLines = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicerequestid`, {
+  const totalLines = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicelines/getbyinvoicerequestid`, {
     invoiceRequestId: ID
   })
   return (totalLines?.invoiceLines.length || 0)
 }
 
 const deleteInvoiceLine = async (request) => {
-  await externalRequest.sendExternalRequestDelete(`${process.env.REQUEST_HOST}/invoicelines/delete`, {
+  await externalRequest.sendExternalRequestDelete(`${constantModel.requestHost}/invoicelines/delete`, {
     invoiceLineId: request.params.id
   })
   request.yar.flash('successMessage', constantModel.invoiceLineDeletionSuccess)
@@ -21,7 +21,7 @@ const deleteInvoiceLine = async (request) => {
 const getAllInvoiceLines = async (request) => {
   const successMessage = request.yar.flash('successMessage')
   const errorMessage = request.yar.flash('errorMessage')
-  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicerequestid`, {
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicelines/getbyinvoicerequestid`, {
     invoiceRequestId: request.params.id
   })
   const lineData = data?.invoiceLines || []
@@ -43,8 +43,8 @@ const getAllInvoiceLines = async (request) => {
 }
 
 const viewInvoiceLine = async (request) => {
-  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
+  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
   const lineData = data?.invoiceLine || []
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
   return {
@@ -66,7 +66,7 @@ const viewInvoiceLine = async (request) => {
 }
 
 const createInvoiceLine = async (request) => {
-  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
+  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
   const summaryPayment = await modifyPaymentResponse(request.params.id, false)
   return {
     pageTitle: constantModel.invoiceLineAddTitle,
@@ -86,12 +86,12 @@ const createInvoiceLine = async (request) => {
 }
 
 const updateInvoiceLine = async (request) => {
-  const optionsData = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/referencedata/getall`)
-  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
+  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
   const lineData = data?.invoiceLine || []
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
   return {
-    pageTitle: constantModel.invoiceline_edit_title,
+    pageTitle: constantModel.invoiceLineEditTitle,
     summaryPayment,
     paymentId: lineData.invoiceRequestId,
     line_id: request.params.id,
@@ -111,7 +111,7 @@ const updateInvoiceLine = async (request) => {
 const invoiceLineStore = async (request) => {
   const payload = request.payload
   if (payload.line_id) {
-    await externalRequest.sendExternalRequestPut(`${process.env.REQUEST_HOST}/invoicelines/update`, {
+    await externalRequest.sendExternalRequestPut(`${constantModel.requestHost}/invoicelines/update`, {
       Value: payload.paymentvalue,
       InvoiceRequestId: payload.paymentId,
       Description: payload.description,
@@ -124,7 +124,7 @@ const invoiceLineStore = async (request) => {
     })
     request.yar.flash('successMessage', constantModel.invoiceLineUpdateSuccess)
   } else {
-    await externalRequest.sendExternalRequestPost(`${process.env.REQUEST_HOST}/invoicelines/add`, {
+    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicelines/add`, {
       Value: payload.paymentvalue,
       InvoiceRequestId: payload.paymentId,
       Description: payload.description,
@@ -139,12 +139,12 @@ const invoiceLineStore = async (request) => {
   return payload.paymentId
 }
 
-const modifyPaymentResponse = async (id, show_actions) => {
-  const data = await externalRequest.sendExternalRequestGet(`${process.env.REQUEST_HOST}/invoicerequests/getbyid`, { invoiceRequestId: id })
+const modifyPaymentResponse = async (id, showActions) => {
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getbyid`, { invoiceRequestId: id })
   const payment = data?.invoiceRequest || []
   return {
     head: 'Invoice Request Id',
-    actions: show_actions
+    actions: showActions
       ? [
           { link: `/editPayment/${payment.invoiceRequestId}/${payment.invoiceId}`, name: 'Edit' }
         ]
@@ -154,4 +154,4 @@ const modifyPaymentResponse = async (id, show_actions) => {
   }
 }
 
-module.exports = { getTotalInvoiceLines, modifyPaymentResponse, getAllInvoiceLines, deleteInvoiceLine, viewInvoiceLine, invoiceLineStore, updateInvoiceLine, viewInvoiceLine, deleteInvoiceLine, createInvoiceLine }
+module.exports = { getTotalInvoiceLines, modifyPaymentResponse, getAllInvoiceLines, viewInvoiceLine, invoiceLineStore, updateInvoiceLine, deleteInvoiceLine, createInvoiceLine }
