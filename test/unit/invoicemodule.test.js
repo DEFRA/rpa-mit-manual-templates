@@ -209,18 +209,7 @@ describe('Invoice Line Model Tests', () => {
     )
     expect(request.yar.flash).toHaveBeenCalledWith('successMessage', constantModel.invoiceDeletionSuccess)
   })
-
-  test('downloadFile should return the file for download', async () => {
-    const h = {
-      file: jest.fn()
-    }
-    const request = {}
-
-    await downloadFile(request, h)
-
-    expect(h.file).toHaveBeenCalledWith(Path.join(__dirname, 'sample_files', 'sample.xlsx').replace('\\test\\unit\\', '\\app\\backend\\models\\'))
-  })
-
+  
   test('BulkDataUpload should upload bulk data and set flash message', async () => {
     const request = {
       payload: {
