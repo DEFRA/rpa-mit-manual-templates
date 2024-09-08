@@ -199,4 +199,5 @@ module.exports = [
     path: '/logout',
     handler: authProvider.logout.bind(authProvider)
   }
+
 ]

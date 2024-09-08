@@ -1,4 +1,6 @@
 const appRoutes = require('../../../app/routes/app_routes')
+const healthy = require('../../../app/routes/healthy')
+const healthz = require('../../../app/routes/healthz')
 const staticRoutes = require('../../../app/routes/static')
 
 const router = require('../../../app/plugins/router')
@@ -12,7 +14,7 @@ describe('router plugin', () => {
     router.plugin.register(mockServer)
 
     expect(mockServer.route).toHaveBeenCalledWith(
-      [].concat(appRoutes, staticRoutes)
+      [].concat(healthy, healthz, appRoutes, staticRoutes)
     )
   })
 })
