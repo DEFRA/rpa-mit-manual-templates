@@ -4,7 +4,7 @@ const Yar = require('@hapi/yar')
 const authPlugin = require('./backend/middleware/route_middleware')
 async function createServer () {
   const server = Hapi.server({
-    port: 54280
+    port: 80
   })
 
   await server.register({
