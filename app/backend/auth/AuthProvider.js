@@ -21,7 +21,7 @@ class AuthProvider {
 
     const authCodeUrlRequestParams = {
       state,
-      scopes: ['process.env.SCOPES'],
+      scopes: [process.env.SCOPES],
       redirectUri: REDIRECT_URI
     }
 
