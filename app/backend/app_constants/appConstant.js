@@ -1,4 +1,4 @@
-const requestHost = process.env.REQUEST_HOST
+const requestHost = process?.env?.REQUEST_HOST || 'http://localhost:5161'
 /* invoice model */
 const invoiceListTitle = 'Invoice List'
 const approveInvoiceListTitle = 'Approval Invoices List'
