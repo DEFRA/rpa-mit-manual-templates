@@ -1,7 +1,7 @@
 const msalConfig = {
   auth: {
     clientId: '80a2f40d-5361-4c67-9940-98ffb1230111',
-    authority: process.env.CLOUD_INSTANCE + process.env.TENANT_ID,
+    authority: 'https://login.microsoftonline.com/6f504113-6b64-43f2-ade9-242e05780007',
     clientSecret: process.env.CLIENT_SECRET
   },
   system: {
