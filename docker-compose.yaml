@@ -8,3 +8,4 @@ services:
     environment:
       APPINSIGHTS_CLOUDROLE: rpa-mit-manual-templates-local
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
+      REQUEST_HOST: rpa-mit-manual-templates-api.lap-mit.svc.cluster.local
