@@ -9,11 +9,3 @@ services:
       APPINSIGHTS_CLOUDROLE: rpa-mit-manual-templates-local
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
       REQUEST_HOST: rpa-mit-manual-templates-api.lap-mit.svc.cluster.local
-      CLOUD_INSTANCE: https://login.microsoftonline.com/
-      TENANT_ID: 6f504113-6b64-43f2-ade9-242e05780007
-      CLIENT_ID: 80a2f40d-5361-4c67-9940-98ffb1230111
-      REDIRECT_URI: https://rpa-mit-manual-templates.snd4.adp.defra.gov.uk/redirect
-      POST_LOGOUT_REDIRECT_URI: https://rpa-mit-manual-templates.snd4.adp.defra.gov.uk
-      EXPRESS_SESSION_SECRET: Enter_the_Express_Session_Secret_Here
-      AUDIENCE: api://442bf74f-8332-4b81-9335-8d4d45b24eb6
-      SCOPES: api://442bf74f-8332-4b81-9335-8d4d45b24eb6/referencedata.getall
