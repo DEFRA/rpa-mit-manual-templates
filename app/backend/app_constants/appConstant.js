@@ -1,4 +1,4 @@
-const requestHost = process?.env?.REQUEST_HOST || 'http://localhost:5161'
+const requestHost = process?.env?.REQUEST_HOST || 'rpa-mit-manual-templates-api.lap-mit.svc.cluster.local'
 /* invoice model */
 const invoiceListTitle = 'Invoice List'
 const approveInvoiceListTitle = 'Approval Invoices List'
