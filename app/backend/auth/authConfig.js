@@ -1,6 +1,6 @@
 const msalConfig = {
   auth: {
-    clientId: process.env.CLIENT_ID,
+    clientId: '80a2f40d-5361-4c67-9940-98ffb1230111',
     authority: process.env.CLOUD_INSTANCE + process.env.TENANT_ID,
     clientSecret: process.env.CLIENT_SECRET
   },
