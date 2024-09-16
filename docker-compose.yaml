@@ -8,7 +8,7 @@ services:
     environment:
       APPINSIGHTS_CLOUDROLE: ${rpa-mit-manual-templates-local}
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
-      REQUEST_HOST: ${REQUEST_HOST:-rpa-mit-manual-templates-api.lap-mit.svc.cluster.local}
+      REQUEST_HOST: ${REQUEST_HOST:-http://rpa-mit-manual-templates-api.lap-mit.svc.cluster.local}
       CLOUD_INSTANCE: ${CLOUD_INSTANCE:-https://login.microsoftonline.com/}
       TENANT_ID: ${TENANT_ID:-6f504113-6b64-43f2-ade9-242e05780007}
       CLIENT_ID: ${CLIENT_ID:-80a2f40d-5361-4c67-9940-98ffb1230111}
