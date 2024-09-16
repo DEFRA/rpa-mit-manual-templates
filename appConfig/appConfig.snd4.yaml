@@ -1,30 +1,30 @@
-- key: APPINSIGHTS__CONNECTIONSTRING
+- key: APPINSIGHTS_CONNECTIONSTRING
   value: "{{servicename}}-APPINSIGHTS-CONNECTIONSTRING"
   type: "keyvault"
-- key: CLOUD__INSTANCE
+- key: CLOUD_INSTANCE
   value: "{{servicename}}-CLOUD-INSTANCE" 
   type: "keyvault"
-- key: TENANT__ID
+- key: TENANT_ID
   value: "{{servicename}}-TENANT-ID" 
   type: "keyvault"
-- key: CLIENT__ID
+- key: CLIENT_ID
   value: "{{servicename}}-CLIENT-ID" 
   type: "keyvault"
-- key: CLIENT__SECRET
+- key: CLIENT_SECRET
   value: "{{servicename}}-CLIENT-SECRET"
   type: "keyvault"
-- key: REDIRECT__URI
+- key: REDIRECT_URI
   value: "{{servicename}}-REDIRECT-URI" 
   type: "keyvault"
-- key: POST__LOGOUT__REDIRECT__URI
+- key: POST_LOGOUT_REDIRECT_URI
   value: "{{servicename}}-POST-LOGOUT-REDIRECT-URI" 
   type: "keyvault"
-- key: EXPRESS__SESSION__SECRET
+- key: EXPRESS_SESSION_SECRET
   value: "{{servicename}}-EXPRESS-SESSION-SECRET" 
   type: "keyvault"
 - key: SCOPES
   value: "{{servicename}}-SCOPES" 
   type: "keyvault"
-- key: REQUEST__HOST
+- key: REQUEST_HOST
   value: "{{servicename}}-REQUEST-HOST" 
   type: "keyvault"
