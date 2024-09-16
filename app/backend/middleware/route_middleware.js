@@ -4,7 +4,7 @@ const authPlugin = {
   version: '1.0.0',
   register: async function (server, options) {
     server.ext('onPreHandler', async (request, h) => {
-      if (process.env.AZURE_ALLOW === 'YES') {
+      if (process.env.EXPRESS_SESSION_SECRET === 'YES') {
         const publicRoutes = ['/login', '/acquire-token', '/redirect', '/logout']
         if (publicRoutes.includes(request.path)) {
           return h.continue
