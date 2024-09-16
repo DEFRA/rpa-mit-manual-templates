@@ -28,6 +28,3 @@
 - key: REQUEST_HOST
   value: "{{servicename}}-REQUEST-HOST" 
   type: "keyvault"
-  key: AZURE_ALLOW
-  value: "{{servicename}}-AZURE-ALLOW" 
-  type: "keyvault"
