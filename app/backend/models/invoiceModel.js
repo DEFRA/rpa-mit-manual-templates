@@ -5,6 +5,7 @@ const paymentModel = require('./paymentModel')
 const Path = require('path')
 
 const getAllInvoices = async (request) => {
+  console.log(constantModel.requestHost)
   const successMessage = request.yar.flash('successMessage')
   const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoices/getall`)
   request.yar.flash('successMessage', '')
