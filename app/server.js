@@ -4,7 +4,8 @@ const Yar = require('@hapi/yar')
 const authPlugin = require('./backend/middleware/route_middleware')
 async function createServer () {
   const server = Hapi.server({
-    port: 3000
+    port: 3000,
+    host: 'rpa-mit-manual-templates.snd4.adp.defra.gov.uk'
   })
 
   await server.register({
