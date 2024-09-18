@@ -3,7 +3,6 @@ const errorModel = require('../models/commonError')
 const invoiceList = async (request, h) => {
   try {
     console.log('getAllInvoices')
-    //const res = await invoiceModel.getAllInvoices(request)
     return h.view('app_views/invoiceList')
   } catch (error) {
     return errorModel.errorMessage(error, h)
