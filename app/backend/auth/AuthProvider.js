@@ -76,7 +76,7 @@ class AuthProvider {
 
       const tokenResponse = await msalInstance.acquireTokenSilent({
         account: request.yar.get('account'),
-        scopes: ['User.Read']
+        scopes: ['User.Read', 'offline_access']
       })
 
       request.yar.set({
