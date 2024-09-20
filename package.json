@@ -1,6 +1,6 @@
 {
   "name": "rpa-mit-manual-templates",
-  "version": "0.1.3",
+  "version": "0.1.0",
   "description": "",
   "homepage": "github.com?owner=defra&repo=rpa-mit-manual-templates&organization=defra",
   "main": "app/index.js",
@@ -22,7 +22,9 @@
   "contributors": [],
   "license": "OGL-UK-3.0",
   "dependencies": {
-    "@azure/msal-node": "^2.13.0",
+    "@azure/msal-node": "^2.6.2",
+    "@hapi/catbox": "^12.1.1",
+    "@hapi/catbox-memory": "^6.0.2",
     "@hapi/hapi": "21.3.2",
     "@hapi/inert": "7.1.0",
     "@hapi/vision": "7.0.3",
@@ -31,7 +33,9 @@
     "axios": "^1.7.2",
     "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
+    "form-data": "^4.0.0",
     "govuk-frontend": "4.7.0",
+    "ioredis": "^5.4.1",
     "jquery": "^3.7.1",
     "knex": "^3.1.0",
     "moment": "^2.30.1",
@@ -52,9 +56,9 @@
     "resolve-url-loader": "5.0.0",
     "sass": "1.67.0",
     "sass-loader": "13.3.2",
-    "standard": "17.1.0",
+    "standard": "^17.1.0",
     "style-loader": "3.3.3",
-    "webpack": "^5.94.0",
+    "webpack": "5.88.2",
     "webpack-cli": "5.1.4"
   },
   "standard": {

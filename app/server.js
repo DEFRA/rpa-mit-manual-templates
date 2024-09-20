@@ -1,11 +1,20 @@
 require('./insights').setup()
 const Hapi = require('@hapi/hapi')
 const Yar = require('@hapi/yar')
+const catboxMemory = require('@hapi/catbox-memory')
 const authPlugin = require('./backend/middleware/route_middleware')
 async function createServer () {
   const server = Hapi.server({
     port: 3000,
-    host: '0.0.0.0'
+    cache: [
+      {
+        name: 'session',
+        provider: {
+          constructor: catboxMemory.Engine,
+          options: {}
+        }
+      }
+    ]
   })
 
   await server.register({
@@ -16,6 +25,10 @@ async function createServer () {
         password: 'the-password-must-be-at-least-32-characters-long',
         isSecure: false,
         isSameSite: false
+      },
+      cache: {
+        cache: 'session',
+        segment: 'session'
       }
     }
   })

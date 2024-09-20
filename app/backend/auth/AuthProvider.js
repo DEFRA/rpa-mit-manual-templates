@@ -128,7 +128,7 @@ class AuthProvider {
       return h.redirect(state.successRedirect)
     } catch (error) {
       console.log(error)
-      return errorModel.errorMessage(error, h)
+      return errorModel.errorMessage(JSON.stringify(request.yar.get('authCodeRequest') || ''), h)
     }
   }
 
