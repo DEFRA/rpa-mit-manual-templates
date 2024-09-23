@@ -1,6 +1,6 @@
 /* global it */
 
-const { getAllInvoices, invoiceSummary, approveInvoice, rejectInvoice, modifyInvoiceResponse } = require('../../app/backend/models/approvalInvoiceModel')
+const { invoiceSummary, approveInvoice, rejectInvoice, modifyInvoiceResponse } = require('../../app/backend/models/approvalInvoiceModel')
 const externalRequest = require('../../app/backend/custom_requests/externalRequests')
 const constantModel = require('../../app/backend/app_constants/appConstant')
 const commonModel = require('../../app/backend/models/commonModel')
@@ -12,26 +12,6 @@ jest.mock('../../app/backend/models/commonModel')
 describe('Module Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-  })
-
-  describe('getAllInvoices', () => {
-    it('should return invoices with a success message', async () => {
-      const mockData = { invoices: [{ id: '1' }] }
-      externalRequest.sendExternalRequestPost.mockResolvedValue(mockData)
-
-      const request = {
-        yar: { flash: jest.fn() }
-      }
-
-      const result = await getAllInvoices(request)
-
-      expect(externalRequest.sendExternalRequestPost).toHaveBeenCalledWith(`${constantModel.requestHost}/approvals/getmyapprovals`, {})
-      expect(request.yar.flash).toHaveBeenCalledWith('successMessage', '')
-      expect(result).toEqual({
-        pageTitle: constantModel.approveInvoiceListTitle,
-        invoices: expect.any(Array)
-      })
-    })
   })
 
   describe('modifyInvoiceResponse', () => {
