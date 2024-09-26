@@ -71,14 +71,45 @@ $(function () {
   $('#paymentForm').on('submit', function (event) {
     event.preventDefault()
     let allGroupsSelected = true
-    const inputs = document.querySelectorAll('.payment_inputs')
-    for (const input of inputs) {
-      if (input.value.trim() === '') {
+    let messageset = ''
+    const frn = $('#frn').val().trim()
+    const sbi = $('#sbi').val().trim()
+    const vendor = $('#vendor').val().trim()
+    const filledFields = [frn, sbi, vendor].filter(field => field !== '').length
+
+    if (filledFields !== 1) {
+      allGroupsSelected = false
+      messageset = 'Select only one of FRN, SBI, and Vendor.'
+    } else if (frn !== '') {
+      const frnRegex = /^[0-9]{10}$/
+      if (!frnRegex.test(frn)) {
         allGroupsSelected = false
+        messageset = 'The FRN must be a 10-digit number or be empty.'
+      }
+    } else if (sbi !== '') {
+      const sbiRegex = /^(1050{5}|10[5-9]\d{6}|1[1-9]\d{7}|[2-9]\d{8})$/ // Custom SBI validation
+      if (!sbiRegex.test(sbi)) {
+        allGroupsSelected = false
+        messageset = 'The SBI is not in valid range (105000000 .. 999999999) or should be empty.'
+      }
+    } else if (vendor !== '') {
+      if (vendor.length < 3) {
+        allGroupsSelected = false
+        messageset = 'Vendor must be longer than 3 characters.'
+      }
+    } else {
+      const inputs = document.querySelectorAll('.payment_inputs')
+      for (const input of inputs) {
+        if (input.value.trim() === '') {
+          messageset = '<span>Error:  Fill All The Fields</span>'
+          allGroupsSelected = false
+        }
       }
     }
+
     if (!allGroupsSelected) {
       const messageElement = $('#error-message')
+      messageElement.html(messageset)
       messageElement.show()
       setTimeout(function () {
         messageElement.hide()
