@@ -1,4 +1,4 @@
-const requestHost = process.env.REQUEST_HOST
+const requestHost = process?.env?.REQUEST_HOST || 'http://localhost:5161'
 /* invoice model */
 const invoiceListTitle = 'Invoice List'
 const approveInvoiceListTitle = 'Approval Invoices List'
@@ -28,7 +28,9 @@ const invoiceLineDeletionSuccess = 'Invoice Line Deleted Successfully'
 
 const invoiceLineBulkUploadFailed = 'Invoice Bulk Upload Failed'
 const invoiceLineBulkUploadSuccess = 'Invoice Bulk Uploaded Successfully'
-const bulkUpload = 'Bulk Upload'
+const bulkUploadAp = 'Bulk Upload Account Payable'
+const bulkUploadAr = 'Bulk Upload Account Receivable'
+
 module.exports = {
   requestHost,
   invoiceListTitle,
@@ -55,5 +57,6 @@ module.exports = {
   invoiceLineDeletionSuccess,
   invoiceLineBulkUploadFailed,
   invoiceLineBulkUploadSuccess,
-  bulkUpload
+  bulkUploadAp,
+  bulkUploadAr
 }

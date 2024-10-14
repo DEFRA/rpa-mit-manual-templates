@@ -61,7 +61,6 @@ class AuthProvider {
       const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(request.yar.get('authCodeUrlRequest'))
       return h.redirect(authCodeUrlResponse)
     } catch (error) {
-      console.log(error)
       return errorModel.errorMessage(error, h)
     }
   }
@@ -91,7 +90,6 @@ class AuthProvider {
       if (error instanceof msal.InteractionRequiredAuthError) {
         return this.login(request, h)
       }
-      console.log(error)
       return errorModel.errorMessage(error, h)
     }
   }
@@ -127,7 +125,6 @@ class AuthProvider {
       const state = JSON.parse(this.cryptoProvider.base64Decode(request.payload.state))
       return h.redirect(state.successRedirect)
     } catch (error) {
-      console.log(error)
       return errorModel.errorMessage(JSON.stringify(request.yar.get('authCodeRequest') || ''), h)
     }
   }
@@ -143,7 +140,6 @@ class AuthProvider {
       request.yar.clear()
       return h.redirect(logoutUri)
     } catch (error) {
-      console.log(error)
       return errorModel.errorMessage(error, h)
     }
   }

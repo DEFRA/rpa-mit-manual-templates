@@ -37,6 +37,38 @@ const modifyResponseSelect = (respData, selected) => {
   return respDataUpdated
 }
 
+const BulkHeadDataAr = (dataPack, bulk) => {
+  const summaryData = []
+  if (bulk) {
+    summaryData.push({ name: 'Claim Reference', value: dataPack.claimReference })
+    summaryData.push({ name: 'Claim Reference Number', value: dataPack.claimReferenceNumber })
+    summaryData.push({ name: 'Currency', value: dataPack.paymentType })
+    summaryData.push({ name: 'Total Amount', value: dataPack.totalAmount?.toString() })
+    summaryData.push({ name: 'Description', value: dataPack.description })
+    summaryData.push({ name: 'Claim Reference Original', value: dataPack.originalClaimReference })
+    summaryData.push({ name: 'Invoice Settlemnet Date', value: dataPack.originalAPInvoiceSettlementDate })
+    summaryData.push({ name: 'Possible Recovery', value: dataPack.earliestDatePossibleRecovery })
+    summaryData.push({ name: 'Ledger', value: dataPack.ledger })
+  } else {
+    summaryData.push({ name: 'FRN', value: dataPack.frn })
+    summaryData.push({ name: 'Currency', value: dataPack.currency })
+    summaryData.push({ name: 'Description', value: dataPack.description })
+    summaryData.push({ name: 'Value', value: dataPack.value.toString() })
+  }
+  return {
+    head: 'Request Id',
+    actions: [],
+    id: dataPack.invoiceRequestId,
+    rows: modifyResponseSummary(summaryData)
+  }
+}
+
+const BulkLineDataAr = (dataPack, bulk) => {
+  const lineDetail = [{ text: 'Line Value' }, { text: 'Description' }, { text: 'Delivery Body' }, { text: 'Fund Code' }, { text: 'Main Account' }, { text: 'Scheme Code' }, { text: 'Marketing Year' }, { text: 'Debt Type' }]
+  const lineTable = addForSummaryTableLineCSVTwoAr(dataPack)
+  return { lineDetail, lineTable }
+}
+
 const BulkLineData = (dataPack, bulk) => {
   const lineDetail = [{ text: 'Line Value' }, { text: 'Description' }, { text: 'Delivery Body' }, { text: 'Fund Code' }, { text: 'Main Account' }, { text: 'Scheme Code' }, { text: 'Marketing Year' }]
   const lineTable = addForSummaryTableLineCSVTwo(dataPack)
@@ -51,6 +83,7 @@ const BulkHeadData = (dataPack, bulk) => {
     summaryData.push({ name: 'Currency', value: dataPack.paymentType })
     summaryData.push({ name: 'Total Amount', value: dataPack.totalAmount?.toString() })
     summaryData.push({ name: 'Description', value: dataPack.description })
+    summaryData.push({ name: 'Ledger', value: dataPack.ledger })
   } else {
     summaryData.push({ name: 'FRN', value: dataPack.frn })
     summaryData.push({ name: 'Currency', value: dataPack.currency })
@@ -154,6 +187,37 @@ const addForSummaryTableLineCSV = (items) => {
   })
 }
 
+const addForSummaryTableLineCSVTwoAr = (items) => {
+  return items.map((item) => {
+    return [
+      {
+        text: item.value
+      },
+      {
+        text: item.description
+      },
+      {
+        text: item.deliveryBodyCode
+      },
+      {
+        text: item.fundCode
+      },
+      {
+        text: item.mainAccount
+      },
+      {
+        text: item.schemeCode
+      },
+      {
+        text: item.marketingYear
+      },
+      {
+        text: item.debtType
+      }
+    ]
+  })
+}
+
 const addForSummaryTableLineCSVTwo = (items) => {
   return items.map((item) => {
     return [
@@ -182,15 +246,19 @@ const addForSummaryTableLineCSVTwo = (items) => {
   })
 }
 
-async function processUploadedCSV (file) {
+async function processUploadedCSV (file, actype) {
   if (!file) return null
   const extension = file.hapi.filename.split('.').pop().toLowerCase()
   const validExtensions = ['csv', 'xlsx']
   if (!validExtensions.includes(extension)) return null
   const form = new FormData()
   form.append('file', file, file.hapi.filename)
-  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/addap`, form, {})
-  return (results?.bulkUploadApDataset || null)
+  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/add${actype.toLowerCase()}`, form, {})
+  if (actype === 'ap') {
+    return (results?.bulkUploadApDataset || null)
+  } else {
+    return (results?.bulkUploadArDataset || null)
+  }
 }
 
-module.exports = { BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modifyResponseRadio, modifyResponseSelect, modifyResponseSummary, modifyResponseTable, generateID, formatTimestamp, removeForSummaryTable }
+module.exports = { BulkHeadDataAr, BulkLineDataAr, BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modifyResponseRadio, modifyResponseSelect, modifyResponseSummary, modifyResponseTable, generateID, formatTimestamp, removeForSummaryTable }

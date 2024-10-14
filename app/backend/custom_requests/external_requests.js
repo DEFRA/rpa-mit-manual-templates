@@ -17,9 +17,6 @@ const addTokenHeader = (url, headers) => {
 const sendExternalRequestGet = async (url, data, headers = {}) => {
   try {
     headers = addTokenHeader(url, headers)
-    console.log('sendExternalRequestGet')
-    console.log(url)
-    console.log(headers)
     const response = await axios.get(url, {
       params: data,
       headers,
@@ -34,9 +31,6 @@ const sendExternalRequestGet = async (url, data, headers = {}) => {
 
 const sendExternalRequestPost = async (url, data, headers = {}) => {
   try {
-    console.log('sendExternalRequestPost')
-    console.log(url)
-    console.log(headers)
     headers = addTokenHeader(url, headers)
     const response = await axios.post(url, data, {
       headers
@@ -50,9 +44,6 @@ const sendExternalRequestPost = async (url, data, headers = {}) => {
 
 const sendExternalRequestPut = async (url, data, headers = {}) => {
   try {
-    console.log('sendExternalRequestPut')
-    console.log(url)
-    console.log(headers)
     headers = addTokenHeader(url, headers)
     const response = await axios.put(url, data, {
       headers

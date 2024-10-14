@@ -32,6 +32,7 @@ const sendExternalRequestGet = async (url, data, headers = {}) => {
 
 const sendExternalRequestPost = async (url, data, headers = {}) => {
   try {
+    console.log(url)
     headers = addTokenHeader(url, headers)
     const response = await axios.post(url, data, {
       headers

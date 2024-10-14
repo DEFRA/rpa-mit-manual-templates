@@ -5,7 +5,6 @@ const paymentModel = require('./paymentModel')
 const Path = require('path')
 
 const getAllInvoices = async (request) => {
-  console.log(constantModel.requestHost)
   const successMessage = request.yar.flash('successMessage')
   const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoices/getall`)
   request.yar.flash('successMessage', '')
@@ -133,11 +132,11 @@ const BulkDataUpload = async (request) => {
 
 const uploadBulk = async (request, h) => {
   const { payload } = request
-  const bulkData = await commonModel.processUploadedCSV(payload.bulk_file)
+  const bulkData = await commonModel.processUploadedCSV(payload.bulk_file, payload.accountType)
   if (!bulkData) {
     request.yar.flash('errorMessage', constantModel.invoiceLineBulkUploadFailed)
-    return h.redirect(`/viewPaymentLine/${payload.paymentId}`).temporary()
-  } else {
+    return h.redirect('/').temporary()
+  } else if (payload.accountType === 'ap') {
     const invoiceRequests = bulkData?.bulkUploadInvoice?.bulkUploadApHeaderLines.map((invRequest, ind) => {
       return {
         id: invRequest.invoiceRequestId,
@@ -147,8 +146,24 @@ const uploadBulk = async (request, h) => {
         lines_data: commonModel.BulkLineData(invRequest.bulkUploadApDetailLines, true)
       }
     })
-    return h.view('app_views/bulkView', {
-      pageTitle: constantModel.bulkUpload,
+    return h.view('app_views/bulkViewAp', {
+      pageTitle: constantModel.bulkUploadAp,
+      invoices: modifyInvoiceResponse([bulkData?.bulkUploadInvoice], false),
+      invoiceRequests,
+      bulkData: JSON.stringify(bulkData)
+    })
+  } else {
+    const invoiceRequests = bulkData?.bulkUploadInvoice?.bulkUploadArHeaderLines.map((invRequest, ind) => {
+      return {
+        id: invRequest.invoiceRequestId,
+        invid: invRequest.invoiceId,
+        index: (ind + 1),
+        summary_data: commonModel.BulkHeadDataAr(invRequest, true),
+        lines_data: commonModel.BulkLineDataAr(invRequest.bulkUploadArDetailLines, true)
+      }
+    })
+    return h.view('app_views/bulkViewAr', {
+      pageTitle: constantModel.bulkUploadAr,
       invoices: modifyInvoiceResponse([bulkData?.bulkUploadInvoice], false),
       invoiceRequests,
       bulkData: JSON.stringify(bulkData)

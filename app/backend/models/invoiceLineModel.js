@@ -55,7 +55,7 @@ const viewInvoiceLine = async (request) => {
     paymentvalue: lineData.value,
     description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes, lineData.description),
     fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes, lineData.fundCode),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes, lineData.mainAccount),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps, lineData.mainAccount),
     schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes, lineData.schemeCode),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, lineData.marketingYear),
     deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies, lineData.deliveryBody),
@@ -75,7 +75,7 @@ const createInvoiceLine = async (request) => {
     paymentvalue: '0.00',
     description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes),
     fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps),
     schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears),
     deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies),
@@ -98,7 +98,7 @@ const updateInvoiceLine = async (request) => {
     paymentvalue: lineData.value,
     description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes, lineData.description),
     fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes, lineData.fundCode),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes, lineData.mainAccount),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps, lineData.mainAccount),
     schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes, lineData.schemeCodes),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, lineData.marketingYears),
     deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies, lineData.deliveryBodies),
@@ -124,7 +124,7 @@ const invoiceLineStore = async (request) => {
     })
     request.yar.flash('successMessage', constantModel.invoiceLineUpdateSuccess)
   } else {
-    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicelines/add`, {
+    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicelines/addap`, {
       Value: payload.paymentvalue,
       InvoiceRequestId: payload.paymentId,
       Description: payload.description,
