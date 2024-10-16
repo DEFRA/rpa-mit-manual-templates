@@ -3,6 +3,7 @@ const externalRequest = require('../custom_requests/externalRequests')
 const constantModel = require('../app_constants/appConstant')
 const paymentModel = require('./paymentModel')
 const Path = require('path')
+const { setGlobal } = require('../hooks/customHooks')
 
 const getAllInvoices = async (request) => {
   const successMessage = request.yar.flash('successMessage')
@@ -70,6 +71,7 @@ const invoiceSummary = async (request) => {
   const summaryHeader = [{ text: 'Account Type' }, { text: 'Delivery Body' }, { text: 'Scheme Type' }, { text: 'Payment Type' }]
   const summaryTable = commonModel.modifyResponseTable(commonModel.removeForSummaryTable(summaryData))
   request.yar.flash('successMessage', '')
+  setGlobal('deliverbody', data?.invoice?.deliveryBody)
   return {
     pageTitle: constantModel.invoiceSummaryTitle,
     summaryTable,
@@ -132,7 +134,10 @@ const BulkDataUpload = async (request) => {
 
 const uploadBulk = async (request, h) => {
   const { payload } = request
-  const bulkData = await commonModel.processUploadedCSV(payload.bulk_file, payload.accountType)
+  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
+  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === payload.deliveryBody)).org || ''
+  payload.deliveryBody = orgget
+  const bulkData = await commonModel.processUploadedCSV(payload.bulk_file, payload)
   if (!bulkData) {
     request.yar.flash('errorMessage', constantModel.invoiceLineBulkUploadFailed)
     return h.redirect('/').temporary()

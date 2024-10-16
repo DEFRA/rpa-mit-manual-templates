@@ -246,15 +246,17 @@ const addForSummaryTableLineCSVTwo = (items) => {
   })
 }
 
-async function processUploadedCSV (file, actype) {
+async function processUploadedCSV (file, payload) {
   if (!file) return null
   const extension = file.hapi.filename.split('.').pop().toLowerCase()
   const validExtensions = ['csv', 'xlsx']
   if (!validExtensions.includes(extension)) return null
   const form = new FormData()
   form.append('file', file, file.hapi.filename)
-  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/add${actype.toLowerCase()}`, form, {})
-  if (actype === 'ap') {
+  form.append('org', payload.deliveryBody)
+  form.append('schemeInvoiceTemplate', payload.invoiceTemplate)
+  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/add${payload.accountType.toLowerCase()}`, form, {})
+  if (payload.accountType === 'ap') {
     return (results?.bulkUploadApDataset || null)
   } else {
     return (results?.bulkUploadArDataset || null)

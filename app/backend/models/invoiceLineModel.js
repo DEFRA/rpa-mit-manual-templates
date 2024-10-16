@@ -2,6 +2,7 @@ const commonModel = require('./commonModel')
 const externalRequest = require('../custom_requests/externalRequests')
 const paymentModel = require('./paymentModel')
 const constantModel = require('../app_constants/appConstant')
+const { getGlobal } = require('../hooks/customHooks')
 
 const getTotalInvoiceLines = async (ID) => {
   const totalLines = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicelines/getbyinvoicerequestid`, {
@@ -47,18 +48,20 @@ const viewInvoiceLine = async (request) => {
   const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
   const lineData = data?.invoiceLine || []
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
+  const DeliverBody = getGlobal('deliverbody') || ''
+  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody)).org || ''
   return {
     pageTitle: constantModel.invoiceLineViewTitle,
     summaryPayment,
     paymentId: lineData.invoiceRequestId,
     line_id: request.params.id,
     paymentvalue: lineData.value,
-    description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes, lineData.description),
-    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes, lineData.fundCode),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps, lineData.mainAccount),
-    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes, lineData.schemeCode),
+    description: '',
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => (data?.org?.split(',')?.includes(orgget) || true)), lineData.fundCode),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes?.filter(data => ((data?.org || orgget) === orgget)), lineData.mainAccount),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget) === orgget)), lineData.schemeCode),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, lineData.marketingYear),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies, lineData.deliveryBody),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget) === orgget)), lineData.deliveryBody),
     disableditem: true,
     attributesitem: { readonly: 'readonly' },
     view_type: 'view'
@@ -68,17 +71,19 @@ const viewInvoiceLine = async (request) => {
 const createInvoiceLine = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
   const summaryPayment = await modifyPaymentResponse(request.params.id, false)
+  const DeliverBody = getGlobal('deliverbody') || ''
+  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody)).org || ''
   return {
     pageTitle: constantModel.invoiceLineAddTitle,
     summaryPayment,
     paymentId: request.params.id,
     paymentvalue: '0.00',
-    description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes),
-    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps),
-    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes),
+    description: '',
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => (data?.org?.split(',')?.includes(orgget) || true))),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes?.filter(data => ((data?.org || orgget) === orgget))),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget) === orgget))),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget) === orgget))),
     disableditem: false,
     attributesitem: {},
     view_type: 'create'
@@ -89,6 +94,8 @@ const updateInvoiceLine = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
   const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
   const lineData = data?.invoiceLine || []
+  const DeliverBody = getGlobal('deliverbody') || ''
+  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody)).org || ''
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
   return {
     pageTitle: constantModel.invoiceLineEditTitle,
@@ -96,12 +103,12 @@ const updateInvoiceLine = async (request) => {
     paymentId: lineData.invoiceRequestId,
     line_id: request.params.id,
     paymentvalue: lineData.value,
-    description: commonModel.modifyResponseSelect(optionsData.referenceData.schemeTypes, lineData.description),
-    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes, lineData.fundCode),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps, lineData.mainAccount),
-    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes, lineData.schemeCodes),
+    description: '',
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => (data?.org?.split(',')?.includes(orgget) || true)), lineData.fundCode),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes?.filter(data => ((data?.org || orgget) === orgget)), lineData.mainAccount),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget) === orgget)), lineData.schemeCodes),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, lineData.marketingYears),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies, lineData.deliveryBodies),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget) === orgget)), lineData.deliveryBodies),
     disableditem: false,
     attributesitem: {},
     view_type: 'edit'
@@ -114,7 +121,7 @@ const invoiceLineStore = async (request) => {
     await externalRequest.sendExternalRequestPut(`${constantModel.requestHost}/invoicelines/update`, {
       Value: payload.paymentvalue,
       InvoiceRequestId: payload.paymentId,
-      Description: payload.description,
+      Description: '',
       FundCode: payload.fundcode,
       MainAccount: payload.mainaccount,
       SchemeCode: payload.schemecode,
@@ -127,7 +134,7 @@ const invoiceLineStore = async (request) => {
     await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicelines/addap`, {
       Value: payload.paymentvalue,
       InvoiceRequestId: payload.paymentId,
-      Description: payload.description,
+      Description: '',
       FundCode: payload.fundcode,
       MainAccount: payload.mainaccount,
       SchemeCode: payload.schemecode,
