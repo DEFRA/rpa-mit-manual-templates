@@ -17,7 +17,9 @@ const createPayment = async (request) => {
     pageTitle: constantModel.paymentAddTitle,
     paymentType,
     ...invoiceData,
+    invoicetype: invoiceData.summaryTable[0][0].text,
     invoiceId: request.params.id,
+    marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears),
     frn: '',
     sbi: '',
     vendor: '',
@@ -45,6 +47,7 @@ const updatePayment = async (request) => {
     sbi: paymentData.sbi,
     vendor: paymentData.vendor,
     description: paymentData.description,
+    marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, paymentData.marketingYear),
     claimreferencenumber: paymentData.claimReferenceNumber,
     claimreference: paymentData.claimReference,
     disableditem: false,
@@ -71,6 +74,7 @@ const viewPayment = async (request) => {
     description: paymentData.description,
     claimreferencenumber: paymentData.claimReferenceNumber,
     claimreference: paymentData.claimReference,
+    marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, paymentData.marketingYear),
     disableditem: true,
     attributesitem: { readonly: 'readonly' },
     view_type: 'view'
@@ -90,12 +94,12 @@ const paymentStore = async (request) => {
       ClaimReference: payload.claimreference,
       ClaimReferenceNumber: payload.claimreferencenumber,
       AgreementNumber: '',
-      MarketingYear: '',
+      MarketingYear: payload.marketingyear,
       AccountType: ''
     })
     request.yar.flash('successMessage', constantModel.paymentUpdateSuccess)
   } else {
-    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicerequests/add`, {
+    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicerequests/${payload.invoicetype === 'AP' ? 'add' : 'addar'}`, {
       InvoiceId: payload.inv_id,
       FRN: payload.frn,
       SBI: payload.sbi,
@@ -105,7 +109,7 @@ const paymentStore = async (request) => {
       ClaimReference: payload.claimreference,
       ClaimReferenceNumber: payload.claimreferencenumber,
       AgreementNumber: '',
-      MarketingYear: '',
+      MarketingYear: payload.marketingyear,
       AccountType: ''
     })
     request.yar.flash('successMessage', constantModel.paymentCreationSuccess)

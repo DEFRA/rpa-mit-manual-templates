@@ -24,6 +24,9 @@
     {% if paymentId and paymentId!='' %}
       <input name="paymentId" type="hidden" value="{{paymentId}}" />
     {% endif %}
+    {% if invoicetype and invoicetype!='' %}
+      <input name="invoicetype" type="hidden" value="{{invoicetype}}" />
+    {% endif %}
     {{ govukInput({
     label: {
       text: "FRN",
@@ -120,6 +123,18 @@
     value: claimreference,
     classes:"payment_inputs",
     attributes: attributesitem
+    }) 
+    }}
+
+      {{ govukSelect({
+     name: "marketingyear",
+     label: {
+      text: 'Marketing Year',
+      classes: "govuk-label--s"
+     },
+    items: marketingyear,
+    classes:"full-width payment_inputs",
+    disabled:disableditem
     }) 
     }}
 

@@ -135,7 +135,7 @@ const BulkDataUpload = async (request) => {
 const uploadBulk = async (request, h) => {
   const { payload } = request
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
-  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === payload.deliveryBody)).org || ''
+  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === payload.deliveryBody))?.org || ''
   payload.deliveryBody = orgget
   const bulkData = await commonModel.processUploadedCSV(payload.bulk_file, payload)
   if (!bulkData) {
