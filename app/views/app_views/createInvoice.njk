@@ -41,6 +41,23 @@
       }) 
     }}
     </div>
+
+     <div id="invoice-template-secondary-body-container" class="govuk-form-group">
+    {{ 
+      govukRadios({
+      name: "invoice_template_secondary",
+      classes: "radio-border govuk-radios--inline",
+      fieldset: {
+        legend: {
+          text: "Select Scheme Invoice Template Secondary Question",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: []
+       }) 
+      }}
+     </div>
     
     <div id="invoice-template-body-container" class="govuk-form-group">
     {{ 
@@ -57,24 +74,8 @@
       items: []
        }) 
     }}
-    </div>
-    
-    <div id="invoice-template-secondary-body-container" class="govuk-form-group">
-    {{ 
-      govukRadios({
-      name: "invoice_template_secondary",
-      classes: "radio-border govuk-radios--inline",
-      fieldset: {
-        legend: {
-          text: "Select Scheme Invoice Template Secondary Question",
-          isPageHeading: true,
-          classes: "govuk-fieldset__legend--l"
-        }
-      },
-      items: []
-       }) 
-      }}
-     </div>
+    </div>   
+   
 
     {{ 
       govukRadios({
