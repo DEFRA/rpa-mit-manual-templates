@@ -146,13 +146,13 @@ const addForSummaryTableLine = (items) => {
         text: item.marketingYear
       },
       {
-        text: item.deliveryBody
+        text: item.deliveryBodyCode
       },
       {
         text: item.value
       },
       {
-        text: item.schemetypes
+        text: item.description
       },
       {
         html: `<div class="action-flex action-flex-other">

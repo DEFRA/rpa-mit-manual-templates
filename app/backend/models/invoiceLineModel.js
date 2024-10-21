@@ -59,7 +59,7 @@ const viewInvoiceLine = async (request) => {
     paymentId: lineData.invoiceRequestId,
     line_id: request.params.id,
     paymentvalue: lineData.value,
-    description: '',
+    description: lineData.description,
     fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.fundCode),
     mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.mainAccount),
     schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.schemeCode),
@@ -148,7 +148,7 @@ const invoiceLineStore = async (request) => {
     })
     request.yar.flash('successMessage', constantModel.invoiceLineUpdateSuccess)
   } else {
-    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicelines/add`, {
+    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicelines/addap`, {
       Value: payload.paymentvalue,
       InvoiceRequestId: payload.paymentId,
       Description: descriptionGet,
