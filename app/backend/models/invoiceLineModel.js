@@ -51,6 +51,10 @@ const viewInvoiceLine = async (request) => {
   const DeliverBody = getGlobal('deliverbody') || ''
   const schemetemplate = getGlobal('schemetemplate') || ''
   let orgget = ''
+  console.log('DeliverBody')
+  console.log(DeliverBody)
+  console.log(schemetemplate)
+  console.log('schemetemplate')
   if (DeliverBody === 'rpa') { orgget = schemetemplate } else { orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || '' }
 
   return {
@@ -77,7 +81,38 @@ const createInvoiceLine = async (request) => {
   const DeliverBody = getGlobal('deliverbody') || ''
   const schemetemplate = getGlobal('schemetemplate') || ''
   let orgget = ''
-  if (DeliverBody === 'rpa') { orgget = schemetemplate } else { orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || '' }
+  console.log('createInvoiceLine')
+  console.log('DeliverBody')
+  console.log(DeliverBody)
+  console.log('schemetemplate')
+  console.log(schemetemplate)
+
+  let schemeCode = optionsData.referenceData.schemeInvoiceTemplates?.find(data => ((data?.name || '') === schemetemplate))?.code || ''
+  console.log(schemeCode)
+
+  if (DeliverBody === 'RPA') 
+    { 
+      //orgget = schemeCode 
+      console.log('orgget')
+      console.log(orgget)
+      return {
+        pageTitle: constantModel.invoiceLineAddTitle,
+        summaryPayment,
+        paymentId: request.params.id,
+        paymentvalue: '0.00',
+        description: '',
+        fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => ((data?.org || DeliverBody).includes(DeliverBody)))),
+        mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps?.filter(data => ((data?.org || schemeCode).includes(schemeCode)))),
+        schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || schemeCode).includes(schemeCode)))),
+        marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears),
+        deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || DeliverBody).includes(DeliverBody)))),
+        disableditem: false,
+        attributesitem: {},
+        view_type: 'create'
+      }
+    } 
+  else 
+  { orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || '' }
   return {
     pageTitle: constantModel.invoiceLineAddTitle,
     summaryPayment,
