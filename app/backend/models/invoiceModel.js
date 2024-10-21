@@ -72,6 +72,7 @@ const invoiceSummary = async (request) => {
   const summaryTable = commonModel.modifyResponseTable(commonModel.removeForSummaryTable(summaryData))
   request.yar.flash('successMessage', '')
   setGlobal('deliverbody', data?.invoice?.deliveryBody)
+  setGlobal('schemetemplate', data?.invoice?.schemeType)
   return {
     pageTitle: constantModel.invoiceSummaryTitle,
     summaryTable,

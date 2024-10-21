@@ -49,7 +49,10 @@ const viewInvoiceLine = async (request) => {
   const lineData = data?.invoiceLine || []
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
   const DeliverBody = getGlobal('deliverbody') || ''
-  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || ''
+  const schemetemplate = getGlobal('schemetemplate') || ''
+  let orgget = ''
+  if (DeliverBody === 'rpa') { orgget = schemetemplate } else { orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || '' }
+
   return {
     pageTitle: constantModel.invoiceLineViewTitle,
     summaryPayment,
@@ -57,11 +60,11 @@ const viewInvoiceLine = async (request) => {
     line_id: request.params.id,
     paymentvalue: lineData.value,
     description: '',
-    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => (data?.org?.split(',')?.includes(orgget) || true)), lineData.fundCode),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes?.filter(data => ((data?.org || orgget) === orgget)), lineData.mainAccount),
-    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget) === orgget)), lineData.schemeCode),
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.fundCode),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.mainAccount),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.schemeCode),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, lineData.marketingYear),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget) === orgget)), lineData.deliveryBody),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.deliveryBody),
     disableditem: true,
     attributesitem: { readonly: 'readonly' },
     view_type: 'view'
@@ -72,18 +75,20 @@ const createInvoiceLine = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
   const summaryPayment = await modifyPaymentResponse(request.params.id, false)
   const DeliverBody = getGlobal('deliverbody') || ''
-  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || ''
+  const schemetemplate = getGlobal('schemetemplate') || ''
+  let orgget = ''
+  if (DeliverBody === 'rpa') { orgget = schemetemplate } else { orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || '' }
   return {
     pageTitle: constantModel.invoiceLineAddTitle,
     summaryPayment,
     paymentId: request.params.id,
     paymentvalue: '0.00',
     description: '',
-    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => (data?.org?.split(',')?.includes(orgget) || true))),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes?.filter(data => ((data?.org || orgget) === orgget))),
-    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget) === orgget))),
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => ((data?.org || orgget).includes(orgget)))),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps?.filter(data => ((data?.org || orgget).includes(orgget)))),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget).includes(orgget)))),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget) === orgget))),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget).includes(orgget)))),
     disableditem: false,
     attributesitem: {},
     view_type: 'create'
@@ -94,9 +99,11 @@ const updateInvoiceLine = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
   const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicelines/getbyinvoicelineid`, { invoiceLineId: request.params.id })
   const lineData = data?.invoiceLine || []
-  const DeliverBody = getGlobal('deliverbody') || ''
-  const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || ''
   const summaryPayment = await modifyPaymentResponse(lineData.invoiceRequestId, false)
+  const DeliverBody = getGlobal('deliverbody') || ''
+  const schemetemplate = getGlobal('schemetemplate') || ''
+  let orgget = ''
+  if (DeliverBody === 'rpa') { orgget = schemetemplate } else { orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === DeliverBody))?.org || '' }
   return {
     pageTitle: constantModel.invoiceLineEditTitle,
     summaryPayment,
@@ -104,11 +111,11 @@ const updateInvoiceLine = async (request) => {
     line_id: request.params.id,
     paymentvalue: lineData.value,
     description: '',
-    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => (data?.org?.split(',')?.includes(orgget) || true)), lineData.fundCode),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountCodes?.filter(data => ((data?.org || orgget) === orgget)), lineData.mainAccount),
-    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget) === orgget)), lineData.schemeCodes),
+    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.fundCode),
+    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.mainAccount),
+    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.schemeCodes),
     marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears, lineData.marketingYears),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget) === orgget)), lineData.deliveryBodies),
+    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget).includes(orgget))), lineData.deliveryBodies),
     disableditem: false,
     attributesitem: {},
     view_type: 'edit'
@@ -120,7 +127,7 @@ const getDescription = async (payload) => {
   const description =
   optionsData.referenceData.chartOfAccounts?.find(data => ((data?.code || '') === (payload.mainaccount + '/' + payload.schemecode + '/' + payload.deliverybody)))?.description || ''
   if (description) { return description } else {
-    return `${(optionsData.referenceData.accountCodes?.find(data => ((data?.code || '') === payload.mainaccount))?.description || '')} ${(optionsData.referenceData.schemeCodes?.find(data => ((data?.code || '') === payload.schemecode))?.description || '')} ${(optionsData.referenceData.deliveryBodies?.find(data => ((data?.code || '') === payload.deliverybody))?.description || '')}`
+    return `${(optionsData.referenceData.accountAps?.find(data => ((data?.code || '') === payload.mainaccount))?.description || '')} ${(optionsData.referenceData.schemeCodes?.find(data => ((data?.code || '') === payload.schemecode))?.description || '')} ${(optionsData.referenceData.deliveryBodies?.find(data => ((data?.code || '') === payload.deliverybody))?.description || '')}`
   }
 }
 
