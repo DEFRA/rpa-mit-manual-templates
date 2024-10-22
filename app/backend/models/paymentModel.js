@@ -3,7 +3,7 @@ const externalRequest = require('../custom_requests/externalRequests')
 const constantModel = require('../app_constants/appConstant')
 
 const getTotalPayments = async (invoiceID) => {
-  const totalPayments = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getbyinvoiceid`, {
+  const totalPayments = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getapbyinvoiceid`, {
     invoiceId: invoiceID
   })
   return (totalPayments?.invoiceRequests.length || 0)
@@ -59,7 +59,7 @@ const updatePayment = async (request) => {
 
 const viewPayment = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
-  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getbyid`, { invoiceRequestId: request.params.id })
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getapbyid`, { invoiceRequestId: request.params.id })
   const paymentData = data?.invoiceRequest || []
   const paymentType = commonModel.modifyResponseSelect(optionsData.referenceData.paymentTypes, paymentData.currency)
   const invoiceData = await summaryPayments(request.params.invoiceid)
@@ -126,7 +126,7 @@ const summaryPayments = async (id) => {
 }
 
 const getAllPayments = async (invoiceID) => {
-  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getbyinvoiceid`, {
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getapbyinvoiceid`, {
     invoiceId: invoiceID
   })
   return modifyPaymentResponse((data?.invoiceRequests || []))

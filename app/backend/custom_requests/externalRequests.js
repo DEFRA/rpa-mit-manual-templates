@@ -17,6 +17,7 @@ const addTokenHeader = (url, headers) => {
 
 const sendExternalRequestGet = async (url, data, headers = {}) => {
   try {
+    console.log(url)
     headers = addTokenHeader(url, headers)
     const response = await axios.get(url, {
       params: data,
@@ -46,6 +47,7 @@ const sendExternalRequestPost = async (url, data, headers = {}) => {
 
 const sendExternalRequestPut = async (url, data, headers = {}) => {
   try {
+    console.log(url)
     headers = addTokenHeader(url, headers)
     const response = await axios.put(url, data, {
       headers
@@ -59,6 +61,7 @@ const sendExternalRequestPut = async (url, data, headers = {}) => {
 
 const sendExternalRequestDelete = async (url, data, headers = {}) => {
   try {
+    console.log(url)
     headers = addTokenHeader(url, headers)
     const response = await axios.delete(url, {
       headers,

@@ -162,7 +162,7 @@ const getDescription = async (payload) => {
   const description =
   optionsData.referenceData.chartOfAccounts?.find(data => ((data?.code || '') === (payload.mainaccount + '/' + payload.schemecode + '/' + payload.deliverybody)))?.description || ''
   if (description) { return description } else {
-    return `${(optionsData.referenceData.accountAps?.find(data => ((data?.code || '') === payload.mainaccount))?.description || '')} ${(optionsData.referenceData.schemeCodes?.find(data => ((data?.code || '') === payload.schemecode))?.description || '')} ${(optionsData.referenceData.deliveryBodies?.find(data => ((data?.code || '') === payload.deliverybody))?.description || '')}`
+    return `${(optionsData.referenceData.accountAps?.find(data => ((data?.code || '') === payload.mainaccount))?.description || '')} / ${(optionsData.referenceData.schemeCodes?.find(data => ((data?.code || '') === payload.schemecode))?.description || '')} / ${(optionsData.referenceData.deliveryBodies?.find(data => ((data?.code || '') === payload.deliverybody))?.description || '')}`
   }
 }
 
@@ -199,7 +199,7 @@ const invoiceLineStore = async (request) => {
 }
 
 const modifyPaymentResponse = async (id, showActions) => {
-  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getbyid`, { invoiceRequestId: id })
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoicerequests/getapbyid`, { invoiceRequestId: id })
   const payment = data?.invoiceRequest || []
   return {
     head: 'Invoice Request Id',
