@@ -143,7 +143,7 @@ const uploadBulk = async (request, h) => {
   if (!bulkData) {
     request.yar.flash('errorMessage', constantModel.invoiceLineBulkUploadFailed)
     return h.redirect('/').temporary()
-  } else if (payload.accountType === 'ap') {
+  } else if (payload.accountType === 'AP') {
     const invoiceRequests = bulkData?.bulkUploadInvoice?.bulkUploadApHeaderLines.map((invRequest, ind) => {
       return {
         id: invRequest.invoiceRequestId,

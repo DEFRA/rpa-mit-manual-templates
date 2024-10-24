@@ -256,7 +256,7 @@ async function processUploadedCSV (file, payload) {
   form.append('org', payload.deliveryBody)
   form.append('schemeInvoiceTemplate', payload.invoiceTemplate)
   const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/add${payload.accountType.toLowerCase()}`, form, {})
-  if (payload.accountType === 'ap') {
+  if (payload.accountType === 'AP') {
     return (results?.bulkUploadApDataset || null)
   } else {
     return (results?.bulkUploadArDataset || null)
