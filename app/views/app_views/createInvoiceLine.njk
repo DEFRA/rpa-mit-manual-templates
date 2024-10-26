@@ -38,6 +38,19 @@
     }}
     
     <div class="custom-container">
+   {{ govukInput({
+    label: {
+      text: "Description",
+      classes: "govuk-label--s",
+      isPageHeading: true
+    },
+    name: "description",
+    id: "description",
+    value: description,
+    classes:"line_inputs",
+    attributes: attributesitem2
+    }) 
+    }}
 
     {{ govukSelect({
      name: "deliverybody",
@@ -46,6 +59,7 @@
       classes: "govuk-label--s"
      },
     items: deliverybody,
+    id: "deliverybody",
     classes:"full-width line_inputs",
     disabled:disableditem
     }) 
@@ -65,6 +79,7 @@
 
     {{ govukSelect({
      name: "mainaccount",
+     id: "mainaccount",
      label: {
       text: 'Main Account',
       classes: "govuk-label--s"
@@ -77,6 +92,7 @@
 
     {{ govukSelect({
      name: "schemecode",
+     id: "schemecode",
      label: {
       text: 'Scheme Code',
       classes: "govuk-label--s"
@@ -118,4 +134,7 @@
 {% endblock %}
 
 {% block footer %}
+<script>
+    const optionsAll = {{ optionsData | dump | safe }};
+</script>
 {% endblock %}

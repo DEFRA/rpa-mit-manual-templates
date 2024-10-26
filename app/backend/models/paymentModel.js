@@ -99,7 +99,7 @@ const paymentStore = async (request) => {
     })
     request.yar.flash('successMessage', constantModel.paymentUpdateSuccess)
   } else {
-    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicerequests/${payload.invoicetype === 'AP' ? 'add' : 'addar'}`, {
+    await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/invoicerequests/${payload.invoicetype.toUpperCase().includes('AP') ? 'add' : 'addar'}`, {
       InvoiceId: payload.inv_id,
       FRN: payload.frn,
       SBI: payload.sbi,

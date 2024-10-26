@@ -1,4 +1,4 @@
-/* global $, deliveryBodyData, invoiceTemplate, invoiceTemplateSecondaryData */
+/* global $, deliveryBodyData, invoiceTemplate, invoiceTemplateSecondaryData, optionsAll */
 
 $(function () {
   $('.backButton').on('click', function () {
@@ -241,6 +241,48 @@ $(function () {
       radio.addEventListener('change', function () {
         updateBodyOptions(this.value, 'delivery-body-container', 'deliveryBody', 'Select Delivery Body')
       })
+    })
+  } catch (e) {
+  }
+
+  try {
+    function getDescription (optionsData) {
+      let description = ''
+      const payload = { mainaccount: $('#mainaccount').val(), deliverybody: $('#deliverybody').val(), schemecode: $('#schemecode').val() }
+      console.log(payload)
+      if (payload.mainaccount && payload.deliverybody && payload.schemecode) {
+        console.log(payload.mainaccount + '/' + payload.schemecode + '/' + payload.deliverybody)
+        
+        description = optionsData.referenceData.chartOfAccounts?.find(data => ((data?.code || '') === (payload.mainaccount + '/' + payload.schemecode + '/' + payload.deliverybody)))?.description || ''
+        console.log('description 1')
+        console.log(description)
+      
+        
+        if (!description) {
+          description = `${(optionsData.referenceData.accountAps?.find(data => ((data?.code || '') === payload.mainaccount))?.description || '')} / ${(optionsData.referenceData.schemeCodes?.find(data => ((data?.code || '') === payload.schemecode))?.description || '')} / ${(optionsData.referenceData.deliveryBodies?.find(data => ((data?.code || '') === payload.deliverybody))?.description || '')}`
+          console.log('accountAps')
+          console.log(optionsData.referenceData.accountAps?.find(data => ((data?.code || '') === payload.mainaccount))?.description || '')
+          console.log('schemeCodes')
+          console.log(optionsData.referenceData.schemeCodes?.find(data => ((data?.code || '') === payload.schemecode))?.description || '')
+          console.log('deliveryBodies')
+          console.log(optionsData.referenceData.deliveryBodies?.find(data => ((data?.code || '') === payload.deliverybody))?.description || '')
+          console.log('description 2')
+          console.log(description)
+        }
+        $('#description').val(description)
+      }
+    }
+    getDescription(optionsAll)
+    $('#mainaccount').on('change', function () {
+      getDescription(optionsAll)
+    })
+
+    $('#schemecode').on('change', function () {
+      getDescription(optionsAll)
+    })
+
+    $('#deliverybody').on('change', function () {
+      getDescription(optionsAll)
     })
   } catch (e) {
   }
