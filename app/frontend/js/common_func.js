@@ -252,12 +252,9 @@ $(function () {
       console.log(payload)
       if (payload.mainaccount && payload.deliverybody && payload.schemecode) {
         console.log(payload.mainaccount + '/' + payload.schemecode + '/' + payload.deliverybody)
-        
         description = optionsData.referenceData.chartOfAccounts?.find(data => ((data?.code || '') === (payload.mainaccount + '/' + payload.schemecode + '/' + payload.deliverybody)))?.description || ''
         console.log('description 1')
         console.log(description)
-      
-        
         if (!description) {
           description = `${(optionsData.referenceData.accountAps?.find(data => ((data?.code || '') === payload.mainaccount))?.description || '')} / ${(optionsData.referenceData.schemeCodes?.find(data => ((data?.code || '') === payload.schemecode))?.description || '')} / ${(optionsData.referenceData.deliveryBodies?.find(data => ((data?.code || '') === payload.deliverybody))?.description || '')}`
           console.log('accountAps')
