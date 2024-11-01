@@ -100,11 +100,12 @@ const BulkHeadData = (dataPack, bulk) => {
 
 const modifyForSummary = (invoice) => {
   const summaryData = []
+  console.log(invoice)
   summaryData.push({ name: 'Account Type', value: invoice.accountType })
   summaryData.push({ name: 'Delivery Body', value: invoice.deliveryBody })
   summaryData.push({ name: 'Invoice Template', value: invoice.schemeType })
-  summaryData.push({ name: 'Invoice Template Secondary', value: invoice.secondaryQuestion })
-  summaryData.push({ name: 'Payment Type', value: invoice.paymentType })
+  summaryData.push({ name: 'Created by', value: invoice.createdBy })
+  summaryData.push({ name: 'Total Value', value: (invoice?.value || 0).toString() })
   return modifyResponseSummary(summaryData)
 }
 

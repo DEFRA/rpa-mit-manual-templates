@@ -87,10 +87,12 @@ const invoiceSummary = async (request) => {
 }
 
 const modifyForSummaryBox = async (summaryData) => {
+  console.log(summaryData)
   const summaryBoxData = []
   summaryBoxData.push({ name: 'Status', value: `<strong class="govuk-tag">${summaryData.status.toUpperCase()}</strong>` })
   summaryBoxData.push({ name: 'Created On', value: commonModel.formatTimestamp(summaryData.created) })
   summaryBoxData.push({ name: 'Number Of Invoice Requests', value: (summaryData?.invoiceRequests?.length || 0).toString() })
+  summaryBoxData.push({ name: 'Total Value', value: (summaryData?.value || 0).toString() })
   return commonModel.modifyResponseSummary(summaryBoxData)
 }
 
