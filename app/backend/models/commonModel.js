@@ -100,12 +100,26 @@ const BulkHeadData = (dataPack, bulk) => {
 
 const modifyForSummary = (invoice) => {
   const summaryData = []
-  console.log(invoice)
   summaryData.push({ name: 'Account Type', value: invoice.accountType })
   summaryData.push({ name: 'Delivery Body', value: invoice.deliveryBody })
   summaryData.push({ name: 'Invoice Template', value: invoice.schemeType })
   summaryData.push({ name: 'Created by', value: invoice.createdBy })
   summaryData.push({ name: 'Total Value', value: (invoice?.value || 0).toString() })
+  if(invoice?.bulkUploadApHeaderLines || false)
+  {
+  summaryData.push({ name: 'Total Requests', value: (invoice?.bulkUploadApHeaderLines.length || 0).toString() })
+  summaryData.push({ name: 'Total Lines', value: (invoice?.bulkUploadApHeaderLines.reduce(function(total, currentValue) {
+    return total + currentValue.bulkUploadApDetailLines.length;
+  },0) || 0).toString() })
+  }
+  
+  if(invoice?.bulkUploadArHeaderLines || false)
+  {
+    summaryData.push({ name: 'Total Requests', value: (invoice?.bulkUploadArHeaderLines.length || 0).toString() })
+    summaryData.push({ name: 'Total Lines', value: (invoice?.bulkUploadArHeaderLines.reduce(function(total, currentValue) {
+      return total + currentValue.bulkUploadApDetailLines.length;
+    },0) || 0).toString() })
+  }
   return modifyResponseSummary(summaryData)
 }
 

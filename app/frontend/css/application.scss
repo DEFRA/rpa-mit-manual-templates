@@ -226,7 +226,11 @@ $govuk-assets-path: "~govuk-frontend/govuk/assets/";
 {
 font-size: 1.25rem !important;
 }
-
+.error_messages
+{
+  background: red !important;
+  border-color: red !important;
+}
 .red-border
 {
   border-color: #a42d27;
@@ -235,6 +239,12 @@ font-size: 1.25rem !important;
 .full-width
 {
   width: 100%;
+}
+
+.full-width-ext
+{
+  width: 100%;
+  max-width: 100%;
 }
 
 .custom-container {

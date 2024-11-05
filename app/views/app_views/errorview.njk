@@ -1,0 +1,26 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% extends 'main_views/_layout.njk' %}
+{% block header %}
+{% endblock %}
+{% block content %}
+<div class="full-height">
+{{ govukBackLink({
+  text: "Back",
+  href: "#",
+  classes:"backButton"
+}) }}
+{% include "partials_views/pageTitle.njk" %}
+{% if errorMessage and errorMessage!='' %}
+{% set html %}
+{{errorMessage | safe}}
+{% endset %}
+{{ govukNotificationBanner({
+  html: html,
+  type: "error",
+  classes: "error_messages"
+}) }}
+{% endif %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
