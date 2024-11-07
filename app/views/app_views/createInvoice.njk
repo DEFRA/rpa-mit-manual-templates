@@ -8,6 +8,8 @@
 
 {% block content %}
 <div class="full-height">
+{% include "partials_views/errorPopup.njk" %}
+
 {% include "partials_views/pageTitle.njk" %}
  <form action="/createInvoice" method="POST" id="invoiceForm">
 
@@ -41,23 +43,6 @@
       }) 
     }}
     </div>
-
-     <div id="invoice-template-secondary-body-container" class="govuk-form-group">
-    {{ 
-      govukRadios({
-      name: "invoice_template_secondary",
-      classes: "radio-border govuk-radios--inline",
-      fieldset: {
-        legend: {
-          text: "Select Scheme Invoice Template Secondary Question",
-          isPageHeading: true,
-          classes: "govuk-fieldset__legend--l"
-        }
-      },
-      items: []
-       }) 
-      }}
-     </div>
     
     <div id="invoice-template-body-container" class="govuk-form-group">
     {{ 
@@ -74,8 +59,24 @@
       items: []
        }) 
     }}
-    </div>   
-   
+    </div>
+    
+    <div id="invoice-template-secondary-body-container" class="govuk-form-group">
+    {{ 
+      govukRadios({
+      name: "invoice_template_secondary",
+      classes: "radio-border govuk-radios--inline",
+      fieldset: {
+        legend: {
+          text: "Select Scheme Invoice Template Secondary Question",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: []
+       }) 
+      }}
+     </div>
 
     {{ 
       govukRadios({

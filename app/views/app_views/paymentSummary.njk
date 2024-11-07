@@ -8,6 +8,8 @@
 
 {% block content %}
 <div class="full-height">
+{% include "partials_views/errorPopup.njk" %}
+
 {{ govukBackLink({
   text: "Back",
   href: "#",

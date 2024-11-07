@@ -155,10 +155,13 @@ const uploadBulk = async (request, h) => {
         lines_data: commonModel.BulkLineData(invRequest.bulkUploadApDetailLines, true)
       }
     })
+    const errorMessage = request.yar.flash('errorm')
+    request.yar.flash('errorm', '')
     return h.view('app_views/bulkViewAp', {
       pageTitle: constantModel.bulkUploadAp,
       invoices: modifyInvoiceResponse([bulkData?.bulkUploadInvoice], false),
       invoiceRequests,
+      errorExist:errorMessage,
       bulkData: JSON.stringify(bulkData)
     })
   } else {
@@ -171,10 +174,13 @@ const uploadBulk = async (request, h) => {
         lines_data: commonModel.BulkLineDataAr(invRequest.bulkUploadArDetailLines, true)
       }
     })
+    const errorMessage = request.yar.flash('errorm')
+    request.yar.flash('errorm', '')
     return h.view('app_views/bulkViewAr', {
       pageTitle: constantModel.bulkUploadAr,
       invoices: modifyInvoiceResponse([bulkData?.bulkUploadInvoice], false),
       invoiceRequests,
+      errorExist:errorMessage,
       bulkData: JSON.stringify(bulkData)
     })
   }

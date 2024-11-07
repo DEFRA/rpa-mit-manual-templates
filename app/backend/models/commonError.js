@@ -1,6 +1,7 @@
-const errorMessage = async (error, h) => {
+const errorMessage = async (error, h, request) => {
+  const pageTitle = 'Error Occured'
+
   try {
-    const pageTitle = 'Error Occured'
     const ext = error?.response?.data?.errors || {};
     var errorMessage = ``;
     errorMessage+=`<h3 class="govuk-notification-banner__heading">${(error?.response?.data?.message || error.toString())}</h3>`;
@@ -12,9 +13,19 @@ const errorMessage = async (error, h) => {
       })
       errorMessage+=`</ul>`;
     }    
-    return h.view('app_views/errorview', { errorMessage , pageTitle}); 
+    if(request.yar.flash('errorm').length>0)
+    {
+      return h.response({ message: `Server is Down` }).code(500)
+    }
+    request.yar.flash('errorm', errorMessage);
+   if (request?.headers?.referer || false) {
+     return h.redirect(request?.headers?.referer);
+   } else {
+     return h.redirect('/');
+   }
   } catch (err) {
-    return h.view('app_views/errorview', { errorMessage: `An unexpected error occurred. ${err.toString()}`, pageTitle});
+    request.yar.flash('errorm', `An unexpected error occurred. ${err.toString()}`);
+    return h.redirect('/');
   }
 };
 

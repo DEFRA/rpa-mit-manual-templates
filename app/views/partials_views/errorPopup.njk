@@ -1,0 +1,28 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% if errorExist and errorExist!='' %}
+<div class="popup-overlay" id="popupOverlayError">
+    <div class="popup-content popup-content-rm govuk-form-group">
+        <div>
+        {% set html %}
+        {{errorExist | safe}}
+          <div class="govuk-button-group cancel-error">
+           {{ 
+            govukButton({
+            text: "Okay",
+            classes: "govuk-button--warning redbut",
+            id:"cancelPopupError"
+            }) }}
+        </div>
+        {% endset %}
+        {{ govukNotificationBanner({
+        html: html,
+        type: "error",
+        classes: "error_messages"
+        }) }}
+        </div>
+      
+    </div>
+</div>
+{% endif %}

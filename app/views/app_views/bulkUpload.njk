@@ -9,6 +9,8 @@
 
 {% block content %}
 <div class="full-height">
+{% include "partials_views/errorPopup.njk" %}
+
 {% include "partials_views/pageTitle.njk" %}
  <form id="uploadBulk" action="/bulkUpload" method="POST" enctype="multipart/form-data" >
 

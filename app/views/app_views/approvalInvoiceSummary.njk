@@ -10,6 +10,8 @@
 
 {% block content %}
 <div class="full-height">
+{% include "partials_views/errorPopup.njk" %}
+
 {{ govukBackLink({
   text: "Back",
   href: "#",
@@ -71,6 +73,7 @@ href: approveUrl
     <div class="govuk-accordion__section-header">
       <h2 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+         {{singleitem.invid}} - ({{singleitem.id}})
         </span>
       </h2>
     </div>

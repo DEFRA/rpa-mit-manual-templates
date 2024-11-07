@@ -61,7 +61,8 @@ class AuthProvider {
       const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(request.yar.get('authCodeUrlRequest'))
       return h.redirect(authCodeUrlResponse)
     } catch (error) {
-      return errorModel.errorMessage(error, h)
+      console.log(error)
+      return errorModel.errorMessage(error, h, request)
     }
   }
 
@@ -75,7 +76,7 @@ class AuthProvider {
 
       const tokenResponse = await msalInstance.acquireTokenSilent({
         account: request.yar.get('account'),
-        scopes: ['User.Read', 'offline_access']
+        scopes: ['User.Read']
       })
 
       request.yar.set({
@@ -90,7 +91,8 @@ class AuthProvider {
       if (error instanceof msal.InteractionRequiredAuthError) {
         return this.login(request, h)
       }
-      return errorModel.errorMessage(error, h)
+      console.log(error)
+      return errorModel.errorMessage(error, h, request)
     }
   }
 
@@ -125,7 +127,8 @@ class AuthProvider {
       const state = JSON.parse(this.cryptoProvider.base64Decode(request.payload.state))
       return h.redirect(state.successRedirect)
     } catch (error) {
-      return errorModel.errorMessage(JSON.stringify(request.yar.get('authCodeRequest') || ''), h)
+      console.log(error)
+      return errorModel.errorMessage(JSON.stringify(request.yar.get('authCodeRequest') || ''), h, request)
     }
   }
 
@@ -140,7 +143,8 @@ class AuthProvider {
       request.yar.clear()
       return h.redirect(logoutUri)
     } catch (error) {
-      return errorModel.errorMessage(error, h)
+      console.log(error)
+      return errorModel.errorMessage(error, h, request)
     }
   }
 

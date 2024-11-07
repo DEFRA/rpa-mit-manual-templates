@@ -3,9 +3,12 @@ const errorModel = require('../models/commonError')
 const approveInvoiceList = async (request, h) => {
   try {
     const res = await approvalInvoiceModel.getAllInvoices(request)
+    const errorMessage = request.yar.flash('errorm')
+    request.yar.flash('errorm', '')
+    res['errorExist']=errorMessage;
     return h.view('app_views/approvalInvoiceList', res)
   } catch (error) {
-    return errorModel.errorMessage(error, h)
+    return errorModel.errorMessage(error, h, request)
   }
 }
 
@@ -13,7 +16,7 @@ const approvalInvoiceSummary = async (request, h) => {
   try {
     return await approvalInvoiceModel.invoiceSummary(request, h)
   } catch (error) {
-    return errorModel.errorMessage(error, h)
+    return errorModel.errorMessage(error, h, request)
   }
 }
 
@@ -22,7 +25,7 @@ const approveInvoice = async (request, h) => {
     await approvalInvoiceModel.approveInvoice(request)
     return h.redirect('/approvelist').temporary()
   } catch (error) {
-    return errorModel.errorMessage(error, h)
+    return errorModel.errorMessage(error, h, request)
   }
 }
 
@@ -31,7 +34,7 @@ const rejectInvoice = async (request, h) => {
     await approvalInvoiceModel.rejectInvoice(request)
     return h.redirect('/approvelist').temporary()
   } catch (error) {
-    return errorModel.errorMessage(error, h)
+    return errorModel.errorMessage(error, h, request)
   }
 }
 

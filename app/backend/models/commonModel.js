@@ -270,7 +270,7 @@ async function processUploadedCSV (file, payload) {
   form.append('file', file, file.hapi.filename)
   form.append('org', payload.deliveryBody)
   form.append('schemeInvoiceTemplate', payload.invoiceTemplate)
-  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/add${payload.accountType.toLowerCase()}`, form, {})
+  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/addap`, form, {})
   if (payload.accountType === 'AP') {
     return (results?.bulkUploadApDataset || null)
   } else {

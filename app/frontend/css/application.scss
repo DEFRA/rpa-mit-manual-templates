@@ -228,8 +228,16 @@ font-size: 1.25rem !important;
 }
 .error_messages
 {
+  margin-bottom: 0px !important;
   background: red !important;
   border-color: red !important;
+}
+.cancel-error
+{
+  display: flex;
+  margin-bottom: 0px !important;
+  height: 30px;
+  justify-content: right;
 }
 .red-border
 {
@@ -288,7 +296,14 @@ font-size: 1.25rem !important;
   align-items: center;
   z-index: 9;
 }
-
+.popup-content-rm
+{
+  padding: 0px !important;
+}
+.redbut
+{
+  background: red !important;
+}
 .popup-content {
   background-color: white;
   padding: 20px;
