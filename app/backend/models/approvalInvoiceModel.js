@@ -4,7 +4,7 @@ const constantModel = require('../app_constants/appConstant')
 
 const getAllInvoices = async (request) => {
   const successMessage = request.yar.flash('successMessage')
-  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/approvals/getmyapprovals`, {})
+  const data = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/getmyapprovals`, {}, {}, request)
   request.yar.flash('successMessage', '')
   return { pageTitle: constantModel.approveInvoiceListTitle, invoices: modifyInvoiceResponse(data?.invoices || []), successMessage }
 }
@@ -12,7 +12,7 @@ const getAllInvoices = async (request) => {
 const approveInvoice = async (request) => {
   await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/approve`, {
     id: request.params.id
-  })
+  },{}, request)
   request.yar.flash('successMessage', constantModel.invoiceApproveSuccess)
   return request.params.id
 }
@@ -22,7 +22,7 @@ const rejectInvoice = async (request) => {
   await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/reject`, {
     id: payload.invoiceId,
     reason: payload.reason
-  })
+  },{}, request)
   request.yar.flash('successMessage', constantModel.invoiceRejectSuccess)
   return request.params.id
 }
@@ -43,7 +43,7 @@ const modifyInvoiceResponse = (invoiceList, action = true) => {
 }
 
 const invoiceSummary = async (request, h) => {
-  const data = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/getinvoiceforapproval`, { invoiceId: request.params.id })
+  const data = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/getinvoiceforapproval`, { invoiceId: request.params.id },{}, request)
   const invoiceRequests = data?.invoice?.invoiceRequests.map((invRequest, ind) => {
     return {
       id: invRequest.invoiceRequestId,

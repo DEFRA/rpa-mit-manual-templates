@@ -261,7 +261,7 @@ const addForSummaryTableLineCSVTwo = (items) => {
   })
 }
 
-async function processUploadedCSV (file, payload) {
+async function processUploadedCSV (file, payload, request) {
   if (!file) return null
   const extension = file.hapi.filename.split('.').pop().toLowerCase()
   const validExtensions = ['csv', 'xlsx']
@@ -270,7 +270,7 @@ async function processUploadedCSV (file, payload) {
   form.append('file', file, file.hapi.filename)
   form.append('org', payload.deliveryBody)
   form.append('schemeInvoiceTemplate', payload.invoiceTemplate)
-  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/addap`, form, {})
+  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/add`, form, {}, request)
   if (payload.accountType === 'AP') {
     return (results?.bulkUploadApDataset || null)
   } else {

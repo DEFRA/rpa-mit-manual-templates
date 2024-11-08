@@ -3,11 +3,10 @@ const externalRequest = require('../custom_requests/externalRequests')
 const constantModel = require('../app_constants/appConstant')
 const paymentModel = require('./paymentModel')
 const Path = require('path')
-const { setGlobal } = require('../hooks/customHooks')
 
 const getAllInvoices = async (request) => {
   const successMessage = request.yar.flash('successMessage')
-  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoices/getall`)
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoices/getall`,{},{},request)
   request.yar.flash('successMessage', '')
   let username = ''
   try {
@@ -19,7 +18,7 @@ const getAllInvoices = async (request) => {
 }
 
 const createInvoice = async (request) => {
-  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
+  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`,{},{},request)
   const accountType = commonModel.modifyResponseRadio(optionsData.referenceData.accountCodes)
   const deliveryBody = optionsData.referenceData.initialDeliveryBodies
   const invoiceTemplate = optionsData.referenceData.schemeInvoiceTemplates
@@ -36,7 +35,7 @@ const createInvoice = async (request) => {
 }
 
 const createBulk = async (request) => {
-  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
+  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`,{},{},request)
   const accountType = commonModel.modifyResponseRadio(optionsData.referenceData.accountCodes)
   const deliveryBody = optionsData.referenceData.initialDeliveryBodies
   const invoiceTemplate = optionsData.referenceData.schemeInvoiceTemplates
@@ -57,23 +56,25 @@ const invoiceStore = async (request) => {
     SecondaryQuestion: payload.invoice_template_secondary,
     PaymentType: payload.paymentType
 
-  })
+  },{},request)
   request.yar.flash('successMessage', constantModel.invoiceCreationSuccess)
 }
 
 const invoiceSummary = async (request) => {
   const successMessage = request.yar.flash('successMessage')
-  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoices/getbyid`, { invoiceId: request.params.id })
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/invoices/getbyid`, { invoiceId: request.params.id }, {}, request)
   const summaryData = data?.invoice || []
-  const getAllPayments = await paymentModel.getAllPayments(request.params.id)
+  const getAllPayments = await paymentModel.getAllPayments(request.params.id,request)
   summaryData.invoiceRequests = getAllPayments
   const summaryBox = { head: 'Invoice Id', actions: [], id: summaryData.id, rows: await modifyForSummaryBox(summaryData) }
   const summaryHeader = [{ text: 'Account Type' }, { text: 'Delivery Body' }, { text: 'Scheme Type' }, { text: 'Payment Type' }]
   const summaryTable = commonModel.modifyResponseTable(commonModel.removeForSummaryTable(summaryData))
   request.yar.flash('successMessage', '')
-  setGlobal('deliverbody', data?.invoice?.deliveryBody)
-  setGlobal('schemetemplate', data?.invoice?.schemeType)
-  setGlobal('accounttype', data?.invoice?.accountType)
+  request.yar.set({
+    deliverbody:data?.invoice?.deliveryBody,
+    schemetemplate:data?.invoice?.schemeType,
+    accounttype:data?.invoice?.accountType
+  })
   return {
     pageTitle: constantModel.invoiceSummaryTitle,
     summaryTable,
@@ -115,7 +116,7 @@ const modifyInvoiceResponse = (invoiceList, action = true) => {
 const deleteInvoice = async (request) => {
   await externalRequest.sendExternalRequestDelete(`${constantModel.requestHost}/invoices/delete`, {
     invoiceId: request.params.id
-  })
+  }, {}, request)
   request.yar.flash('successMessage', constantModel.invoiceDeletionSuccess)
   return request.params.id
 }
@@ -132,16 +133,16 @@ const BulkDataUpload = async (request) => {
     invoiceId: bulkData.bulkUploadInvoice.id,
     confirmUpload: true,
     confirm: true
-  })
+  },{},request)
   request.yar.flash('successMessage', constantModel.invoiceLineBulkUploadSuccess)
 }
 
 const uploadBulk = async (request, h) => {
   const { payload } = request
-  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`)
+  const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`,{},{},request)
   const orgget = optionsData.referenceData.initialDeliveryBodies?.find(data => (data.code === payload.deliveryBody))?.org || ''
   payload.deliveryBody = orgget
-  const bulkData = await commonModel.processUploadedCSV(payload.bulk_file, payload)
+  const bulkData = await commonModel.processUploadedCSV(payload.bulk_file, payload, request)
   if (!bulkData) {
     request.yar.flash('errorMessage', constantModel.invoiceLineBulkUploadFailed)
     return h.redirect('/').temporary()
