@@ -11,8 +11,8 @@ const authPlugin = {
       if (isAuthenticated) {
         return h.continue
       } else {
-        return h.continue
-        // return h.redirect('/login').takeover()
+        // return h.continue
+        return h.redirect('/login').takeover()
       }
     })
   }

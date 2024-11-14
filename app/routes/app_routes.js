@@ -2,7 +2,9 @@ const invoiceController = require('../backend/controllers/invoiceController')
 const paymentController = require('../backend/controllers/paymentController')
 const invoiceLineController = require('../backend/controllers/invoiceLineController')
 const approvalInvoiceController = require('../backend/controllers/approvalInvoiceController')
+const adminApproverController = require('../backend/controllers/adminapproversController')
 const authProvider = require('../backend/auth/AuthProvider')
+
 module.exports = [
   {
     method: 'GET',
@@ -177,6 +179,48 @@ module.exports = [
     path: '/rejectInvoice',
     options: {
       handler: approvalInvoiceController.rejectInvoice
+    }
+  },
+  {
+    method: 'GET',
+    path: '/adminapprovers',
+    options: {
+      handler: adminApproverController.adminapproverList
+    }
+  },
+  {
+    method: 'POST',
+    path: '/adminapprovers',
+    options: {
+      handler: adminApproverController.adminapproverSearch
+    }
+  },
+  {
+    method: 'GET',
+    path: '/createAdminApprover',
+    options: {
+      handler: adminApproverController.adminapproverCreate
+    }
+  },
+  {
+    method: 'GET',
+    path: '/editAdminApprover/{email}/{deliverybody}',
+    options: {
+      handler: adminApproverController.adminapproverEdit
+    }
+  },
+  {
+    method: 'POST',
+    path: '/storeAdminApprover',
+    options: {
+      handler: adminApproverController.adminapproverStore
+    }
+  },
+  {
+    method: 'GET',
+    path: '/deleteAdminApprover/{email}/{deliverybody}',
+    options: {
+      handler: adminApproverController.adminapproverDelete
     }
   },
   {

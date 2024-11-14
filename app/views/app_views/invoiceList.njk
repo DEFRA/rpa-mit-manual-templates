@@ -1,8 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% extends 'main_views/_layout.njk' %}
-{% block header %}
-{% endblock %}
 
 {% block content %}
 <div class="full-height">
@@ -27,6 +25,13 @@ href: "/approvelist"
 }}
 {{ 
 govukButton({
+text: "Admin Approvers",
+classes: "fix-width",
+href: "/adminapprovers"
+}) 
+}}
+{{ 
+govukButton({
 text: "Download Sample File",
 classes: "fix-width float-right",
 href: "/sample_download"
@@ -46,7 +51,4 @@ href: "/bulkView"
  {% include "partials_views/summaryBox.njk" %}
 {% endfor %}
 </div>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}

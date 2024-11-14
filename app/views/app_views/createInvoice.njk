@@ -3,8 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% extends 'main_views/_layout.njk' %}
-{% block header %}
-{% endblock %}
+
 
 {% block content %}
 <div class="full-height">
@@ -107,8 +106,6 @@
     </form>
 
 </div>
-{% endblock %}
-{% block footer %}
 <script>
     const deliveryBodyData = {{ deliveryBody | dump | safe }};
     const invoiceTemplate = {{ invoiceTemplate | dump | safe }};

@@ -1,6 +1,53 @@
-/* global $, deliveryBodyData, invoiceTemplate, invoiceTemplateSecondaryData, optionsAll */
+/* global $, deliveryBodyData, schemecodeData, invoiceTemplate, invoiceTemplateSecondaryData, optionsAll */
 
 $(function () {
+  $('#approverForm').on('submit', function (event) {
+    event.preventDefault()
+    let allGroupsSelected = true
+    const inputs = document.querySelectorAll('.approver_inputs')
+    console.log(inputs)
+    for (const input of inputs) {
+      if (input.value.trim() === '') {
+        allGroupsSelected = false
+      }
+    }
+    if (!allGroupsSelected) {
+      const messageElement = $('#error-message')
+      messageElement.show()
+      setTimeout(function () {
+        messageElement.hide()
+      }, 3000)
+    } else {
+      $('#error-message').hide()
+      this.submit()
+    }
+  })
+
+  $('#searchForm').on('submit', function (event) {
+    event.preventDefault()
+    const allGroupsSelected = []
+    const inputs = document.querySelectorAll('.approver_inputs')
+    console.log(inputs)
+    for (const input of inputs) {
+      if (input.value.trim() === '') {
+        allGroupsSelected.push(true)
+      } else {
+        allGroupsSelected.push(false)
+      }
+    }
+
+    if (!allGroupsSelected.includes(false)) {
+      const messageElement = $('#error-message')
+      messageElement.show()
+      setTimeout(function () {
+        messageElement.hide()
+      }, 3000)
+    } else {
+      $('#error-message').hide()
+      this.submit()
+    }
+  })
+
   $('.backButton').on('click', function () {
     window.history.back()
   })
@@ -141,7 +188,7 @@ $(function () {
     }
   })
 
-  $("#popupOverlayError").fadeIn();
+  $('#popupOverlayError').fadeIn()
   $('#cancelPopupError').on('click', function (event) {
     event.preventDefault()
     $('#popupOverlayError').fadeOut()
@@ -276,6 +323,23 @@ $(function () {
       getDescription(optionsAll)
     })
   } catch (e) {
+  }
+
+  try {
+    const orgdelivery = deliverybodyData.find(data => (data.code === $('#deliverybody').val()))?.org
+    $('#schemecode').val(schemecodeData.find(data => ((data?.org || '') === orgdelivery)).code)
+
+    $('#schemecode').on('change', function () {
+      const orgscheme = schemecodeData.find(data => (data.code === $('#schemecode').val()))?.org || ''
+      $('#deliverybody').val(deliverybodyData.find(data => (data.org === orgscheme)).code)
+    })
+
+    $('#deliverybody').on('change', function () {
+      const orgdelivery = deliverybodyData.find(data => (data.code === $('#deliverybody').val()))?.org
+      $('#schemecode').val(schemecodeData.find(data => ((data?.org || '') === orgdelivery)).code)
+    })
+  } catch (e) {
+    console.log(e)
   }
 
   $('#showPopup').on('click', function () {

@@ -5,8 +5,11 @@ const invoiceLineAll = async (request, h) => {
   try {
     const res = await invoiceLineModel.getAllInvoiceLines(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
     return h.view('app_views/paymentSummary', res)
   } catch (error) {
     return errorModel.errorMessage(error, h, request)
@@ -17,8 +20,11 @@ const invoiceLineCreate = async (request, h) => {
   try {
     const res = await invoiceLineModel.createInvoiceLine(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
     return h.view('app_views/createInvoiceLine', res)
   } catch (error) {
     return errorModel.errorMessage(error, h, request)
@@ -29,8 +35,11 @@ const invoiceLineView = async (request, h) => {
   try {
     const res = await invoiceLineModel.viewInvoiceLine(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
     return h.view('app_views/createInvoiceLine', res)
   } catch (error) {
     return errorModel.errorMessage(error, h, request)
@@ -41,8 +50,11 @@ const invoiceLineEdit = async (request, h) => {
   try {
     const res = await invoiceLineModel.updateInvoiceLine(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
     return h.view('app_views/createInvoiceLine', res)
   } catch (error) {
     return errorModel.errorMessage(error, h, request)

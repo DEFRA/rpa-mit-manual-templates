@@ -26,7 +26,8 @@
     </div>
 </div>
 <script>
-if (document.referrer=== `${window.location.protocol}//${window.location.host}/`) {
+const errorUrl = {{ direction | dump | safe }};
+if (document.referrer != errorUrl[0]) {
   history.back();
 }
 </script>

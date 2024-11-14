@@ -4,8 +4,11 @@ const approveInvoiceList = async (request, h) => {
   try {
     const res = await approvalInvoiceModel.getAllInvoices(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
     return h.view('app_views/approvalInvoiceList', res)
   } catch (error) {
     return errorModel.errorMessage(error, h, request)

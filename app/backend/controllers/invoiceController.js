@@ -4,8 +4,11 @@ const invoiceList = async (request, h) => {
   try {
     const res = await invoiceModel.getAllInvoices(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
     return h.view('app_views/invoiceList', res)
   } catch (error) {
     return errorModel.errorMessage(error, h, request)
@@ -16,8 +19,11 @@ const invoiceCreate = async (request, h) => {
   try {
     const res = await invoiceModel.createInvoice(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
     return h.view('app_views/createInvoice', res)
   } catch (error) {
     return errorModel.errorMessage(error, h, request)
@@ -28,9 +34,11 @@ const invoiceSummary = async (request, h) => {
   try {
     const res = await invoiceModel.invoiceSummary(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
-    console.log(res)
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
 
     return h.view('app_views/invoiceSummary', res)
   } catch (error) {
@@ -85,8 +93,11 @@ const Bulkview = async (request, h) => {
   try {
     const res = await invoiceModel.createBulk(request)
     const errorMessage = request.yar.flash('errorm')
+    const direction = request.yar.flash('direction')
     request.yar.flash('errorm', '')
-    res['errorExist']=errorMessage;
+    request.yar.flash('direction', '')
+    res.errorExist = errorMessage
+    res.direction = direction
     return h.view('app_views/bulkUpload', res)
   } catch (error) {
     return errorModel.errorMessage(error, h, request)

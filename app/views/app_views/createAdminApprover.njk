@@ -5,6 +5,7 @@
 
 {% extends 'main_views/_layout.njk' %}
 
+
 {% block content %}
 <div class="full-height">
 {% include "partials_views/errorPopup.njk" %}
@@ -17,38 +18,42 @@
 }) }}
 {% endif %}
 {% include "partials_views/pageTitle.njk" %}
-{% set item = summaryPayment %}
-{% include "partials_views/summaryBox.njk" %}
- <form action="{% if view_type != 'view' %}/createInvoiceLine{% else %}#{% endif %}" method="POST" id="lineForm">
-    <input name="paymentId" type="hidden" value="{{paymentId}}" />
-    {% if line_id and line_id!='' %}
-      <input name="line_id" type="hidden" value="{{line_id}}" />
-    {% endif %}
+{% include "partials_views/summaryTable.njk" %}
+
+ <form action="{% if view_type != 'view' %}/storeAdminApprover{% else %}#{% endif %}" method="POST" id="approverForm">
+    <input name="view_type" type="hidden" value="{{view_type}}" />
+    
     {{ govukInput({
     label: {
-      text: "Line Value",
+      text: "Email",
       classes: "govuk-label--s",
       isPageHeading: true
     },
-    name: "paymentvalue",
-    value: paymentvalue,
-    classes:"line_inputs",
+    hint: {
+    text: "Enter Email"
+    },
+    id:"email",
+    name: "email",
+    value: email,
+    classes:"approver_inputs",
     attributes: attributesitem
     }) 
     }}
-    
-    <div class="custom-container">
-   {{ govukInput({
+
+    {{ govukInput({
     label: {
-      text: "Description",
+      text: "Threshold",
       classes: "govuk-label--s",
       isPageHeading: true
     },
-    name: "description",
-    id: "description",
-    value: description,
-    classes:"line_inputs",
-    attributes: attributesitem2
+    hint: {
+    text: "Enter Threshold"
+    },
+    id:"threshold",
+    name: "threshold",
+    value: threshold,
+    classes:"approver_inputs",
+    attributes: attributesitem
     }) 
     }}
 
@@ -60,32 +65,7 @@
      },
     items: deliverybody,
     id: "deliverybody",
-    classes:"full-width line_inputs",
-    disabled:disableditem
-    }) 
-    }}
-
-    {{ govukSelect({
-     name: "fundcode",
-     label: {
-      text: 'Fund Code',
-      classes: "govuk-label--s"
-     },
-    items: fundcode,
-    classes:"full-width line_inputs",
-    disabled:disableditem
-    }) 
-    }}
-
-    {{ govukSelect({
-     name: "mainaccount",
-     id: "mainaccount",
-     label: {
-      text: 'Main Account',
-      classes: "govuk-label--s"
-     },
-    items: mainaccount,
-    classes:"full-width line_inputs",
+    classes:"full-width approver_inputs",
     disabled:disableditem
     }) 
     }}
@@ -98,23 +78,11 @@
       classes: "govuk-label--s"
      },
     items: schemecode,
-    classes:"full-width line_inputs",
+    classes:"full-width approver_inputs",
     disabled:disableditem
     }) 
     }}
 
-    {{ govukSelect({
-     name: "marketingyear",
-     label: {
-      text: 'Marketing Year',
-      classes: "govuk-label--s"
-     },
-    items: marketingyear,
-    classes:"full-width line_inputs",
-    disabled:disableditem
-    }) 
-    }}
-    </div>
     {% if view_type and view_type!='view' %}
 
     {% set errorMessage %}
@@ -132,6 +100,8 @@
 
 </div>
 <script>
-    const optionsAll = {{ optionsData | dump | safe }};
+    const deliverybodyData = {{ deliverybodyData | dump | safe }};
+    const schemecodeData = {{ schemecodeData | dump | safe }};
 </script>
 {% endblock %}
+

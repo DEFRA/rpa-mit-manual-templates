@@ -105,21 +105,34 @@ const modifyForSummary = (invoice) => {
   summaryData.push({ name: 'Invoice Template', value: invoice.schemeType })
   summaryData.push({ name: 'Created by', value: invoice.createdBy })
   summaryData.push({ name: 'Total Value', value: (invoice?.value || 0).toString() })
-  if(invoice?.bulkUploadApHeaderLines || false)
-  {
-  summaryData.push({ name: 'Total Requests', value: (invoice?.bulkUploadApHeaderLines.length || 0).toString() })
-  summaryData.push({ name: 'Total Lines', value: (invoice?.bulkUploadApHeaderLines.reduce(function(total, currentValue) {
-    return total + currentValue.bulkUploadApDetailLines.length;
-  },0) || 0).toString() })
+  if (invoice?.bulkUploadApHeaderLines || false) {
+    summaryData.push({ name: 'Total Requests', value: (invoice?.bulkUploadApHeaderLines.length || 0).toString() })
+    summaryData.push({
+      name: 'Total Lines',
+      value: (invoice?.bulkUploadApHeaderLines.reduce(function (total, currentValue) {
+        return total + currentValue.bulkUploadApDetailLines.length
+      }, 0) || 0).toString()
+    })
   }
-  
-  if(invoice?.bulkUploadArHeaderLines || false)
-  {
+
+  if (invoice?.bulkUploadArHeaderLines || false) {
     summaryData.push({ name: 'Total Requests', value: (invoice?.bulkUploadArHeaderLines.length || 0).toString() })
-    summaryData.push({ name: 'Total Lines', value: (invoice?.bulkUploadArHeaderLines.reduce(function(total, currentValue) {
-      return total + currentValue.bulkUploadApDetailLines.length;
-    },0) || 0).toString() })
+    summaryData.push({
+      name: 'Total Lines',
+      value: (invoice?.bulkUploadArHeaderLines.reduce(function (total, currentValue) {
+        return total + currentValue.bulkUploadApDetailLines.length
+      }, 0) || 0).toString()
+    })
   }
+  return modifyResponseSummary(summaryData)
+}
+
+const modifyForSummaryApprover = (invoice) => {
+  const summaryData = []
+  summaryData.push({ name: 'Email', value: invoice.email.toString() })
+  summaryData.push({ name: 'Delivery Body', value: invoice.deliveryBody.toString() })
+  summaryData.push({ name: 'Scheme Code', value: invoice.schemeCode.toString() })
+  summaryData.push({ name: 'Threshold', value: invoice.threshold.toString() })
   return modifyResponseSummary(summaryData)
 }
 
@@ -278,4 +291,4 @@ async function processUploadedCSV (file, payload, request) {
   }
 }
 
-module.exports = { BulkHeadDataAr, BulkLineDataAr, BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modifyResponseRadio, modifyResponseSelect, modifyResponseSummary, modifyResponseTable, generateID, formatTimestamp, removeForSummaryTable }
+module.exports = { BulkHeadDataAr, modifyForSummaryApprover, BulkLineDataAr, BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modifyResponseRadio, modifyResponseSelect, modifyResponseSummary, modifyResponseTable, generateID, formatTimestamp, removeForSummaryTable }

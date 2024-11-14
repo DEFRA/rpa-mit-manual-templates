@@ -1,0 +1,93 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% extends 'main_views/_layout.njk' %}
+
+
+{% block content %}
+<div class="full-height">
+{% include "partials_views/errorPopup.njk" %}
+
+{{ govukBackLink({
+  text: "Back",
+  href: "#",
+  classes:"backButton"
+}) }}
+{% include "partials_views/pageTitle.njk" %}
+{{ 
+govukButton({
+text: "Create Approver",
+classes: "fix-width float-right",
+href: "/createAdminApprover"
+}) 
+}}
+<br/><br/><br/><br/>
+ <form action="/adminapprovers" method="POST" id="searchForm">
+
+<div class="action-flex">
+
+ {{ govukInput({
+    label: {
+      text: "Email",
+      classes: "govuk-label--s",
+      isPageHeading: true
+    },
+    id:"email",
+    name: "email",
+    value: email,
+    classes:"approver_inputs"
+    }) 
+  }}
+   {{ govukInput({
+    label: {
+      text: "Threshold",
+      classes: "govuk-label--s",
+      isPageHeading: true
+    },
+    id:"threshold",
+    name: "threshold",
+    value: threshold,
+    classes:"approver_inputs"
+    }) 
+    }}
+   {{ govukSelect({
+     name: "deliverybody",
+     label: {
+      text: 'Delivery Body',
+      classes: "govuk-label--s"
+     },
+    items: deliverybody,
+    id: "deliverybody",
+    classes:"approver_inputs"
+    }) 
+    }}
+
+    {{ govukSelect({
+     name: "schemecode",
+     id: "schemecode",
+     label: {
+      text: 'Scheme Code',
+      classes: "govuk-label--s"
+     },
+    items: schemecode,
+    classes:"approver_inputs"
+    }) 
+    }}
+    {{ govukButton({text: "Search" , classes:"set-search-margin"}) }}
+    
+</div>
+<div>
+   {% set errorMessage %}
+    Fill Any Field
+    {% endset %}
+
+    {% include "partials_views/errorBanner.njk" %}
+</div>
+</form>
+{% include "partials_views/successBanner.njk" %}
+{% for item in invoices %}
+ {% include "partials_views/summaryBox.njk" %}
+{% endfor %}
+</div>
+{% endblock %}
