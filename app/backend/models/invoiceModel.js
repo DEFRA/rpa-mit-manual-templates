@@ -21,7 +21,7 @@ const createInvoice = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`, {}, {}, request)
   const accountType = commonModel.modifyResponseRadio(optionsData.referenceData.accountCodes)
   const deliveryBody = optionsData.referenceData.initialDeliveryBodies
-  const invoiceTemplate = optionsData.referenceData.schemeInvoiceTemplates
+  const invoiceTemplate = optionsData.referenceData.schemeTypes
   const invoiceTemplateSecondary = optionsData.referenceData.schemeInvoiceTemplateSecondaryQuestions
   const paymentType = commonModel.modifyResponseRadio(optionsData.referenceData.paymentTypes)
   return {
@@ -38,7 +38,7 @@ const createBulk = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`, {}, {}, request)
   const accountType = commonModel.modifyResponseRadio(optionsData.referenceData.accountCodes)
   const deliveryBody = optionsData.referenceData.initialDeliveryBodies
-  const invoiceTemplate = optionsData.referenceData.schemeInvoiceTemplates
+  const invoiceTemplate = optionsData.referenceData.schemeTypes
   return {
     pageTitle: constantModel.bulkUpload,
     accountType,
