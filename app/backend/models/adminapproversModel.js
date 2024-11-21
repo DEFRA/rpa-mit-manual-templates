@@ -29,7 +29,7 @@ const getAllSearch = async (request) => {
     filter.schemeCode = payload.schemecode
   }
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`, filter, {}, request)
-  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/admin/approvers/${Object.keys(filter).length == 4 ? 'getbyall' : 'getbyall'}`, {}, {}, request)
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/admin/approvers/${Object.keys(filter).length == 4 ? 'getbyall' : 'getbyall'}`, filter, {}, request)
   request.yar.flash('successMessage', '')
   optionsData.referenceData.schemeCodes.unshift({ code: ' ', description: ' ' })
   optionsData.referenceData.deliveryBodies.unshift({ code: ' ', description: ' ' })

@@ -4,7 +4,7 @@ const constantModel = require('../app_constants/appConstant')
 
 const getAllInvoices = async (request) => {
   const successMessage = request.yar.flash('successMessage')
-  const data = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/approvals/getmyapprovals`, {}, {}, request)
+  const data = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/approvals/getmyapprovals`, {}, {}, request)
   request.yar.flash('successMessage', '')
   return { pageTitle: constantModel.approveInvoiceListTitle, invoices: modifyInvoiceResponse(data?.invoices || []), successMessage }
 }
