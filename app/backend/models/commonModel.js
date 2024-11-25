@@ -131,7 +131,7 @@ const modifyForSummaryApprover = (invoice) => {
   const summaryData = []
   summaryData.push({ name: 'Email', value: invoice.email.toString() })
   summaryData.push({ name: 'Delivery Body', value: invoice.deliveryBody.toString() })
-  summaryData.push({ name: 'Scheme Code', value: invoice.schemeCode.toString() })
+  summaryData.push({ name: 'Scheme Type', value: invoice.schemeType.toString() })
   summaryData.push({ name: 'Threshold', value: invoice.threshold.toString() })
   return modifyResponseSummary(summaryData)
 }
