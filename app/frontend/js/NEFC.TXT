@@ -1,42 +1,15 @@
 
-Private Sub CloseWorkbook_Click()
-    Dim response As VbMsgBoxResult
-    response = MsgBox("Are you sure you want to close this workbook?", vbYesNo)
-    If response = vbYes Then
-        Application.DisplayAlerts = False
-        ActiveWorkbook.Close
-        Application.DisplayAlerts = True
-        Application.ScreenUpdating = True
-    End If
-End Sub
+
 
 Private Sub LS_Click()
 
-    dBody = "LS"    'the old pre-2014 Programmes
-
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Pre - 2014 RD Programme"
-    
-    dBody = strOrg & dBody      ' #### e.g.NELS
-    
-    Dim response As VbMsgBoxResult
-    If strOrg = "NE" Then
-        response = MsgBox("EU (Pre 2014): HLS, ELS, OELS, CSS, ESA, Habitat, HTB, HAC, ETIP, CSF, P4C has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    Else
-        response = MsgBox("EU (Pre 2014) has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    End If
-
-    If response = vbYes Then
-        Call SelectFormNEFC.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
+    dBody = "LS"    
+    dBody = strOrg & dBody      ' #### e.g.NELS     
 
 End Sub
 
 Private Sub CS_Click()
 
-    Application.ScreenUpdating = False
     
     If strOrg = "RDT" Then
         dBody = "CP"        'the new 2014 - 2020 Pillar 2 Programme
@@ -44,80 +17,19 @@ Private Sub CS_Click()
         dBody = "EA"
     Else
         dBody = "CS"
-    End If
-    
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "2014 - 2020 RD Programme"
+    End If    
+ 
     If strOrg <> "EA" Then
         dBody = strOrg & dBody 'e.g. NECS
     End If
-    Dim response As VbMsgBoxResult
-    If strOrg = "NE" Then
-        response = MsgBox("EU (2014-2020): CS Mid and Higher Tier, CS Capital, Facilitation Fund, CS Advice, CS Water Schemes has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    Else
-        response = MsgBox("EU (2014-2020) has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    End If
     
-    If response = vbYes Then
-        Call SelectFormNEFC.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
-
-
 End Sub
 
 Private Sub P1_Click()
-
-If strExNRDPE = "ExNRDPE" Then
-    Call ExNRDPE_Divert
-Else
-    Application.ScreenUpdating = False
     
-    dBody = "P1"    'NE P1 schemes
+    dBody = "P1"    'NE P1 schemes   
+  
     
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Domestic Schemes"
-    dBody = strOrg & dBody          'e.g. NECS
-    Dim response As VbMsgBoxResult
-    If strOrg = "NE" Then
-        response = MsgBox("Domestic Schemes has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    Else
-        response = MsgBox("New Schemes has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    End If
-    
-    If response = vbYes Then
-        Call SelectFormNEFC.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
-End If
-
 End Sub
 
-Private Sub UserForm_Activate()
-    Me.Left = GetLeftFormOffset(Me.Width)
-    Me.Top = GetTopFormOffset(Me.Height)
-End Sub
 
-Private Sub ExNRDPE_Divert()
-
-    Application.ScreenUpdating = False
-    
-    dBody = "RDTEXQ"    'Exchequer Non-RDPE
-    
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Exchequer Non-RDPE"
-    Dim response As VbMsgBoxResult
-    If strOrg = "RDT" Then
-        response = MsgBox("Exchequer Non-RDPE has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    Else
-        response = MsgBox("New Schemes has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    End If
-    
-    If response = vbYes Then
-        Call SelectFormNEFC.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
-End Sub

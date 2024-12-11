@@ -2,33 +2,11 @@ Private Sub BK_Click()
 
     dBody = "BK"
 
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Bee Keeping Scheme"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("Bee Keeping has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
-
 End Sub
 
 Private Sub DA_Click()
 
     dBody = "DA"
-
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Direct Aid"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("DIRECT AID has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
 End Sub
 
 
@@ -36,49 +14,15 @@ Private Sub DF_Click()
 
     dBody = "DF"
 
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Dairy Farmer Scheme"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("Dairy Farmer has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
-
 End Sub
 
-Private Sub CloseWorkbook_Click()
-    Dim response As VbMsgBoxResult
-    response = MsgBox("Are you sure you want to close this workbook?", vbYesNo)
-    If response = vbYes Then
-        Application.DisplayAlerts = False
-        ActiveWorkbook.Close
-        Application.DisplayAlerts = True
-        Application.ScreenUpdating = True
-    End If
-End Sub
 
-Private Sub UserForm_Activate()
-    Me.Left = GetLeftFormOffset(Me.Width)
-    Me.Top = GetTopFormOffset(Me.Height)
-End Sub
+
+
 
 Private Sub HE_Click()
 
     dBody = "HE"
-
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "AHWR Invoice"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("AHWR Invoice has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
     
 End Sub
 
@@ -86,56 +30,17 @@ Private Sub IP_Click()
 
     dBody = "IP"
 
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Interim Payments"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("Interim Payment has been selected" & vbNewLine & vbNewLine & _
-    "Have you checked that your Customers are REGISTERED?" & vbNewLine & vbNewLine & _
-    "(Please refer to  S:\operations - shared\FRN Exceptions\Unregistered Customers)", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
-
 End Sub
 
 
 Private Sub IT_Click()
 
     dBody = "INT"
-    If WBTYpe = "AP" Then
-        MsgBox "Interest can only be Recovered - Please close this workbook and select AR Invoice"
-        Exit Sub
-    End If
-
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Interest Recoveries"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("Interest Recoveries has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
 End Sub
 
 Private Sub OPA_Click()
 
     dBody = "OPA"
-
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "OPA Payments"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("Other Paying Agency (OPA) has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
 
 End Sub
 
@@ -143,33 +48,11 @@ End Sub
 Private Sub SPS_Click()
 
     dBody = "SPS"
-
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Single Payment Schemes"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("SINGLE PAYMENT (Legacy SPS) has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
 End Sub
 
 Private Sub TR_Click()
 
     dBody = "TR"
-
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Trader Schemes"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("TRADER SCHEMES has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
     
 End Sub
 
@@ -177,21 +60,4 @@ Private Sub XG_Click()
 
     dBody = "XG"
 
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B3").Value = strOrg & "  -  " & dBody
-    ActiveWorkbook.Worksheets("Main Page - " & WBTYpe).Range("B4").Value = "Ex Gratia Payment"
-    
-    Dim response As VbMsgBoxResult
-    response = MsgBox("Ex Gratia Payment has been selected" & vbNewLine & "Is this correct?", vbYesNo)
-    If response = vbYes Then
-        Call SelectFormST.Hide
-        Call SetValRng
-        Call PrepAPorAR
-    End If
-
-End Sub
-
-Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
-    If CloseMode = vbFormControlMenu Then
-        Cancel = True
-    End If
 End Sub

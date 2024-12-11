@@ -24,6 +24,13 @@ const createInvoice = async (request) => {
   const invoiceTemplate = optionsData.referenceData.schemeTypes
   const invoiceTemplateSecondary = optionsData.referenceData.schemeInvoiceTemplateSecondaryQuestions
   const paymentType = commonModel.modifyResponseRadio(optionsData.referenceData.paymentTypes)
+  console.log('delivery body')
+  console.log(deliveryBody)
+  console.log('invoiceTemplate')
+  console.log(invoiceTemplate)
+  console.log('invoiceTemplateSecondary')
+  console.log(invoiceTemplateSecondary)
+
   return {
     pageTitle: constantModel.invoiceAddTitle,
     accountType,
