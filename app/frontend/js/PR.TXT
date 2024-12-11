@@ -1,0 +1,49 @@
+
+
+
+Private Sub adjPost_Click()
+Dim response As VbMsgBoxResult
+    response = MsgBox("Adjustment where first payment was after to EU Exit has been selected" & vbNewLine & "Is this correct?", vbYesNo)
+    If response = vbYes Then
+        prType = 3
+        Call SelectFormPR.Hide
+        Call SelectFormST.Show
+    End If
+End Sub
+
+Private Sub adjPre_Click()
+Dim response As VbMsgBoxResult
+    response = MsgBox("Adjustment where first payment was prior to EU Exit has been selected" & vbNewLine & "Is this correct?", vbYesNo)
+    If response = vbYes Then
+        prType = 2
+        Call SelectFormPR.Hide
+        Call SelectFormST.Show
+    End If
+End Sub
+
+Private Sub CloseWorkbook_Click()
+Dim response As VbMsgBoxResult
+    response = MsgBox("Are you sure you want to close this workbook?", vbYesNo)
+    If response = vbYes Then
+        Application.DisplayAlerts = False
+        ActiveWorkbook.Close
+        Application.DisplayAlerts = True
+        Application.ScreenUpdating = True
+    End If
+End Sub
+
+Private Sub UserForm_Activate()
+    Me.Left = GetLeftFormOffset(Me.Width)
+    Me.Top = GetTopFormOffset(Me.Height)
+End Sub
+
+Private Sub firstPR_Click()
+Dim response As VbMsgBoxResult
+    response = MsgBox("First payment has been selected" & vbNewLine & "Is this correct?", vbYesNo)
+    If response = vbYes Then
+        prType = 1
+        Call SelectFormPR.Hide
+        Call SelectFormST.Show
+    End If
+End Sub
+

@@ -1,0 +1,131 @@
+
+Private Sub EA_Click()
+ strOrg = "EA"
+    
+    Dim response As VbMsgBoxResult
+    response = MsgBox("Delivery Body selected: EA" & vbNewLine & "Is this correct?", vbYesNo)
+    If response = vbYes Then
+        Call SelectFormDB.Hide
+        
+        If WBTYpe = "AP" Then
+            SelectFormNEFC.LS.Visible = False
+            SelectFormNEFC.P1.Visible = False
+            Call SelectFormNEFC.Show
+        ElseIf WBTYpe = "AR" Then
+            SelectFormNEFCAR.LS.Visible = False
+            SelectFormNEFCAR.P1.Visible = False
+            SelectFormNEFCAR.LSDom.Visible = False
+            Call SelectFormNEFCAR.Show
+        End If
+    End If
+End Sub
+
+Private Sub RDPE_Click()
+
+    strOrg = "RDPE"
+    
+    Dim response As VbMsgBoxResult
+    response = MsgBox("Delivery Body selected: RDPE" & vbNewLine & "Is this correct?", vbYesNo)
+    If response = vbYes Then
+        Call SelectFormDB.Hide
+        If WBTYpe = "AP" Then
+            SelectFormNEFC.LS.Visible = False
+            SelectFormNEFC.P1.Visible = False
+            Call SelectFormNEFC.Show
+        ElseIf WBTYpe = "AR" Then
+            SelectFormNEFCAR.P1.Visible = False
+            Call SelectFormNEFCAR.Show
+        End If
+    End If
+End Sub
+
+
+Private Sub RPA_Click()
+
+    strOrg = "RPA"
+    
+    Dim response As VbMsgBoxResult
+    response = MsgBox("Delivery Body selected: RPA" & vbNewLine & "Is this correct?", vbYesNo)
+    If response = vbYes Then
+        Application.ScreenUpdating = True
+        Call SelectFormDB.Hide
+        Call SelectFormPR.Show
+    End If
+End Sub
+Private Sub NE_Click()
+
+    strOrg = "NE"
+    Application.ScreenUpdating = False
+
+    Dim response As VbMsgBoxResult
+    response = MsgBox("Delivery Body selected: NE" & vbNewLine & "Is this correct?", vbYesNo)
+    
+    If response = vbYes Then
+        Call SelectFormDB.Hide
+        
+        If WBTYpe = "AP" Then
+            Call SelectFormNEFC.Show
+        ElseIf WBTYpe = "AR" Then
+            Call SelectFormNEFCAR.Show
+        End If
+    End If
+End Sub
+Private Sub FC_Click()
+
+    strOrg = "FC"
+
+    Dim response As VbMsgBoxResult
+    response = MsgBox("Delivery Body selected: FC" & vbNewLine & "Is this correct?", vbYesNo)
+    If response = vbYes Then
+        Call SelectFormDB.Hide
+        
+        If WBTYpe = "AP" Then
+            SelectFormNEFC.P1.Visible = False
+            Call SelectFormNEFC.Show
+        ElseIf WBTYpe = "AR" Then
+            SelectFormNEFCAR.P1.Visible = False
+            Call SelectFormNEFCAR.Show
+        End If
+    End If
+End Sub
+Private Sub RDT_Click()
+
+    strOrg = "RDT"
+    
+    Dim response As VbMsgBoxResult
+    response = MsgBox("Delivery Body selected: RDT" & vbNewLine & "Is this correct?", vbYesNo)
+    If response = vbYes Then
+        Call SelectFormDB.Hide
+        SelectFormNEFC.P1.Visible = False
+        If WBTYpe = "AP" Then
+            SelectFormNEFC.LS.Visible = False
+            strExNRDPE = "ExNRDPE"
+            SelectFormNEFC.P1.Visible = True
+            Call SelectFormNEFC.Show
+        ElseIf WBTYpe = "AR" Then
+            Call SelectFormNEFCAR.Show
+        End If
+    End If
+End Sub
+
+Private Sub CloseWorkbook_Click()
+    Dim response As VbMsgBoxResult
+    response = MsgBox("Are you sure you want to close this workbook?", vbYesNo)
+    If response = vbYes Then
+        Application.DisplayAlerts = False
+        ActiveWorkbook.Close
+        Application.DisplayAlerts = True
+        Application.ScreenUpdating = True
+    End If
+End Sub
+
+Private Sub UserForm_Activate()
+    Me.Left = GetLeftFormOffset(Me.Width)
+    Me.Top = GetTopFormOffset(Me.Height)
+End Sub
+
+Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+    If CloseMode = vbFormControlMenu Then
+        Cancel = True
+    End If
+End Sub
