@@ -30,8 +30,18 @@ const modifyResponseRadio = (respData, selected) => {
   return respDataUpdated
 }
 
+const modifyResponseCheckbox = (respData, selected, disabledItem) => {
+  const respDataUpdated = respData.map((item) => {
+    return { text: (item?.description || (item?.deliveryBodyDescription || '')), value: item.code, checked: (selected.split(",").includes(item.code)), disabled: disabledItem}
+  })
+  return respDataUpdated
+}
+
 const modifyResponseSelect = (respData, selected) => {
   const respDataUpdated = respData.map((item) => {
+    if(typeof item == "string")
+    return { text: item, value: item, selected: (selected === item) }
+    else
     return { text: item.code.toUpperCase(), value: item.code, selected: (selected === item.code) }
   })
   return respDataUpdated
@@ -276,14 +286,14 @@ const addForSummaryTableLineCSVTwo = (items) => {
 
 async function processUploadedCSV (file, payload, request) {
   if (!file) return null
-  const extension = file.hapi.filename.split('.').pop().toLowerCase()
-  const validExtensions = ['csv', 'xlsx']
-  if (!validExtensions.includes(extension)) return null
+  // const extension = file.hapi.filename.split('.').pop().toLowerCase()
+  // const validExtensions = ['csv', 'xlsx']
+  // if (!validExtensions.includes(extension)) return null
   const form = new FormData()
   form.append('file', file, file.hapi.filename)
   form.append('org', payload.deliveryBody)
-  form.append('schemeInvoiceTemplate', payload.invoiceTemplate)
-  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/add`, form, {}, request)
+  form.append('schemeType', payload.invoiceTemplate)
+  const results = await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/bulkuploads/addap`, form, {}, request)
   if (payload.accountType === 'AP') {
     return (results?.bulkUploadApDataset || null)
   } else {
@@ -291,4 +301,4 @@ async function processUploadedCSV (file, payload, request) {
   }
 }
 
-module.exports = { BulkHeadDataAr, modifyForSummaryApprover, BulkLineDataAr, BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modifyResponseRadio, modifyResponseSelect, modifyResponseSummary, modifyResponseTable, generateID, formatTimestamp, removeForSummaryTable }
+module.exports = { BulkHeadDataAr, modifyResponseCheckbox, modifyForSummaryApprover, BulkLineDataAr, BulkLineData, BulkHeadData, modifyForSummary, addForSummaryTableLineCSV, addForSummaryTableLineCSVTwo, processUploadedCSV, addForSummaryTableLine, modifyResponseRadio, modifyResponseSelect, modifyResponseSummary, modifyResponseTable, generateID, formatTimestamp, removeForSummaryTable }

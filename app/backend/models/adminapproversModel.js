@@ -45,15 +45,27 @@ const deleteAdminApprover = async (request) => {
   return request.params.invoiceid
 }
 
+const groupByKeys =function (data, key) {
+  return data.reduce((acc, item) => {
+    const keyValue = item[key]
+    if (!acc[keyValue]) {
+      acc[keyValue] = item
+    }
+    return acc
+  }, {})
+}
+
+
 const createAdminApprover = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`, {}, {}, request)
+
   return {
     pageTitle: constantModel.adminApproverAddTitle,
     email: '',
     threshold: '',
     schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies),
-    deliverybodyData: optionsData.referenceData.deliveryBodies,
+    deliverybody: commonModel.modifyResponseCheckbox(Object.values(groupByKeys(optionsData.referenceData.initialDeliveryBodies,'code')),'',false),
+    deliverybodyData: optionsData.referenceData.initialDeliveryBodies,
     schemecodeData: optionsData.referenceData.schemeCodes,
     disableditem: false,
     attributesitem: {},
@@ -70,8 +82,8 @@ const updateAdminApprover = async (request) => {
     email: filterData ? filterData.email : '',
     threshold: filterData ? filterData.threshold : '',
     schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes, filterData.schemeCode),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies, filterData.deliveryBody),
-    deliverybodyData: optionsData.referenceData.deliveryBodies,
+    deliverybody:  commonModel.modifyResponseCheckbox(optionsData.referenceData.initialDeliveryBodies,filterData.deliveryBody,false),
+    deliverybodyData: optionsData.referenceData.initialDeliveryBodies,
     schemecodeData: optionsData.referenceData.schemeCodes,
     disableditem: false,
     attributesitem: {},
@@ -81,10 +93,11 @@ const updateAdminApprover = async (request) => {
 
 const adminApproverStore = async (request) => {
   const payload = request.payload
+
   if (payload.view_type == 'edit') {
     await externalRequest.sendExternalRequestPut(`${constantModel.requestHost}/admin/approvers/update`, {
       Email: payload.email,
-      DeliveryBody: payload.deliverybody,
+      DeliveryBody:typeof payload.deliverybody == "string"?payload.deliverybody:payload.deliverybody.join(","),
       SchemeCode: payload.schemecode,
       Threshold: payload.threshold
     }, {}, request)
@@ -92,7 +105,7 @@ const adminApproverStore = async (request) => {
   } else {
     await externalRequest.sendExternalRequestPost(`${constantModel.requestHost}/admin/approvers/add`, {
       Email: payload.email,
-      DeliveryBody: payload.deliverybody,
+      DeliveryBody:typeof payload.deliverybody == "string"?payload.deliverybody:payload.deliverybody.join(","),
       SchemeCode: payload.schemecode,
       Threshold: payload.threshold
     }, {}, request)

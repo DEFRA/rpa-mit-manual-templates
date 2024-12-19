@@ -12,7 +12,7 @@ const authPlugin = {
         return h.continue
       } else {
         // return h.continue
-        return h.redirect('/login').takeover()
+       return h.redirect('/login').takeover()
       }
     })
   }

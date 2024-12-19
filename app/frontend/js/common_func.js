@@ -1,16 +1,24 @@
-/* global $, deliveryBodyData, schemecodeData, invoiceTemplate, invoiceTemplateSecondaryData, optionsAll */
+/* global $, deliveryBodyData, accounttype, schemecodeData, invoiceTemplate, invoiceTemplateSecondaryData, optionsAll, dropdownAll*/
 
 $(function () {
   $('#approverForm').on('submit', function (event) {
     event.preventDefault()
-    let allGroupsSelected = true
+    let allGroupsSelected = false
     const inputs = document.querySelectorAll('.approver_inputs')
-    console.log(inputs)
+    const inputs2 = document.querySelectorAll('.govuk-checkboxes__input')
+
+    for (const input of inputs2) {
+      if (input.checked) {
+        allGroupsSelected = true
+      }
+    }
+
     for (const input of inputs) {
       if (input.value.trim() === '') {
         allGroupsSelected = false
       }
     }
+   
     if (!allGroupsSelected) {
       const messageElement = $('#error-message')
       messageElement.show()
@@ -74,7 +82,7 @@ $(function () {
     }
 
     ard = [...new Set(ard)]
-    if (!allGroupsSelected || ard.length !== 5) {
+    if (!allGroupsSelected || ard.length < 4) {
       const messageElement = $('#error-message')
       messageElement.show()
       setTimeout(function () {
@@ -257,10 +265,14 @@ $(function () {
             const deliveryTypeRadios = document.querySelectorAll('input[name="deliveryBody"]')
             deliveryTypeRadios.forEach(radio => {
               radio.addEventListener('change', function () {
-                if (invoiceTemplateSecondaryData) {
+                if(invoiceTemplateSecondaryData && deliveryBodyOptionsUnique[this.value][0].org == "RPA")
+                {
                   updateBodyOptions(this.value, 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question')
-                } else {
-                  updateBodyOptions(this.value, 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template')
+                }
+                else
+                {
+                  updateBodyOptions('', 'invoice-template-secondary-body-container', 'invoice_template_secondary', 'Select Scheme Invoice Template Secondary Question')
+                  updateBodyOptions(this.value, 'invoice-template-body-container', 'invoiceTemplate', 'Select Scheme Invoice Template') 
                 }
               })
             })
@@ -299,6 +311,7 @@ $(function () {
   }
 
   try {
+    // let actype = accounttype;
     function getDescription (optionsData) {
       let description = ''
       const payload = { mainaccount: $('#mainaccount').val(), deliverybody: $('#deliverybody').val(), schemecode: $('#schemecode').val() }
@@ -310,6 +323,10 @@ $(function () {
         $('#description').val(description)
       }
     }
+    // getFund('', $('#deliverybody').val(),actype.toUpperCase())
+    // getMY($('#deliverybody').val())
+    // getScheme($('#deliverybody').val(),'',actype.toUpperCase())
+    // getAccount($('#deliverybody').val(),'',actype.toUpperCase()) 
     getDescription(optionsAll)
     $('#mainaccount').on('change', function () {
       getDescription(optionsAll)
@@ -321,26 +338,248 @@ $(function () {
 
     $('#deliverybody').on('change', function () {
       getDescription(optionsAll)
+
+      // getFund('', $('#deliverybody').val(),actype.toUpperCase())
+      // getMY($('#deliverybody').val())
+      // getScheme($('#deliverybody').val(),'',actype.toUpperCase())
+      // getAccount($('#deliverybody').val(),'',actype.toUpperCase()) 
     })
+
+   
+  //   function getFund(strOrg, dBody, WBTYpe) {
+  //     if(optionsDropdowns ==  null) return;
+  //     let strFund;
+  //     if (strOrg === "RPA") {
+  //         strFund = strOrg + "Funds";
+  //         if (["XG", "IP", "INT", "HE"].includes(dBody)) {
+  //             strFund = "EXQFund";
+  //         }
+  //         if (dBody === "IP") {
+  //             strFund = "RPAIPFunds";
+  //         }
+  //         if (dBody === "OPA") {
+  //             strFund = "OPAFunds";
+  //         }
+  //         if (dBody === "HE") {
+  //             strFund = "HEFunds";
+  //         }
+  //     } else {
+  //         if (dBody.endsWith("P1")) {
+  //             strFund = "P1Funds";
+  //         } else if (dBody.endsWith("XQ")) {
+  //             strFund = "ExNRDPEFunds";
+  //         } else if (dBody.endsWith("LS") && WBTYpe === "AR") {
+  //             if (["NE", "FC", "RDPE", "RDT"].includes(strOrg)) {
+  //                 strFund = "AR_LS_FUNDS";
+  //             } else {
+  //                 strFund = "LSFunds";
+  //             }
+  //         } else if (dBody.endsWith("Dom") && WBTYpe === "AR") {
+  //             if (["NE", "FC", "RDPE", "RDT"].includes(strOrg)) {
+  //                 strFund = "AR_DOM_FUNDS";
+  //             }
+  //         } else {
+  //             if (strOrg === "RDT" && WBTYpe === "AP") {
+  //                 strFund = "RDTNSFunds";
+  //             } else if (dBody === "NECS" && WBTYpe === "AP") {
+  //                 strFund = "NECSFunds";
+  //             } else if (WBTYpe === "AR") {
+  //                 strFund = "NSARFunds";
+  //             } else {
+  //                 strFund = "NSFunds";
+  //             }
+  //         }
+  //         if (strOrg === "FC" && WBTYpe === "AP") {
+  //             strFund = "FCAP"; 
+  //         }
+  //         if (dBody.startsWith("EA")) {
+  //             if (dBody.endsWith("CSDom") || WBTYpe === "AP") {
+  //                 strFund = "EA_DOM_FUNDS";
+  //             } else {
+  //                 strFund = "EAFunds";
+  //             }
+  //         }
+  //     }
+  //     const allfundcode = $('#fundcode');
+  //     allfundcode.empty();
+  //     optionsDropdowns[strFund].split(",").forEach(val => {
+  //     allfundcode.append($('<option>', {
+  //       value: val,
+  //       text: val
+  //     }));
+  //     });
+  // }
+  
+  // function getMY(dBody) {
+  //   if(optionsDropdowns ==  null) return;
+
+  //     let strMY = "NSMY";
+  //     if (dBody === "P1") {
+  //         strMY = "P1MY";
+  //     } else if (dBody === "XQ") {
+  //         strMY = "ExNRDPEMY";
+  //     } else if (dBody === "LS" || dBody.endsWith("LSDom")) {
+  //         strMY = "LSMY";
+  //     } else if (dBody === "CS" || dBody.endsWith("CSDom")) {
+  //         strMY = "NAMY"; 
+  //     } else if (dBody === "SPS" || dBody === "TR") {
+  //         strMY = "LSMY";
+  //     } else if (dBody === "XG") {
+  //         strMY = "XGMY";
+  //     } else if (dBody === "OPA") {
+  //         strMY = "OPAMY";
+  //     }
+  //     const allmarketingyear = $('#marketingyear');
+  //     allmarketingyear.empty();
+  //     optionsDropdowns[strMY].split(",").forEach(val => {
+  //       allmarketingyear.append($('<option>', {
+  //       value: val,
+  //       text: val
+  //     }));
+  //     });
+  // }
+  
+  // function getDB(dBody, strOrg) {
+  //     let strDB;
+  //     if (dBody === "P1") {
+  //         strDB = "P1DBs";
+  //     } else if (dBody === "XQ") {
+  //         strDB = "ExNRDPEDBs";
+  //     } else {
+  //         strDB = strOrg + "DBs";
+  //     }
+  //     return strDB;
+  // }
+  
+  // function getScheme(dBody, strOrg, WBTYpe) {
+  //   if(optionsDropdowns ==  null) return;
+
+  //     let strSCH;
+  //     if (dBody === "NEP1") {
+  //         strSCH = "P1Schemes";
+  //     } else if (strOrg === "NE" && dBody.endsWith("LS")) {
+  //         if (WBTYpe === "AR") {
+  //             strSCH = "NEARSchemes";
+  //         } else {
+  //             strSCH = "NEAPSchemes";
+  //         }
+  //     } else {
+  //         strSCH = dBody + "Schemes"; 
+  //     }
+
+  //     const allschemecode = $('#schemecode');
+  //     allschemecode.empty();
+  //     optionsDropdowns[strSCH].split(",").forEach(val => {
+  //       allschemecode.append($('<option>', {
+  //       value: val,
+  //       text: val
+  //     }));
+  //     });
+     
+  // }
+  
+  // function getAccount(dBody, strOrg, WBTYpe) {
+  //   if(optionsDropdowns ==  null) return;
+
+  //     let strACC;
+  //     if (strOrg !== "NE") {
+  //         if (WBTYpe === "AP") {
+  //             strACC = dBody + "APAccounts"; 
+  //         } else if (WBTYpe === "AR") {
+  //             strACC = dBody + "ARAccounts";
+  //         }
+  //     } else {
+  //         if (dBody === "NEP1") {
+  //             if (WBTYpe === "AP") {
+  //                 strACC = "NEP1APAccounts";
+  //             } else {
+  //                 strACC = "NEP1ARAccounts";
+  //             }
+  //         } else if (dBody === "NECS" && WBTYpe === "AP") {
+  //             strACC = "NECSAPAccounts";
+  //         } else if (WBTYpe === "AP") {
+  //             strACC = strOrg + "APAccounts";
+  //         } else {
+  //             if (dBody.endsWith("LS")) {
+  //                 strACC = "NELSARAccounts"; 
+  //             } else if (dBody.endsWith("LSDom")) {
+  //                 strACC = "NELSDomARAccounts";
+  //             } else if (dBody.endsWith("CSDom")) {
+  //                 strACC = "NECSDomARAccounts";
+  //             } else {
+  //                 strACC = "NEARAccounts"; 
+  //             }
+  //         }
+  //     }
+
+  //     const allmainaccount = $('#mainaccount');
+  //     allmainaccount.empty();
+  //     optionsDropdowns[strACC].split(",").forEach(val => {
+  //       allmainaccount.append($('<option>', {
+  //       value: val,
+  //       text: val
+  //     }));
+  //     });
+      
+  // }
+  
+  // function getCoAAndOtherValues(dBody, WBTYpe) {
+  //     let strCoA, strFund, strDB, strMY, strSCH, strACC;
+  //     if (dBody === "NEP1") {
+  //         if (WBTYpe === "AP") {
+  //             strCoA = "P1APCoA"; 
+  //         } else if (WBTYpe === "AR") {
+  //             strCoA = "P1ARCoA";
+  //         }
+  //     } else if (dBody === "RDTDom" && WBTYpe === "AR") {
+  //         strCoA = "RDTDomARCOA";
+  //         strFund = "RDTDomARFunds";
+  //         strDB = "RDTDomDBs";
+  //         strMY = "LSMY";
+  //     } else if (dBody === "RDTEXQ") {
+  //         strSCH = "ExNRDPESchemes";
+  //         if (WBTYpe === "AP") {
+  //             strCoA = "ExNRDPEAPCoA";
+  //             strACC = "ExNRDPEAPAccounts";
+  //         } else if (WBTYpe === "AR") {
+  //             strCoA = "ExNRDPEARCoA";
+  //             strACC = "ExNRDPEARAccounts";
+  //         }
+  //     } else {
+  //         if (WBTYpe === "AP") {
+  //             strCoA = dBody + "APCoA";
+  //         } else if (WBTYpe === "AR") {
+  //             strCoA = dBody + "ARCoA";
+  //         }
+  //     }
+  //     return {
+  //         strCoA,
+  //         strFund,
+  //         strDB,
+  //         strMY,
+  //         strSCH,
+  //         strACC
+  //     };
+  // }
   } catch (e) {
   }
 
-  try {
-    const orgdelivery = deliverybodyData.find(data => (data.code === $('#deliverybody').val()))?.org
-    $('#schemecode').val(schemecodeData.find(data => ((data?.org || '') === orgdelivery)).code)
+  // try {
+  //   const orgdelivery = deliverybodyData.find(data => (data.code === $('#deliverybody').val()))?.org
+  //   $('#schemecode').val(schemecodeData.find(data => ((data?.org || '') === orgdelivery)).code)
 
-    $('#schemecode').on('change', function () {
-      const orgscheme = schemecodeData.find(data => (data.code === $('#schemecode').val()))?.org || ''
-      $('#deliverybody').val(deliverybodyData.find(data => (data.org === orgscheme)).code)
-    })
+  //   $('#schemecode').on('change', function () {
+  //     const orgscheme = schemecodeData.find(data => (data.code === $('#schemecode').val()))?.org || ''
+  //     $('#deliverybody').val(deliverybodyData.find(data => (data.org === orgscheme)).code)
+  //   })
 
-    $('#deliverybody').on('change', function () {
-      const orgdelivery = deliverybodyData.find(data => (data.code === $('#deliverybody').val()))?.org
-      $('#schemecode').val(schemecodeData.find(data => ((data?.org || '') === orgdelivery)).code)
-    })
-  } catch (e) {
-    console.log(e)
-  }
+  //   $('#deliverybody').on('change', function () {
+  //     const orgdelivery = deliverybodyData.find(data => (data.code === $('#deliverybody').val()))?.org
+  //     $('#schemecode').val(schemecodeData.find(data => ((data?.org || '') === orgdelivery)).code)
+  //   })
+  // } catch (e) {
+  //   console.log(e)
+  // }
 
   $('#showPopup').on('click', function () {
     $('#reason').val('')

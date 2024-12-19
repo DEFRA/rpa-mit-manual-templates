@@ -2,6 +2,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% extends 'main_views/_layout.njk' %}
 
@@ -57,16 +58,14 @@
     }) 
     }}
 
-    {{ govukSelect({
+    {{ govukCheckboxes({
      name: "deliverybody",
      label: {
       text: 'Delivery Body',
       classes: "govuk-label--s"
      },
     items: deliverybody,
-    id: "deliverybody",
-    classes:"full-width approver_inputs",
-    disabled:disableditem
+    classes:"full-width approver_inputscheck checkbox-design"
     }) 
     }}
 

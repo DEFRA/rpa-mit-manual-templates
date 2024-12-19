@@ -54,12 +54,12 @@
 
     {{ govukSelect({
      name: "deliverybody",
+     id: "deliverybody",
      label: {
       text: 'Delivery Body',
       classes: "govuk-label--s"
      },
     items: deliverybody,
-    id: "deliverybody",
     classes:"full-width line_inputs",
     disabled:disableditem
     }) 
@@ -67,6 +67,7 @@
 
     {{ govukSelect({
      name: "fundcode",
+     id: "fundcode",
      label: {
       text: 'Fund Code',
       classes: "govuk-label--s"
@@ -105,6 +106,7 @@
 
     {{ govukSelect({
      name: "marketingyear",
+     id: "marketingyear",
      label: {
       text: 'Marketing Year',
       classes: "govuk-label--s"
@@ -133,5 +135,8 @@
 </div>
 <script>
     const optionsAll = {{ optionsData | dump | safe }};
+    //const optionsDropdowns = {{ dropdownAll | dump | safe }};
+    //const accounttype = {{ accounttype | dump | safe }};
+
 </script>
 {% endblock %}

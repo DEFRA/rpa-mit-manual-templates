@@ -2,6 +2,7 @@ const commonModel = require('./commonModel')
 const externalRequest = require('../custom_requests/externalRequests')
 const paymentModel = require('./paymentModel')
 const constantModel = require('../app_constants/appConstant')
+const {getGlobal} = require('../hooks/custom_hook')
 
 const deleteInvoiceLine = async (request) => {
   await externalRequest.sendExternalRequestDelete(`${constantModel.requestHost}/invoicelines/delete`, {
@@ -67,6 +68,13 @@ const viewInvoiceLine = async (request) => {
 
 const createInvoiceLine = async (request) => {
   const optionsData = await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/referencedata/getall`, {}, {}, request)
+  let dropdownData = null
+  if(getGlobal(request.yar.get('invid')))
+  {
+    dropdownData = getGlobal(request.yar.get('invid'))
+  }
+  else
+  dropdownData = (await externalRequest.sendExternalRequestGet(`${constantModel.requestHost}/dropdowns/getall`, {}, {}, request))?.Dropdowns|| []
   const summaryPayment = await modifyPaymentResponse(request.params.id, false, request)
   const DeliverBody = request.yar.get('deliverbody') || ''
   const schemetemplate = request.yar.get('schemetemplate') || ''
@@ -87,14 +95,15 @@ const createInvoiceLine = async (request) => {
       paymentId: request.params.id,
       paymentvalue: '0.00',
       description: '',
-      fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => ((data?.org || DeliverBody).includes(DeliverBody)))),
-      mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps?.filter(data => ((data?.org || schemetemplate).includes(schemetemplate)))),
-      schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || schemetemplate).includes(schemetemplate)))),
-      marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears),
-      deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || DeliverBody).includes(DeliverBody)))),
+      fundcode: commonModel.modifyResponseSelect(dropdownData.funds.split(",")),
+      mainaccount: commonModel.modifyResponseSelect(dropdownData.accounts.split(",")),
+      schemecode: commonModel.modifyResponseSelect(dropdownData.schemeTypes.split(",")),
+      marketingyear: commonModel.modifyResponseSelect(dropdownData.marketingYears.split(",")),
+      deliverybody: commonModel.modifyResponseSelect(dropdownData.deliveryBodies.split(",")),
       disableditem: false,
       attributesitem: {},
       optionsData,
+      accountType:(request.yar.get('accounttype') || ''),
       attributesitem2: { readonly: 'readonly' },
       view_type: 'create'
     }
@@ -107,14 +116,15 @@ const createInvoiceLine = async (request) => {
     paymentId: request.params.id,
     paymentvalue: '0.00',
     description: '',
-    fundcode: commonModel.modifyResponseSelect(optionsData.referenceData.fundCodes?.filter(data => ((data?.org || orgget).includes(orgget)))),
-    mainaccount: commonModel.modifyResponseSelect(optionsData.referenceData.accountAps?.filter(data => ((data?.org || orgget).includes(orgget)))),
-    schemecode: commonModel.modifyResponseSelect(optionsData.referenceData.schemeCodes?.filter(data => ((data?.org || orgget).includes(orgget)))),
-    marketingyear: commonModel.modifyResponseSelect(optionsData.referenceData.marketingYears),
-    deliverybody: commonModel.modifyResponseSelect(optionsData.referenceData.deliveryBodies?.filter(data => ((data?.org || orgget).includes(orgget)))),
+    fundcode: commonModel.modifyResponseSelect(dropdownData.funds.split(",")),
+    mainaccount: commonModel.modifyResponseSelect(dropdownData.accounts.split(",")),
+    schemecode: commonModel.modifyResponseSelect(dropdownData.schemeTypes.split(",")),
+    marketingyear: commonModel.modifyResponseSelect(dropdownData.marketingYears.split(",")),
+    deliverybody: commonModel.modifyResponseSelect(dropdownData.deliveryBodies.split(",")),
     disableditem: false,
     attributesitem: {},
     optionsData,
+    accountType:(request.yar.get('accounttype') || ''),
     attributesitem2: { readonly: 'readonly' },
     view_type: 'create'
   }
@@ -144,6 +154,8 @@ const updateInvoiceLine = async (request) => {
     disableditem: false,
     attributesitem: {},
     optionsData,
+    dropdownAll:null,
+    accountType:(request.yar.get('accounttype') || ''),
     attributesitem2: { readonly: 'readonly' },
     view_type: 'edit'
   }
